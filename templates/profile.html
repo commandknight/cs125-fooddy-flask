@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+</head>
+<body>
+<center>
+<script>
+  angular.module('checkboxExample', [])
+    .controller('ExampleController', ['$scope', function($scope) {
+      $scope.checkboxModel = {
+       value1 : false,
+       value2 : false
+     };
+    }]);
+</script>
+<form name="myForm" ng-controller="ExampleController">
+  <label>
+    <input type="checkbox" ng-model="checkboxModel.value1"> French
+  </label><br/>
+  <label>
+    <input type="checkbox" ng-model="checkboxModel.value2"
+           ng-true-value="true" ng-false-value="false"> Mexican
+   </label><br/>
+
+    <label>
+    <input type="checkbox" ng-model="checkboxModel.value3"
+           ng-true-value="true" ng-false-value="false"> Italian
+   </label><br/>
+  <tt>value1 = {{checkboxModel.value1}}</tt><br/>
+  <tt>value2 = {{checkboxModel.value2}}</tt><br/>
+    <tt>value3 = {{checkboxModel.value3}}</tt><br/>
+ </form>
+</center>
+</body>
+</html>
