@@ -57,17 +57,36 @@ def get_number_of_categories():
     curr.close()
     return result
 
-# TODO: Insert Category
+def is_login_valid(username,password):
+    curr = cnx.cursor()
+    curr.execute('SELECT password FROM UserProfile WHERE user_name = %s',(username))
+    password_tmp = curr.fetchone()
+    curr.close()
+    if password == password_tmp:
+        return True
+    else:
+        return False
+
+
 def insert_category(category_name,category_alias):
-    pass
+    curr = cnx.cursor()
+    curr.execute('INSERT INTO Categories(category_name,category_alias)',(category_name,category_alias))
+    curr.close()
 
 # TODO: Insert new userProfile
 def insert_user_profile(username,password):
-    pass
+    curr = cnx.cursor()
+    curr.execute('INSERT INTO UserProfile(user_name,password)',(username,password))
+    curr.close()
 
 # TODO: Insert/Update Category Weight
 def update_category_weight(category_alias,weight):
-    pass
+    curr = cnx.cursor()
+    sql_get_category_id = 'SELECT category_id FROM Categories WHERE category_alias = %s'
+    category_id = curr.execute(sql_get_category_id,(category_alias)).fetchone()
+    sql_insert_update = ''
+    curr.execute(sql_insert_update,(category_id,weight))
+    curr.close()
 
 
 def close_connection():
