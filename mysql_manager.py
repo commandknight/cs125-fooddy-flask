@@ -1,10 +1,10 @@
 import mysql.connector
 
 config = {
-    'user': 'jeet',
-    'password': 'paper2mate',
-    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-    'database': 'cs175reddit',
+    'user': 'ucifooddy',
+    'password': 'ucifooddy',
+    'host': 'fooddy.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+    'database': 'fooddy',
     # 'cursorclass' : 'MySQLdb.cursors.SSCursor',
     'raise_on_warnings': True
 }
