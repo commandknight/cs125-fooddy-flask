@@ -57,6 +57,18 @@ def get_number_of_categories():
     curr.close()
     return result
 
+# TODO: Insert Category
+def insert_category(category_name,category_alias):
+    pass
+
+# TODO: Insert new userProfile
+def insert_user_profile(username,password):
+    pass
+
+# TODO: Insert/Update Category Weight
+def update_category_weight(category_alias,weight):
+    pass
+
 
 def close_connection():
     """
