@@ -10,6 +10,7 @@ config = {
 
 cnx = mysql.connector.connect(**config)
 
+
 def get_list_of_category_names():
     curr = cnx.cursor()
     curr.execute('SELECT category_name From Categories')
@@ -59,25 +60,27 @@ def get_number_of_categories():
 
 def is_login_valid(username,password):
     curr = cnx.cursor()
-    curr.execute('SELECT password FROM UserProfile WHERE user_name = %s',(username))
+    curr.execute('SELECT password FROM UserProfile WHERE user_name = %s',(username,))
     password_tmp = curr.fetchone()
     curr.close()
-    if password == password_tmp:
-        return True
-    else:
+    if password_tmp is None:
         return False
+    return password == password_tmp[0]
 
 
 def insert_category(category_name,category_alias):
     curr = cnx.cursor()
     curr.execute('INSERT INTO Categories(category_name,category_alias)',(category_name,category_alias))
+    cnx.commit()
     curr.close()
 
-# TODO: Insert new userProfile
-def insert_user_profile(username,password):
+
+def insert_new_user_profile(username,password):
     curr = cnx.cursor()
-    curr.execute('INSERT INTO UserProfile(user_name,password)',(username,password))
+    curr.execute('INSERT INTO UserProfile(user_name,password) VALUES (%s,%s)',(username,password))
+    cnx.commit()
     curr.close()
+
 
 # TODO: Insert/Update Category Weight
 def update_category_weight(category_alias,weight):
