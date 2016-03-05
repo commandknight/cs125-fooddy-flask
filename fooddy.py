@@ -1,6 +1,7 @@
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 import sqlite3
+import mysql_manager as mm
 from contextlib import closing
 
 
@@ -24,9 +25,7 @@ def listview():
 
 @app.route('/profile.html')
 def profile():
-    import mysql_manager as mm
     cat_names = mm.get_list_of_category_names()
-    mm.close_connection()
     return render_template("profile.html", category_names=cat_names)
 
 
