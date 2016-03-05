@@ -1,13 +1,36 @@
+<!DOCTYPE html>
 <html>
-
+<head>
+    <title>Fooddy Categories</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
 <body>
-test
-  <div>
-    <ol>
-      {% for category in category_names %}
-      <li>{{ category[0] }}</li>
-      {% endfor %}
-    </ol>
-  </div>
+<div data-role="page" id="profile_page">
+
+    <div data-role="header">
+        <div data-role="navbar"><ul><li><a href="/">Home</a></li></ul></div>
+    </div><!-- /header -->
+
+        <fieldset data-role="controlgroup">
+          {% for category in category_names %}
+              <form>
+                <label>
+                    <input type="checkbox" name=" {{ "checkbox-" + category[0] }}">{{ category[0] }}
+                </label>
+              </form>
+          {% endfor %}
+
+            <form action="listview.html">
+                <input type="submit" value="Submit!">
+            </form>
+        </fieldset>
+
+</div><!--/end profile_page-->
+
+
+
+
 </body>
 </html>
