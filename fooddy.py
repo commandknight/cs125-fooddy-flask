@@ -24,7 +24,24 @@ def listview():
 
 @app.route('/profile.html')
 def profile():
-    return render_template("profile.html")
+    import mysql_manager as mm
+    cat_names = mm.get_list_of_category_names()
+    mm.close_connection()
+    return render_template("profile.html", category_names=cat_names)
+
+# static resources will be updated each run. namely, style.css
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     endpoint, filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
