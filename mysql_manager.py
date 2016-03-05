@@ -14,7 +14,7 @@ config = {
     'user': 'ucifooddy',
     'password': 'ucifooddy',
     'host': 'fooddy.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-    'database': 'fooddy',
+    'database': 'fooddy2.0',
     'raise_on_warnings': True
 }
 
@@ -110,8 +110,8 @@ def is_login_valid(username,password):
 def insert_category(category_name,category_alias):
     """
     Function to insert new category record
-    :param category_name: formal name of category to insert Ex: "Italian"
-    :param category_alias: alias used by Yelp API to search Ex: "italian"
+    :param category_name: String formal name of category to insert Ex: "Italian"
+    :param category_alias: String alias used by Yelp API to search Ex: "italian"
     :return: None
     """
     curr = cnx.cursor()
@@ -122,24 +122,33 @@ def insert_category(category_name,category_alias):
 
 def insert_new_user_profile(username,password):
     """
-    Function to insrt new user_profile into database
-    :param username: PK user_name to insert
-    :param password: Password of new user
+    Function to insert new user_profile into database
+    :param username: String PK user_name to insert
+    :param password: String Password of new user
     :return: None
     """
     curr = cnx.cursor()
-    curr.execute('INSERT IGNORE INTO UserProfile(user_name,password) VALUES (%s,%s)',(username,password))
+    curr.execute('INSERT IGNORE INTO UserProfile(user_name,password) VALUES (%s,%s)'
+                 'ON DUPLICATE KEY UPDATE password = %s',(username,password,password))
     cnx.commit()
     curr.close()
 
 
-# TODO: Insert/Update Category Weight
-def update_category_weight(category_alias,weight):
+
+def update_category_weight(user_name,category_name,weight):
+    """
+    Function to INSERT or UPDATE UserWeight for given category_alias and weight
+    :param user_name: string UserName of UserWeight to update/insert
+    :param category_name: String alias of category weight to update
+    :param weight: Double of the weight to insert
+    :return: None
+    """
     curr = cnx.cursor()
-    sql_get_category_id = 'SELECT category_id FROM Categories WHERE category_alias = %s'
-    category_id = curr.execute(sql_get_category_id,(category_alias)).fetchone()
-    sql_insert_update = ''
-    curr.execute(sql_insert_update,(category_id,weight))
+    sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
+                                   'VALUES (%s,(SELECT category_id FROM Categories WHERE category_name = %s),%s) ' \
+                                   'ON DUPLICATE KEY UPDATE weight = %s'
+    curr.execute(sql_insert_update_UserWeight,(user_name,category_name,weight,weight))
+    cnx.commit()
     curr.close()
 
 
