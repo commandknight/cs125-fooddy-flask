@@ -1,9 +1,3 @@
-drop table if exists entries;
-create table entries (
-  id integer primary key autoincrement,
-  title text not null,
-  text text not null
-);
 DROP TABLE IF EXISTS UserProfile;
 CREATE TABLE IF NOT EXISTS UserProfile(
   user_id INTEGER PRIMARY KEY AUTOINCREMENT ,

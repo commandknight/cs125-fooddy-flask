@@ -15,14 +15,17 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 @app.route('/')
-def indextest():
-    return render_template('indextest.html')
-'''
 def show_entries():
-    cur = g.db.execute('select title, text from entries order by id desc')
-    entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
-    return render_template('show_entries.html', entries=entries)
-'''
+    return render_template("indextest.html")
+
+@app.route('/listview.html')
+def listview():
+    return render_template("listview.html")
+
+@app.route('/profile.html')
+def profile():
+    return render_template("profile.html")
+
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
@@ -63,5 +66,4 @@ def logout():
     return redirect(url_for('show_entries'))
 
 if __name__ == '__main__':
-    print("hi")
     app.run()
