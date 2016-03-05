@@ -16,7 +16,7 @@ app.config.from_object(__name__)
 
 @app.route('/')
 def show_entries():
-    return render_template("indextest.html")
+    return render_template("login.html")
 
 @app.route('/listview.html')
 def listview():
@@ -29,19 +29,6 @@ def profile():
     mm.close_connection()
     return render_template("profile.html", category_names=cat_names)
 
-# static resources will be updated each run. namely, style.css
-@app.context_processor
-def override_url_for():
-    return dict(url_for=dated_url_for)
-
-def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
-        if filename:
-            file_path = os.path.join(app.root_path,
-                                     endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
-    return url_for(endpoint, **values)
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])

@@ -1,10 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Fooddy - Logging in...</title>
-</head>
-<body>
-    Log in dummy here.
-</body>
+<link rel="stylesheet" href="{{url_for('static', filename='dist/css/mobile-angular-ui-base.min.css')}}"/>
+
+<script src="{{url_for('static', filename='dist/js/mobile-angular-ui.min.js')}}">
+</script>
+
+
+<h1>Hi</h1>
+<div class="app-content">
+          <!-- ngView: undefined --><ng-view class="ng-scope">
+
+<div class="scrollable ng-scope">
+ <div class="scrollable-content section">
+
+  <form role="form" ng-submit="login()" class="ng-pristine ng-valid ng-valid-email">
+    <fieldset>
+      <legend>Login</legend>
+        <div class="form-group has-success has-feedback">
+          <label>Email</label>
+          <input type="email" ng-model="email" class="form-control ng-pristine ng-untouched ng-valid needsclick ng-valid-email" placeholder="Enter email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="pass5f word" class="form-control needsclick" placeholder="Password">
+        </div>
+
+        <div class="form-group">
+          <label>Remember Me</label>
+          <ui-switch ng-model="rememberMe" class="ng-pristine ng-untouched ng-valid ng-isolate-scope switch active switch-transition-enabled"><div class="switch-handle"></div></ui-switch>
+        </div>
+    </fieldset>
+    <hr>
+
+    <button class="btn btn-primary btn-block">
+      Login
+    </button>
+
+
+
+  </form>
+ </div>
+</div>
+</ng-view>
+        </div>
+
 </html>
