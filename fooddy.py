@@ -3,6 +3,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 import sqlite3
 import mysql_manager as mm
 from contextlib import closing
+import yelp_data_source
 
 
 # configuration
@@ -22,6 +23,10 @@ def index():
 @app.route('/login.html')
 def show_entries():
     return render_template("login.html")
+
+@app.route('/recme_temp')
+def show_yelp_results():
+    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10));
 
 @app.route('/listview.html')
 def listview():
