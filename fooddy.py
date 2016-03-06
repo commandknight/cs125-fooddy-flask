@@ -26,7 +26,11 @@ def show_entries():
 
 @app.route('/recme_temp')
 def show_yelp_results():
-    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10));
+    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10))
+
+@app.route('/restaurant/<restaurant_name>')
+def restaurant(restaurant_name):
+    return render_template("listview.html", restaurant_name = restaurant_name)
 
 @app.route('/listview.html')
 def listview():
