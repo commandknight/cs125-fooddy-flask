@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>List of Restaurants</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
 <body>
-<h3> Restaurants </h3>
-<ol>
-  <li>One</li>
-  <li>Two</li>
-  <li>Three</li>
-</ol>
+<!-- page 1-->
+<div data-role="page" id="listview_page">
+
+    <div data-role="header">
+        <div data-role="navbar"><ul><li><a href="/">Home</a></li></ul></div>
+    </div><!-- /header -->
+
+    <!-- for each restaurant
+        display one clickable div for the restaurant
+        with all essential yelp data
+    -->
+    You clicked {{ restaurant_name }}!
+
+</div> <!--/end listview_page-->
 </body>
 </html>

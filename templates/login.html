@@ -1,5 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<!-- page 1-->
+<div data-role="page" id="login_page">
+
+    <div data-role="header">
+        <div data-role="navbar"><ul><li><a href="/">Home</a></li></ul></div>
+    </div><!-- /header -->
+
+<fieldset data-role="control-group">
+    <h1>Login to Fooddy!</h1>
+    <label for="user_email">E-mail:</label>
+    <input type="email" id="user_email" class="required_email"/>
+
+    <label for="user_password">Password:</label>
+    <input type="password" id="user_password"/>
+
+    <form action="user_login.js" method="get">
+        <input type="submit" value="Submit"/>
+    </form>
+
+</fieldset>
+</div><!-- end of login_page-->
+</body>
+
+</html>
+
+{#
+<!DOCTYPE html>
+<html lang="en">
 <link rel="stylesheet" href="{{url_for('static', filename='dist/css/mobile-angular-ui-base.min.css')}}"/>
 
 <script src="{{url_for('static', filename='dist/js/mobile-angular-ui.min.js')}}">
@@ -45,4 +79,4 @@
 </ng-view>
         </div>
 
-</html>
+</html>#}
