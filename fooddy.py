@@ -4,6 +4,7 @@ import sqlite3
 import mysql_manager as mm
 from contextlib import closing
 import yelp_data_source
+import google_calendar_data_source
 
 
 # configuration
@@ -26,7 +27,9 @@ def show_entries():
 
 @app.route('/recme_temp')
 def show_yelp_results():
-    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10))
+    next_event_datetimeloc = google_calendar_data_source.get_next_event_timedateloc_on_google_calendar()
+    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10),
+                           next_event = next_event_datetimeloc)
 
 @app.route('/restaurant/<restaurant_name>')
 def restaurant(restaurant_name):
@@ -41,45 +44,6 @@ def profile():
     cat_names = mm.get_list_of_category_names()
     return render_template("profile.html", category_names=cat_names)
 
-# TODO: DO WE NEED THIS?? If not, please delete. [CA]
-# def connect_db():
-#     return sqlite3.connect(app.config['DATABASE'])
-#
-# def init_db():
-#     with closing(connect_db()) as db:
-#         with app.open_resource('schema.sql', mode='r') as f:
-#             db.cursor().executescript(f.read())
-#         db.commit()
-#
-# @app.before_request
-# def before_request():
-#     g.db = connect_db()
-#
-# @app.teardown_request
-# def teardown_request(exception):
-#     db = getattr(g, 'db', None)
-#     if db is not None:
-#         db.close()
-#
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != app.config['USERNAME']:
-#             error = 'Invalid username'
-#         elif request.form['password'] != app.config['PASSWORD']:
-#             error = 'Invalid password'
-#         else:
-#             session['logged_in'] = True
-#             flash('You were logged in')
-#             return redirect(url_for('show_entries'))
-#     return render_template('login.html', error=error)
-#
-# @app.route('/logout')
-# def logout():
-#     session.pop('logged_in', None)
-#     flash('You were logged out')
-#     return redirect(url_for('show_entries'))
 
 if __name__ == '__main__':
     app.run()
