@@ -14,16 +14,14 @@
     </div><!-- /header -->
 
         <fieldset data-role="controlgroup">
-          {% for category in category_names %}
-              <form>
+            <!-- changing code to a single form to submit -->
+            <form id="category_question" action="{{ url_for('upload_categories') }}" method="POST">
+                {% for category in category_names %}
                 <label>
                     <input type="checkbox" name=" {{ "checkbox-" + category[0] }}">{{ category[0] }}
                 </label>
-              </form>
-          {% endfor %}
-
-            <form action="listview.html">
-                <input type="submit" value="Submit!">
+                {% endfor %}
+               <input type="submit" value="Submit!">
             </form>
         </fieldset>
 
