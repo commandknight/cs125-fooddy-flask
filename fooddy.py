@@ -21,7 +21,6 @@ app.config.from_object(__name__)
 def index():
     return render_template("index.html")
 
-
 @app.route('/login.html')
 def show_entries():
     return render_template("login.html")
@@ -34,16 +33,18 @@ def show_yelp_results():
                            next_event = next_event_datetimeloc)
 """
 
+#TODO: recme_temp for now so that link actually works. Comment this out when you're done testing show_yelp_results()
+@app.route('/recme_temp')
+def recommended():
+    return render_template("rec_temp.html", list_results= yelp_data_source.get_results_from_locations(10))
 
 @app.route('/restaurant/<restaurant_name>')
 def restaurant(restaurant_name):
     return render_template("listview.html", restaurant_name = restaurant_name)
 
-
 @app.route('/listview.html')
 def listview():
     return render_template("listview.html")
-
 
 @app.route('/profile.html')
 def profile():
@@ -54,9 +55,8 @@ def profile():
 @app.route('/upload', methods=['POST'])
 def upload():
     print("Trying to upload categories")
-    print(request.form)
-    return redirect('/')
-
+    #for each category in form
+    return redirect("/", code=302)
 
 @app.route('/test_data')
 def test_data():
