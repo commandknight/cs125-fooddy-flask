@@ -46,12 +46,12 @@ def profile():
     cat_names = mm.get_list_of_category_names()
     return render_template("profile.html", category_names=cat_names)
 
-"""
+
 @app.route('/upload')
 def upload():
     print("Trying to upload categories")
     return redirect('index.html')
-"""
+
 
 if __name__ == '__main__':
     app.run()
