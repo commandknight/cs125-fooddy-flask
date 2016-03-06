@@ -12,10 +12,9 @@
     <div data-role="header">
         <div data-role="navbar"><ul><li><a href="/">Home</a></li></ul></div>
     </div><!-- /header -->
-
         <fieldset data-role="controlgroup">
             <!-- changing code to a single form to submit -->
-            <form id="category_question" action="{{ url_for('upload_categories') }}" method="POST">
+            <form id="category_question" action="{{ url_for('upload') }}" method="POST">
                 {% for category in category_names %}
                 <label>
                     <input type="checkbox" name=" {{ "checkbox-" + category[0] }}">{{ category[0] }}
@@ -24,11 +23,6 @@
                <input type="submit" value="Submit!">
             </form>
         </fieldset>
-
 </div><!--/end profile_page-->
-
-
-
-
 </body>
 </html>
