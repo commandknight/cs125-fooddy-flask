@@ -47,11 +47,11 @@ def profile():
     return render_template("profile.html", category_names=cat_names)
 
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 def upload():
     print("Trying to upload categories")
-    return redirect('index.html')
-
+    #for each category in form
+    return redirect("/", code=302)
 
 if __name__ == '__main__':
     app.run()
