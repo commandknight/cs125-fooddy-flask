@@ -29,7 +29,7 @@ def show_entries():
 @app.route('/recme_temp')
 def show_yelp_results():
     next_event_datetimeloc = google_calendar_data_source.get_next_event_timedateloc_on_google_calendar()
-    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_location(10),
+    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_locations(10),
                            next_event = next_event_datetimeloc)
 """
 

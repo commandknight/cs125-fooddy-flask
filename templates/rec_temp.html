@@ -12,6 +12,9 @@
     <div data-role="header">
         <div data-role="navbar"><ul><li><a href="/">Home</a></li></ul></div>
     </div><!-- /header -->
+            {% for bus in list_results %}
+                  <li>{{ bus[0] }}</li>
+            {%endfor%}
 
 <ul data-role="listview">
     {% for bus in list_results %}
@@ -20,4 +23,4 @@
 </ul>
 </div> <!--/end rec_page-->
 </body>
-</html>
+</html> 
