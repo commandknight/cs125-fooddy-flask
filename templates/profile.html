@@ -18,7 +18,6 @@
             <form id="category_question" action="{{ url_for('upload_categories') }}" method="POST">
                 {% for category in category_names %}
                 <label>
-                    <input type="checkbox" name=" {{ "checkbox-" + category[0] }}">{{ category[0] }}
                 </label>
                 {% endfor %}
                <input type="submit" value="Submit!">
