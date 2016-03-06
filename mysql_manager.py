@@ -20,7 +20,6 @@ config = {
 
 cnx = mysql.connector.connect(**config)
 
-
 def get_list_of_category_names():
     """
     Function to return list of category names as list(tuples(string,))
@@ -31,6 +30,31 @@ def get_list_of_category_names():
     result = curr.fetchall()
     curr.close()
     return result
+
+
+def get_category_dict():
+    print("making dict")
+    curr = cnx.cursor()
+    curr.execute('SELECT category_id, category_name From Categories')
+    result = curr.fetchall()
+    curr.close()
+    category_dict = {};
+    for tup in result:
+        category_dict[tup[1]] = tup[0]
+    return category_dict;
+
+
+def get_category_name_to_alias_dict():
+    print("making alias dict")
+    curr = cnx.cursor()
+    curr.execute('SELECT category_alias, category_name From Categories')
+    result = curr.fetchall()
+    curr.close()
+    name_to_alias_dict = {};
+    for tup in result:
+        name_to_alias_dict[tup[1]] = tup[0]
+    return name_to_alias_dict;
+
 
 
 def get_list_of_category_alias():

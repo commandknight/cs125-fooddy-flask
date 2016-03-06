@@ -21,6 +21,7 @@ app.config.from_object(__name__)
 def index():
     return render_template("index.html")
 
+
 @app.route('/login.html')
 def show_entries():
     return render_template("login.html")
@@ -33,13 +34,16 @@ def show_yelp_results():
                            next_event = next_event_datetimeloc)
 """
 
+
 @app.route('/restaurant/<restaurant_name>')
 def restaurant(restaurant_name):
     return render_template("listview.html", restaurant_name = restaurant_name)
 
+
 @app.route('/listview.html')
 def listview():
     return render_template("listview.html")
+
 
 @app.route('/profile.html')
 def profile():
@@ -47,11 +51,18 @@ def profile():
     return render_template("profile.html", category_names=cat_names)
 
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 def upload():
     print("Trying to upload categories")
-    return redirect('index.html')
+    print(request.form)
+    return redirect('/')
 
+
+@app.route('/test_data')
+def test_data():
+    data=yelp_data_source.get_restaurant_vectors_by_query(['Italian'])
+    print(data)
+    return render_template("testdata.html")
 
 if __name__ == '__main__':
     app.run()

@@ -4,6 +4,9 @@ import math;
 import time;
 import urllib;
 import json;
+import mysql_manager as mm
+import numpy as np;
+import scipy as sp;
 
 consumer_key = 'EXZNRAR-epLUvS7LnuwqNg'
 consumer_secret = 'JTZY_0nE8ohfazCK-e_hP_aHhDs'
@@ -14,29 +17,18 @@ google_places_key="AIzaSyBrElDm-bOxHup93M1QLfWXYjpYYoReGjg"
 
 yelp_api = YelpAPI(consumer_key, consumer_secret, token, token_secret)
 
-# deprecated
-'''
-def get_results_from_location(num_of_results, location="37.77493,-122.419415", limit = 20):
-    iterations = math.ceil(num_of_results / limit);
-    responses = [];
-    print(iterations)
-    for i in range(iterations):
-        time.sleep(.5)
-        response = yelp_api.search_query(category_filter='italian', location="SanFrancisco", offset=limit*i, cll=location, limit=limit)
-        responses += response['businesses'] #list
-    return responses;
-'''
+category_dict = mm.get_category_dict();
+num_categories = len(category_dict)
+category_name_to_alias_dict = mm.get_category_name_to_alias_dict();
 
-
-
-def get_location_from_coordinates(long,lat) -> str:
+def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)
     RADIUS = 1;
     MyUrl = ('https://maps.googleapis.com/maps/api/place/nearbysearch/json'
            '?location=%s'
            '&radius=%s'
            '&key=%s') % (LOCATION, RADIUS, google_places_key)
-    #grabbing the JSON result
+    # grabbing the JSON result
     response = urllib.request.urlopen(MyUrl)
     jsonRaw = response.read().decode("utf-8")
     jsonData = json.loads(jsonRaw)
@@ -47,9 +39,9 @@ def get_location_from_coordinates(long,lat) -> str:
 
 
 # pass in a list of tuples for locations. Default is SF and San Jose
-def get_results_from_locations(num_of_results, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], limit = 20):
+# category_filter is a list of category names
+def get_results_from_locations(category_filter, num_of_results=40, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], limit = 20):
     # parse location if two locations given
-
     loc_coords = "";
     location = "";
     if len(coords) == 2:
@@ -71,15 +63,43 @@ def get_results_from_locations(num_of_results, coords=[(37.77493,-122.419415) , 
 
     else:
         raise Exception("Please provide no more than two location coordinate sets");
-
     iterations = math.ceil(num_of_results / limit);
+
+    aliases = ''
+    for category in category_filter:
+        aliases += category_name_to_alias_dict[category] + ','
+    aliases = aliases[:-1]  # strip the last comma
+
     responses = [];
     for i in range(iterations):
         time.sleep(.5)
-        response = yelp_api.search_query(category_filter='italian', location=location, offset=limit*i, cll=loc_coords, limit=limit)
-        responses += response['businesses'] #list
+        response = yelp_api.search_query(category_filter=aliases, location=location, offset=limit*i, cll=loc_coords, limit=limit)
+        responses += response['businesses']  # list
     return responses;
 
+
+# return weight vectors for each restaurant
+def restaurant_vector(business):
+    vec = np.zeros(num_categories);
+    for category_list_item in business['categories']:
+        category = category_list_item[0]
+        print(category)
+        vec[category_dict[category]] = 1;
+    return vec
+
+
+def get_all_restaurant_vectors_from_list_businesses(list_businesses):
+    list_vecs = [];
+    for bus in list_businesses:
+        list_vecs.append(restaurant_vector(bus));
+    return list_vecs
+
+
+def get_restaurant_vectors_by_query(category_filter):
+    list_businesses = get_results_from_locations(category_filter)
+    a=  get_all_restaurant_vectors_from_list_businesses(list_businesses)
+    print("hehe")
+    return a
 
 
 if __name__ == '__main__':
