@@ -33,6 +33,11 @@ def show_yelp_results():
                            next_event = next_event_datetimeloc)
 """
 
+#TODO: recme_temp for now so that link actually works. Comment this out when you're done testing show_yelp_results()
+@app.route('/recme_temp')
+def recommended():
+    return render_template("rec_temp.html", list_results= yelp_data_source.get_results_from_locations(10))
+
 @app.route('/restaurant/<restaurant_name>')
 def restaurant(restaurant_name):
     return render_template("listview.html", restaurant_name = restaurant_name)
