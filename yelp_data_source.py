@@ -6,7 +6,28 @@ import urllib;
 import json;
 import mysql_manager as mm
 import numpy as np;
-import scipy as sp;
+
+
+class YelpData:
+
+    def __init__(self, business):
+        self.restaurant_info = business;
+        self.restaurant_vector = self.__get_restaurant_vector();
+        self.cosine_sim = -1;
+
+
+    # TODO: remove conditional after category table is fixed
+    # return weight vectors for restaurant
+    def __get_restaurant_vector(self):
+        vec = np.zeros(num_categories);
+        for category_list_item in self.restaurant_info['categories']:
+            category = category_list_item[0]
+            print(category)
+            if(category in category_dict.keys()):
+                vec[category_dict[category]] = 1;
+        return vec;
+
+
 
 consumer_key = 'EXZNRAR-epLUvS7LnuwqNg'
 consumer_secret = 'JTZY_0nE8ohfazCK-e_hP_aHhDs'
@@ -40,7 +61,7 @@ def get_location_from_coordinates(long, lat) -> str:
 
 # pass in a list of tuples for locations. Default is SF and San Jose
 # category_filter is a list of category names
-def get_results_from_locations(category_filter, num_of_results=40, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], limit = 20):
+def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], num_of_results=40 , limit = 20):
     # parse location if two locations given
     loc_coords = "";
     location = "";
@@ -78,29 +99,16 @@ def get_results_from_locations(category_filter, num_of_results=40, coords=[(37.7
     return responses;
 
 
-# return weight vectors for each restaurant
-def restaurant_vector(business):
-    vec = np.zeros(num_categories);
-    for category_list_item in business['categories']:
-        category = category_list_item[0]
-        print(category)
-        vec[category_dict[category]] = 1;
-    return vec
-
-
-def get_all_restaurant_vectors_from_list_businesses(list_businesses):
-    list_vecs = [];
+def get_yelp_data(list_businesses):
+    list_yelp_data = [];
     for bus in list_businesses:
-        list_vecs.append(restaurant_vector(bus));
-    return list_vecs
+        list_yelp_data.append(YelpData(bus));
+    return list_yelp_data
 
 
-def get_restaurant_vectors_by_query(category_filter):
-    list_businesses = get_results_from_locations(category_filter)
-    a=  get_all_restaurant_vectors_from_list_businesses(list_businesses)
-    print("hehe")
-    return a
-
+def get_restaurant_vectors_by_query(category_filter, coords):
+    list_businesses = get_results_from_locations(category_filter, coords=coords)
+    return get_yelp_data(list_businesses)
 
 if __name__ == '__main__':
     results = get_results_from_locations(40)

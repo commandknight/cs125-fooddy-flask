@@ -33,14 +33,11 @@ def get_list_of_category_names():
 
 
 def get_category_dict():
-    print("making dict")
-    curr = cnx.cursor()
-    curr.execute('SELECT category_id, category_name From Categories')
-    result = curr.fetchall()
-    curr.close()
     category_dict = {};
-    for tup in result:
-        category_dict[tup[1]] = tup[0]
+    print("making dict")
+    result = get_list_of_category_names();
+    for idx,tup in enumerate(result):
+        category_dict[tup[0]] = idx
     return category_dict;
 
 
