@@ -18,6 +18,21 @@ config = {
 
 cnx = mysql.connector.connect(**config)
 
+
+def get_list_categories_for_profile_edit(user_name):
+    """
+    Function that returns tuple of (Category_Name,liked)
+    :param user_name: username to get liked categories of
+    :return: List(Tuple(String,Boolean)) ex: ('Italian',True)
+    """
+    category_names = get_list_of_category_names()
+    categories_liked = get_list_of_category_names_user_likes(username=user_name)
+    result = []
+    for category in category_names:
+        result.append((category[0],True if category in categories_liked else False))
+    return result
+
+
 def get_list_of_category_names():
     """
     Function to return list of category names as list(tuples(string,))

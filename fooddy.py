@@ -49,7 +49,7 @@ def listview():
 
 @app.route('/profile.html')
 def profile():
-    cat_names = mm.get_list_of_category_names()
+    cat_names = mm.get_list_categories_for_profile_edit('jeet')
     return render_template("profile.html", category_names=cat_names)
 
 

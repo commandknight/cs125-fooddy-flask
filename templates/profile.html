@@ -15,9 +15,14 @@
         <fieldset data-role="controlgroup">
             <!-- changing code to a single form to submit -->
             <form id="category_question" action="{{ url_for('upload') }}" method="POST">
-                {% for category in category_names %}
+                {% for category_name,liked in category_names %}
                 <label>
-                    <input type="checkbox" value="{{category[0]}}", name="checkbox">{{ category[0] }}
+                     {%  if liked == True %}
+                        <input type="checkbox" value="{{ category_name }}" name="checkbox" checked> {{ category_name }}
+                     {% else %}
+                         <!-- category is not liked -->
+                        <input type="checkbox" value="{{ category_name }}" name="checkbox"> {{ category_name }}
+                     {% endif %}
                 </label>
                 {% endfor %}
                <input type="submit" value="Submit!">
