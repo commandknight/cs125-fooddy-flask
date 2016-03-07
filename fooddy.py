@@ -49,6 +49,7 @@ def listview():
 
 @app.route('/profile.html')
 def profile():
+    # TODO: Need to pass in correct user!, using 'jeet' in the mean time
     cat_names = mm.get_list_categories_for_profile_edit('jeet')
     return render_template("profile.html", category_names=cat_names)
 
