@@ -3,8 +3,6 @@ Created by Jeet Nagda
 To Use: please import right before you call it, and close immediately after finish
 import mysql_manager as mm
 result = mm.get_list....
-mm.close_connection()
-
 """
 
 import mysql.connector
@@ -47,10 +45,10 @@ def get_category_name_to_alias_dict():
     curr.execute('SELECT category_alias, category_name From Categories')
     result = curr.fetchall()
     curr.close()
-    name_to_alias_dict = {};
+    name_to_alias_dict = {}
     for tup in result:
         name_to_alias_dict[tup[1]] = tup[0]
-    return name_to_alias_dict;
+    return name_to_alias_dict
 
 
 

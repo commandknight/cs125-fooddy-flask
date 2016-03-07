@@ -42,6 +42,7 @@ category_dict = mm.get_category_dict();
 num_categories = len(category_dict)
 category_name_to_alias_dict = mm.get_category_name_to_alias_dict();
 
+
 def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)
     RADIUS = 1;
@@ -56,7 +57,6 @@ def get_location_from_coordinates(long, lat) -> str:
     # parse for location name i.e. San Francisco
     location_name = jsonData['results'][0]['vicinity']
     return location_name
-
 
 
 # pass in a list of tuples for locations. Default is SF and San Jose
