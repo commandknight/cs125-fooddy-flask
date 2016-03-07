@@ -153,10 +153,9 @@ def insert_new_user_profile(username,password):
     curr.close()
 
 
-
-def update_category_weight(user_name,category_name,weight):
+def init_category_weight_if_not_present(user_name,category_name,weight):
     """
-    Function to INSERT or UPDATE UserWeight for given category_alias and weight
+    Function to INSERT or IGNORE UserWeight for given category_name and weight
     :param user_name: string UserName of UserWeight to update/insert
     :param category_name: String alias of category weight to update
     :param weight: Double of the weight to insert
@@ -164,9 +163,25 @@ def update_category_weight(user_name,category_name,weight):
     """
     curr = cnx.cursor()
     sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
+                                   'VALUES (%s,(SELECT category_id FROM Categories WHERE category_name = %s),%s)'
+    curr.execute(sql_insert_update_UserWeight,(user_name,category_name,weight))
+    cnx.commit()
+    curr.close()
+
+
+def update_category_alias_weight(user_name,category_alias,weight):
+    """
+    Function to INSERT or UPDATE UserWeight for given category_alias and weight
+    :param user_name: string UserName of UserWeight to update/insert
+    :param category_alias: String alias of category weight to update
+    :param weight: Double of the weight to insert
+    :return: None
+    """
+    curr = cnx.cursor()
+    sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
                                    'VALUES (%s,(SELECT category_id FROM Categories WHERE category_name = %s),%s) ' \
                                    'ON DUPLICATE KEY UPDATE weight = %s'
-    curr.execute(sql_insert_update_UserWeight,(user_name,category_name,weight,weight))
+    curr.execute(sql_insert_update_UserWeight,(user_name,category_alias,weight,weight))
     cnx.commit()
     curr.close()
 

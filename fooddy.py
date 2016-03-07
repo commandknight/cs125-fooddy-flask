@@ -55,8 +55,12 @@ def profile():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    print("Trying to upload categories")
-    #for each category in form
+    print("Trying to upload categories for user profile")
+    selected_categories = request.form.getlist('checkbox')
+    # print(selected_categories) #DEBUG
+    for cat_name in selected_categories:
+        # TODO: Need to pass in correct user!, using 'jeet' in the mean time
+        mm.init_category_weight_if_not_present('jeet',cat_name,1.0)
     return redirect("/", code=302)
 
 @app.route('/test_data')
