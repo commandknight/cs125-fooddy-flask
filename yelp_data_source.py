@@ -11,9 +11,9 @@ import numpy as np;
 class YelpData:
 
     def __init__(self, business):
-        self.restaurant_info = business;
-        self.restaurant_vector = self.__get_restaurant_vector();
-        self.cosine_sim = -1;
+        self.restaurant_info = business;  # dictionary information for the restaurant/business
+        self.restaurant_vector = self.__get_restaurant_vector(); # restaurant weights
+        self.cosine_sim = -1; # cosine simlarity.
 
 
     # TODO: remove conditional after category table is fixed

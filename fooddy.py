@@ -5,6 +5,7 @@ import mysql_manager as mm
 from contextlib import closing
 import yelp_data_source
 #import google_calendar_data_source
+import ranker
 
 
 # configuration
@@ -60,7 +61,7 @@ def upload():
 
 @app.route('/test_data')
 def test_data():
-    data=yelp_data_source.get_restaurant_vectors_by_query(['Italian'])
+    data=ranker.get_ranking_by_cosine("terry",['Italian']) # need to first update the weights of the user though.
     print(data)
     return render_template("testdata.html")
 

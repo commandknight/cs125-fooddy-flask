@@ -15,7 +15,7 @@ def get_user_weights_vector(username):
 
 # coords is a list of long lat tuples. (1 or 2))
 # category filter is a list of string categories
-# returns a list of YelpData
+# returns a list of YelpData sorted by the most similar to the least
 def get_ranking_by_cosine(username, category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)]):
     list_yelp_data = ydp.get_restaurant_vectors_by_query(category_filter,coords);
     user_weight_vec = get_user_weights_vector(username);
