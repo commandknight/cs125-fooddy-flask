@@ -34,18 +34,19 @@ def show_yelp_results():
                            next_event = next_event_datetimeloc)
 """
 
-#TODO: recme_temp for now so that link actually works. Comment this out when you're done testing show_yelp_results()
-@app.route('/recme_temp')
+@app.route('/recommended')
 def recommended():
-    return render_template("rec_temp.html", list_results= yelp_data_source.get_results_from_locations(["Italian"]))
+    # Right now, we are using a static category_filter=["Italian"],
+    # TODO: later use the user's checked categories.
+    return render_template("rec_temp.html", list_results= yelp_data_source.get_results_from_locations(category_filter=["Italian"]))
 
-@app.route('/restaurant/<restaurant_name>')
-def restaurant(restaurant_name):
-    return render_template("listview.html", restaurant_name = restaurant_name)
 
-@app.route('/listview.html')
-def listview():
-    return render_template("listview.html")
+# This is used AFTER we display recme_temp (list of restaurants)
+@app.route('/restaurant/<restaurant_id>')
+def restaurant(restaurant_id):
+    business = yelp_data_source.get_business_by_id(restaurant_id) #this is a dictionary
+    return render_template("restaurant.html", business= business)
+
 
 @app.route('/profile.html')
 def profile():

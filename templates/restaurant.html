@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<!-- page 1-->
+<div data-role="page" id="restaurant_page">
+
+    <div data-role="header">
+        <div data-role="navbar"><ul><li><a href="/">Fooddy Home</a></li></ul></div>
+    </div><!-- /header -->
+
+
+{#    You clicked {{ business["name"], business["location"] }}!#}
+    <div data-role="ui-grid-solo">Hey! You want to eat at {{ business['name'] }}?</div>
+    <div data-role="ui-grid-solo">Address: <br/>{{ business['location']['display_address'] }}</div>
+    <div data-role="ui-grid-solo">Phone:<br/>{{ business['phone'] }}</div>
+
+
+    <div data-role="footer" data-position="fixed">Restaurant information brought to you by Yelp!</div>
+</div> <!--/end restaurant_page-->
+
+
+</body>
+</html>

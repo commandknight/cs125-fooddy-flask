@@ -43,6 +43,11 @@ num_categories = len(category_dict)
 category_name_to_alias_dict = mm.get_category_name_to_alias_dict();
 
 
+# Query the Yelp API for a Business, by passing restaurant_id.
+def get_business_by_id(restaurant_id):
+    response = yelp_api.business_query(id=restaurant_id)
+    return response #returns a Yelp BUSINESS dictionary with keys: name, id, location, etc.
+
 def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)
     RADIUS = 1;
