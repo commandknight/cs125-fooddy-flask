@@ -9,9 +9,16 @@
 <body>
 <div data-role="page" id="profile_page">
 
-    <div data-role="header">
-        <div data-role="navbar"><ul><li><a href="/">Fooddy Home</a></li></ul></div>
-    </div><!-- /header -->
+    <div data-role="header" style="overflow:hidden;" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/"><img src="../static/assets/fooddy_logo.png" height="50px"/></a></li>
+            </ul>
+        </div><!--/navbar-->
+        <center>Tell me what you like!</center>
+    </div><!--/header-->
+
+
         <fieldset data-role="controlgroup">
             <!-- changing code to a single form to submit -->
             <form id="category_question" action="{{ url_for('upload') }}" method="POST">
@@ -28,6 +35,11 @@
                <input type="submit" value="Submit!">
             </form>
         </fieldset>
+
+    <div data-role="footer" data-position="fixed">
+        <center>Categories from <img src="../static/assets/yelp/yelp-logo-small.png" />.</center>
+    </div><!--/footer-->
+
 </div><!--/end profile_page-->
 </body>
 </html>

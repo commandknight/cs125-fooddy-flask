@@ -9,12 +9,17 @@
 <!-- page 1-->
 <div data-role="page" id="login_page">
 
-    <div data-role="header">
-        <div data-role="navbar"><ul><li><a href="/">Fooddy Home</a></li></ul></div>
-    </div><!-- /header -->
+    <div data-role="header" style="overflow:hidden;" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/"><img src="../static/assets/fooddy_logo.png" height="50px"/></a></li>
+            </ul>
+        </div><!--/navbar-->
+        <center>Login to Fooddy!</center>
+    </div><!--/header-->
 
 <fieldset data-role="control-group">
-    <h1>Login to Fooddy!</h1>
+    <h3>Hey! Have you met Fooddy? :)</h3>
     <label for="user_email">E-mail:</label>
     <input type="email" id="user_email" class="required_email"/>
 
@@ -26,6 +31,10 @@
     </form>
 
 </fieldset>
+
+    <div data-role="footer" data-position="fixed">
+        <center>Fooddy is glad to meet you.</center>
+    </div><!--/footer-->
 </div><!-- end of login_page-->
 </body>
 
