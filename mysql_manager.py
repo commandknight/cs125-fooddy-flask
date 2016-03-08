@@ -208,6 +208,19 @@ def update_category_alias_weight(user_name,category_alias,weight):
     curr.close()
 
 
+def reset_user_profile(user_name):
+    """
+    Function to reset user profile for a given user name
+    :param user_name: String of user to reset
+    :return: None
+    """
+    curr = cnx.cursor()
+    sql_reset_user = 'DELETE FROM UserWeights WHRE user_name = %s'
+    curr.execute(sql_reset_user, (user_name))
+    cnx.commit()
+    curr.close()
+
+
 def close_connection():
     """
     Function to close connection to MySQL Database
