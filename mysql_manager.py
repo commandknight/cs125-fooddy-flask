@@ -29,7 +29,7 @@ def get_list_categories_for_profile_edit(user_name):
     categories_liked = get_list_of_category_names_user_likes(username=user_name)
     result = []
     for category in category_names:
-        result.append((category[0],True if category in categories_liked else False))
+        result.append((category[0],True if category[0] in categories_liked else False))
     return result
 
 
@@ -100,7 +100,7 @@ def get_list_of_category_names_user_likes(username):
                  'AND UserProfile.user_name = %s',(username,))
     result = curr.fetchall()
     curr.close()
-    return result
+    return [x[0] for x in result]
 
 
 def get_category_weights_for_user(username):
