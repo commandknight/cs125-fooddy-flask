@@ -18,23 +18,27 @@
         <center>Tell me what you like!</center>
     </div><!--/header-->
 
-
-        <fieldset data-role="controlgroup">
+<form>
+  <input type="text" data-type="search" id="filterable-input">
+</form>
+        <!--<fieldset data-role="controlgroup" data-filter="true">-->
             <!-- changing code to a single form to submit -->
-            <form id="category_question" action="{{ url_for('upload') }}" method="POST">
-                {% for category_name,liked in category_names %}
-                <label>
-                     {%  if liked == True %}
-                        <input type="checkbox" value="{{ category_name }}" name="checkbox" checked> {{ category_name }}
-                     {% else %}
-                         <!-- category is not liked -->
-                        <input type="checkbox" value="{{ category_name }}" name="checkbox"> {{ category_name }}
-                     {% endif %}
-                </label>
-                {% endfor %}
-               <input type="submit" value="Submit!">
-            </form>
-        </fieldset>
+    <form id="category_question" action="{{ url_for('upload') }}" method="POST"
+          data-role="controlgroup" data-filter="true" data-input="#filterable-input">
+        {% for category_name,liked in category_names %}
+        
+             {%  if liked == True %}
+                <input type="checkbox" id="{{ category_name }}" name="checkbox" value="{{ category_name }}" checked />
+             {% else %}
+                 <!-- category is not liked -->
+                <input type="checkbox" id="{{ category_name }}" name="checkbox" value="{{ category_name }}"/>
+             {% endif %}
+            <label for="{{ category_name }}">{{ category_name }}</label>
+        {% endfor %}
+        <input type="submit" value="Submit!" />
+    </form>
+
+        <!--</fieldset>-->
 
     <div data-role="footer" data-position="fixed">
         <center>Categories from <img src="../static/assets/yelp/yelp-logo-small.png" />.</center>
