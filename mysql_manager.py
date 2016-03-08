@@ -46,25 +46,32 @@ def get_list_of_category_names():
 
 
 def get_category_dict():
-    category_dict = {};
+    """
+    function to make dictionary of category names -> id
+    :return: Dictionary{Key: String(Category_Name), Value: Int(Category_ID)}
+    """
+    category_dict = {}
     print("making dict")
-    result = get_list_of_category_names();
+    result = get_list_of_category_names()
     for idx,tup in enumerate(result):
         category_dict[tup[0]] = idx
-    return category_dict;
+    return category_dict
 
 
 def get_category_name_to_alias_dict():
+    """
+    function to make dictionary of category name -> alias
+    :return: Dictionary{Key: String(category_name), Value: String category_alias}
+    """
     print("making alias dict")
     curr = cnx.cursor()
     curr.execute('SELECT category_alias, category_name From Categories')
     result = curr.fetchall()
     curr.close()
     name_to_alias_dict = {}
-    for tup in result:
-        name_to_alias_dict[tup[1]] = tup[0]
+    for category_alias,category_name in result:
+        name_to_alias_dict[category_name] = category_alias
     return name_to_alias_dict
-
 
 
 def get_list_of_category_alias():
