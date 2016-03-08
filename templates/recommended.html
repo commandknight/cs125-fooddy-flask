@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="rec_page">
+
+    <div data-role="header" style="overflow:hidden;" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/"><img src="../static/assets/fooddy_logo.png" height="50px"/></a></li>
+            </ul>
+        </div><!--/navbar-->
+        <center>Recommended for you :)</center>
+    </div><!--/header-->
+
+<ul data-role="listview">
+    {% for bus in list_results %}
+        <li><a href="restaurant/{{ bus['id'] }}">{{ bus['name'] }}</a></li>
+    {%endfor%}
+</ul>
+
+<div data-role="footer" data-position="fixed">
+<center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
+</div>
+
+</div> <!--/end rec_page-->
+</body>
+</html>
