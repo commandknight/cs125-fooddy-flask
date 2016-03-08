@@ -35,12 +35,19 @@
              {% endif %}
             <label for="{{ category_name }}">{{ category_name }}</label>
         {% endfor %}
-        <input type="submit" value="Submit!" />
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><input type="reset" name="reset_button" value="Reset my profile."></div>
+            <div class="ui-block-b"><input type="submit" name="submit_button" value="Submit!"></div>
+        </fieldset>
     </form>
+{#    <form id="reset_profile" >#}
+{#        <!-- TODO: Jeet to add action="DELETE_FUNCTION_ON_FOODDY_PY"-->#}
+{#        <input type="submit" value="Reset my profile." />#}
+{#    </form>#}
 
         <!--</fieldset>-->
 
-    <div data-role="footer" data-position="fixed">
+    <div data-role="footer" data-position="fixed" style="height:40px">
         <center>Categories from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
     </div><!--/footer-->
 

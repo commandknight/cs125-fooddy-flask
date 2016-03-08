@@ -38,7 +38,8 @@ def show_yelp_results():
 def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
-    return render_template("recommended.html", list_results= yelp_data_source.get_results_from_locations(category_filter=["Italian"]))
+    user_categories = mm.get_list_of_category_names_user_likes("jeet")
+    return render_template("recommended.html", list_results= yelp_data_source.get_results_from_locations(user_categories))
 
 
 # This is used AFTER we display recme_temp (list of restaurants)
