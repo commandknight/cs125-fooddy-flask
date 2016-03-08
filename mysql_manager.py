@@ -216,7 +216,7 @@ def reset_user_profile(user_name):
     """
     curr = cnx.cursor()
     sql_reset_user = 'DELETE FROM UserWeights WHRE user_name = %s'
-    curr.execute(sql_reset_user, (user_name))
+    curr.execute(sql_reset_user, (user_name,))
     cnx.commit()
     curr.close()
 
