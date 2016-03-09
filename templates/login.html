@@ -20,6 +20,9 @@
 
     <fieldset data-role="control-group">
         <h3>Hey! Have you met Fooddy? :)</h3>
+        {% if error_msg %}
+            <h1>{{ error_msg }}</h1>
+        {% endif %}
         <form id="login_form" action="{{ url_for('login') }}" method="POST">
             <label for="user_name">Username:</label>
             <input type="text" name="user_name"/>

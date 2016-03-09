@@ -1,21 +1,13 @@
-import sqlite3
-import mysql_manager as mm
-from contextlib import closing
-import yelp_data_source
-import google_calendar_data_source
-import ranker
-import json
-from googleapiclient.discovery import build_from_document
-from googleapiclient.discovery import build
-import httplib2
-import random
+from flask import Flask, render_template, session, request, redirect, url_for, session
+from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager, UserMixin
 from oauth2client.client import OAuth2WebServerFlow
 
-from flask import Flask, render_template, session, request, redirect, url_for, abort
+import google_calendar_data_source
+import mysql_manager as mm
+import yelp_data_source
+from models.UserModel import User
 
-
-# configuration
-DATABASE = '/tmp/fooddy.db'
+# app configuration
 DEBUG = False
 SECRET_KEY = 'development_key'
 USERNAME = 'admin'
@@ -23,37 +15,72 @@ PASSWORD = 'uci'
 CLIENT_ID = "113602676382-vom8i9393ldj0vcuk32emk3c4elf20vo.apps.googleusercontent.com"
 CLIENT_SECRET = "xdXnSkdHanL361tPp4AZU2HU"
 
-
+# App Init
 app = Flask(__name__)
 app.config.from_object(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
+
+# Helper Functions
+@login_manager.user_loader
+def user_loader(user_name):
+    temp_user = mm.get_user(user_name)
+    if temp_user is not None:
+        return User(temp_user)
+    return None
+
+
+# HOME PAGE
 @app.route('/')
 def index():
     return render_template("index.html")
 
-#@app.route('/login.html')
-#def show_entries():
-#    return render_template("login.html")
+""" GOOGLE LOGIN """
+# @app.route('/login')
+# def login():
+#   flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
+#     client_secret=CLIENT_SECRET,
+#     scope='https://www.googleapis.com/auth/calendar',
+#     redirect_uri='http://localhost:5000/oauth2callback',
+#     approval_prompt='force',
+#     access_type='offline')
+#   auth_uri = flow.step1_get_authorize_url()
+#   return redirect(auth_uri)
+""" GOOGLE SIGNOUT """
+# @app.route('/signout')
+# def signout():
+#   del session['credentials']
+#   session['message'] = "You have logged out"
+#   return redirect(url_for('index'))
 
 
-@app.route('/login')
+@app.route("/login", methods=["GET", "POST"])
 def login():
-  flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    scope='https://www.googleapis.com/auth/calendar',
-    redirect_uri='http://localhost:5000/oauth2callback',
-    approval_prompt='force',
-    access_type='offline')
+    if request.method == 'POST':
+        user_name = request.form['user_name']
+        form_password = request.form['user_password']
+        user = mm.get_user(user_name)
+        if user:
+            muser = User(user)
+            if muser.password == form_password:
+                print(muser)
+                login_user(muser)
+                return redirect(request.args.get('next') or url_for('index'))
+            else:
+                print("ERROR in logging in")
+                return render_template("login.html", error_msg="You entered a wrong password, please try again")
+        else:
+            return render_template("login.html", error_msg="Unknown username, please try again")
+    return render_template("login.html")
 
-  auth_uri = flow.step1_get_authorize_url()
-  return redirect(auth_uri)
 
-@app.route('/signout')
-def signout():
-  del session['credentials']
-  session['message'] = "You have logged out"
-
-  return redirect(url_for('index'))
+@app.route("/logout", methods=["GET"])
+@login_required
+def logout():
+    """Logout the current user."""
+    logout_user()
+    return render_template("logout.html")
 
 
 @app.route('/oauth2callback')
@@ -104,6 +131,7 @@ def calendartest():
     return render_template("calendartest.html", event = next_event)
 
 @app.route('/profile.html')
+@login_required
 def profile():
     # TODO: Need to pass in correct user!, using 'jeet' in the mean time
     cat_names = mm.get_list_categories_for_profile_edit('jeet')
@@ -111,6 +139,7 @@ def profile():
 
 
 @app.route('/upload', methods=['POST','GET'])
+@login_required
 def upload():
     if request.method == 'GET':
         return redirect("/", code=302)
@@ -124,7 +153,6 @@ def upload():
 
 
 if __name__ == '__main__':
-    # IMPORT HERE
     app.run(host='localhost')
     # to make public
     # app.run(host='0.0.0.0')
