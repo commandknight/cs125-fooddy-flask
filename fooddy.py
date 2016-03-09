@@ -26,14 +26,6 @@ def index():
 def show_entries():
     return render_template("login.html")
 
-"""
-@app.route('/recme_temp')
-def show_yelp_results():
-    next_event_datetimeloc = google_calendar_data_source.get_next_event_timedateloc_on_google_calendar()
-    return render_template("rec_temp.html", list_results=yelp_data_source.get_results_from_locations(10),
-                           next_event = next_event_datetimeloc)
-"""
-
 @app.route('/recommended')
 def recommended():
     # Right now, we are using a static category_filter=["Italian"],
@@ -66,11 +58,6 @@ def upload():
         mm.init_category_weight_if_not_present('jeet',cat_name,1.0)
     return redirect("/", code=302)
 
-@app.route('/test_data')
-def test_data():
-    data=ranker.get_ranking_by_cosine("terry",['Italian']) # need to first update the weights of the user though.
-    print(data)
-    return render_template("testdata.html")
 
 if __name__ == '__main__':
     app.run()

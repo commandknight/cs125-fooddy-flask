@@ -19,12 +19,10 @@
     </div><!--/header-->
 
 
-{#    You clicked {{ business["name"], business["location"] }}!#}
-{#    <span style="font-family:Tahoma, Verdana; line-height:11px">#}
+
     <div class="ui-body ui-corner-all">Hey! You want to eat at {{ business['name'] }}?</div>
     <div class="ui-body ui-corner-all">Address: <br/>{{ business['location']['display_address'] }}</div>
     <div class="ui-body ui-corner-all">Phone:<br/>{{ business['phone'] }}</div>
-{#    </span>#}
 
     <div data-role="footer" data-position="fixed">
         <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
