@@ -111,12 +111,11 @@ def get_bounding_box(coords):
     boundary_points = boundary_points + translate_matrix;
     return boundary_points
 
-
+'''
 # pass in a list of tuples for locations. Default
 # category_filter is a list of category namesis SF and San Jose
-def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], num_of_results=40, limit = 20):
+def get_results_from_locations2(category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], num_of_results=40, limit = 20):
     # parse location if two locations given
-
     aliases = ''
     for category in category_filter:
         aliases += category_name_to_alias_dict[category] + ','
@@ -157,8 +156,8 @@ def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) ,
         response = yelp_api.search_query(category_filter=aliases, location=location, offset=limit*i, cll=loc_coords, limit=limit)
         responses += response['businesses']  # list
     return responses;
-
 '''
+
 # pass in a list of tuples for locations. Default
 # category_filter is a list of category namesis SF and San Jose
 def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], num_of_results=40 , limit = 20):
@@ -197,7 +196,7 @@ def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) ,
         responses += response['businesses']  # list
     return responses;
 
-'''
+
 def get_yelp_data(list_businesses):
     list_yelp_data = [];
     for bus in list_businesses:
