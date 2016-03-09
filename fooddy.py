@@ -48,8 +48,10 @@ def profile():
     return render_template("profile.html", category_names=cat_names)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST','GET'])
 def upload():
+    if request.method == 'GET':
+        return redirect("/", code=302)
     print("Trying to upload categories for user profile")
     selected_categories = request.form.getlist('checkbox')
     # print(selected_categories) #DEBUG
@@ -60,6 +62,7 @@ def upload():
 
 
 if __name__ == '__main__':
+    # IMPORT HERE
     app.run()
     # to make public
     # app.run(host='0.0.0.0')
