@@ -76,6 +76,19 @@ def get_location_from_coordinates(long, lat) -> str:
     # get leftmost point, center both points by the left most point. find slope to determine how to find angle. find angle,
     # rotate it, find box, rotate it back, translate it back.
 
+
+def get_rotation_matrix(recentered_outer_vector):
+    if(recentered_outer_vector[1]==0 or recentered_outer_vector[0] == 0):
+        if(recentered_outer_vector[1]==0): # if y is zero we want to rotate x to y so we have a length.
+            theta = np.deg2rad(90)
+        elif(recentered_outer_vector[0]==0):# if x is zero, no rotations needed.
+            theta = np.deg2rad(0);
+    else:
+        theta = np.arctan(recentered_outer_vector[0]/recentered_outer_vector[1])
+    c, s = np.cos(theta), np.sin(theta)
+    R = np.matrix('{} {}; {} {}'.format(c, -s, s, c))
+    return R;
+
 def get_bounding_box(coords):
 
     # width is Golden Ratio. L/1.62
@@ -86,11 +99,7 @@ def get_bounding_box(coords):
     translate_x = coords[left_most_point_index][0];
     translate_y = coords[left_most_point_index][1];
     recentered_outer_vector = np.array([coords[right_most_point_index][0]-translate_x, coords[right_most_point_index][1]-translate_y]);
-    if(recentered_outer_vector[1]==0 or recentered_outer_vector[0] == 0):
-        raise Exception (" error for now")
-    theta = np.arctan(recentered_outer_vector[0]/recentered_outer_vector[1])
-    c, s = np.cos(theta), np.sin(theta)
-    R = np.matrix('{} {}; {} {}'.format(c, -s, s, c))
+    R = get_rotation_matrix(recentered_outer_vector);
     rotated_point = np.array(np.dot(R, recentered_outer_vector.transpose()))[0]
     lower_left = np.array([-rotated_point[1]/1.62/2, 0])
     lower_right = np.array([rotated_point[1]/1.62/2, 0])
