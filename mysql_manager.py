@@ -221,6 +221,19 @@ def reset_user_profile(user_name):
     curr.close()
 
 
+def get_user(user_name):
+    """
+    Function get user_name given id
+    :param id:
+    :return: tuple(String username, String password)
+    """
+    curr = cnx.cursor()
+    curr.execute('SELECT user_name, password FROM UserProfile WHERE user_name = %s',(user_name,))
+    result = curr.fetchone()
+    curr.close()
+    return result
+
+
 def close_connection():
     """
     Function to close connection to MySQL Database
