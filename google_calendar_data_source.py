@@ -2,6 +2,7 @@ from __future__ import print_function
 import httplib2
 import os
 
+import pprint as pp
 from apiclient import discovery
 import oauth2client
 from oauth2client import client
@@ -15,11 +16,14 @@ try:
 except ImportError:
     flags = None
 
+# To test with your own calendar, run this on sterminal: python google_calendar_data_source.py --noauth_local_webserver
+
+
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/calendar-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 CLIENT_SECRET_FILE = 'resources/google_calendar_client_secret.json'
-APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+APPLICATION_NAME = 'Fooddy - Your Food Buddy'
 
 
 def get_credentials():
@@ -50,13 +54,13 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def get_next_event_timedateloc_on_google_calendar():
+def get_next_event_timedateloc_on_google_calendar(credentials):
     """Shows basic usage of the Google Calendar API.
 
     Creates a Google Calendar API service object and outputs a list of the next
     10 events on the user's calendar.
     """
-    credentials = get_credentials()
+    #credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
@@ -76,11 +80,10 @@ def get_next_event_timedateloc_on_google_calendar():
     if 'location' in events[0].keys():
         location = events[0]['location']
 
-    # right now, a simple string representation is returned.
-    # TO GET THE JSON TEXT: just return events[0]
-    return start + "\nevent_name: " + name + " \nlocation: " + location
+    return events[0]['summary']
+    #return start + "--" + name + "--" + location (RETURNS SIMPLE STRING SEPARATED BY "--")
 
 
 if __name__ == '__main__':
     event_string = get_next_event_timedateloc_on_google_calendar()
-    print(event_string)
+    pp.pprint(event_string)

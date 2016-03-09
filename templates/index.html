@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="113602676382-vom8i9393ldj0vcuk32emk3c4elf20vo.apps.googleusercontent.com">
+
 </head>
 <body>
 
@@ -20,11 +23,30 @@
         <h1>Welcome to Fooddy!</h1>
         <img src="static/assets/fooddy_logo.png" width="60%" />
         <h3>Your Food Buddy</h3>
-    </center>
-    <a href="/login.html" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
+</center>
+    <!--
+    <script>function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail());
+    }
+    </script>
+
+    <center><div class="g-signin2" data-onsuccess="onSignIn"></div></center>-->
+    <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     <a href="/profile.html" rel="external" class="ui-btn">Profile</a> <!--return to listview page-->
     <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a> <!--return to listview page-->
-
+<center><a href="#" onclick="signOut();">Sign out</a></center>
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
 
 </div>
 
