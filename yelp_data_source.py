@@ -1,5 +1,3 @@
-from yelpapi import YelpAPI
-import pprint as pp
 import math;
 import time;
 import urllib;
@@ -15,7 +13,6 @@ consumer_secret = 'JTZY_0nE8ohfazCK-e_hP_aHhDs'
 token = 'Sa67MrlQ3hoVCr3Wsn2rfU9-kPPQ40Q_'
 token_secret = '8Xyb1WAJpRW_TJFomJb3eom3e4w'
 google_places_key = "AIzaSyBrElDm-bOxHup93M1QLfWXYjpYYoReGjg"
-yelp_api = YelpAPI(consumer_key, consumer_secret, token, token_secret)
 auth = Oauth1Authenticator(
     consumer_key=consumer_key,
     consumer_secret=consumer_secret,
@@ -37,7 +34,6 @@ class YelpData:
         self.cosine_sim = -1; # cosine simlarity.
 
 
-    # TODO: remove conditional after category table is fixed
     # return weight vectors for restaurant
     def __get_restaurant_vector(self):
         vec = np.zeros(num_categories);
@@ -53,8 +49,8 @@ class YelpData:
 
 # Query the Yelp API for a Business, by passing restaurant_id.
 def get_business_by_id(restaurant_id):
-    response = yelp_api.business_query(id=restaurant_id)
-    return response  # returns a Yelp BUSINESS dictionary with keys: name, id, location, etc.
+    response = yelp_client.get_business(restaurant_id)
+    return response  # returns a Yelp BUSINESS Object
 
 def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)
@@ -172,49 +168,6 @@ def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415), 
         raise Exception("Please provide no more than two location coordinate sets");
 
 
-
-
-
-'''
-# pass in a list of tuples for locations. Default
-# category_filter is a list of category namesis SF and San Jose
-def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415) , (37.3382, -121.8863)], num_of_results=40 , limit = 20):
-    # parse location if two locations given
-    if len(coords) == 2:
-        loc1 = coords[0]
-        loc2 = coords[1]
-        long = (loc1[0] + loc2[0])/2;
-        lat = (loc1[1] + loc2[1])/2;
-        loc_coords = str(long) + "," + str(lat);
-        location = get_location_from_coordinates(long, lat)
-        print (loc_coords, location)
-
-    elif len(coords) == 1:
-        loc1 = coords[0];
-        long = loc1[0];
-        lat = loc1[1];
-        loc_coords = str(long) + "," + str(lat);
-        location = get_location_from_coordinates(long, lat);
-        print (loc_coords, location)
-
-    else:
-        raise Exception("Please provide no more than two location coordinate sets");
-    iterations = math.ceil(num_of_results / limit);
-
-    aliases = ''
-    for category in category_filter:
-        aliases += category_name_to_alias_dict[category] + ','
-    aliases = aliases[:-1]  # strip the last comma
-
-    responses = [];
-
-    for i in range(iterations):
-        time.sleep(.3)
-        response = yelp_api.search_query(category_filter=aliases, location=location, offset=limit*i, cll=loc_coords, limit=limit)
-        responses += response['businesses']  # list
-    return responses;
-'''
-
 def get_yelp_data(list_businesses):
     list_yelp_data = [];
     for bus in list_businesses:
@@ -227,7 +180,5 @@ def get_restaurant_vectors_by_query(category_filter, coords):
     return get_yelp_data(list_businesses)
 
 if __name__ == '__main__':
-    results = get_results_from_locations(40)
-    #pp.pprint(results);
-  #  print(len(results))
+    results = get_results_from_locations(['Italian']);
 
