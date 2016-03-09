@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
@@ -18,72 +18,22 @@
         <center>Login to Fooddy!</center>
     </div><!--/header-->
 
-<fieldset data-role="control-group">
-    <h3>Hey! Have you met Fooddy? :)</h3>
-     <form id="login_form" action="{{ url_for('login') }}" method="POST">
-        <label for="user_name">Username:</label>
+    <fieldset data-role="control-group">
+        <h3>Hey! Have you met Fooddy? :)</h3>
+        <form id="login_form" action="{{ url_for('login') }}" method="POST">
+            <label for="user_name">Username:</label>
             <input type="text" name="user_name"/>
-        <label for="user_password">Password:</label>
+            <label for="user_password">Password:</label>
             <input type="password" name="user_password"/>
-        <input type="submit" value="Submit"/>
-    </form>
-
-</fieldset>
+            <input type="submit" value="Submit"/>
+        </form>
+    </fieldset>
 
     <div data-role="footer" data-position="fixed">
         <center>Fooddy is glad to meet you.</center>
     </div><!--/footer-->
+
 </div><!-- end of login_page-->
 </body>
 
 </html>
-
-{#
-<!DOCTYPE html>
-<html lang="en">
-<link rel="stylesheet" href="{{url_for('static', filename='dist/css/mobile-angular-ui-base.min.css')}}"/>
-
-<script src="{{url_for('static', filename='dist/js/mobile-angular-ui.min.js')}}">
-</script>
-
-
-<h1>Hi</h1>
-<div class="app-content">
-          <!-- ngView: undefined --><ng-view class="ng-scope">
-
-<div class="scrollable ng-scope">
- <div class="scrollable-content section">
-
-  <form role="form" ng-submit="login()" class="ng-pristine ng-valid ng-valid-email">
-    <fieldset>
-      <legend>Login</legend>
-        <div class="form-group has-success has-feedback">
-          <label>Email</label>
-          <input type="email" ng-model="email" class="form-control ng-pristine ng-untouched ng-valid needsclick ng-valid-email" placeholder="Enter email">
-        </div>
-
-        <div class="form-group">
-          <label>Password</label>
-          <input type="pass5f word" class="form-control needsclick" placeholder="Password">
-        </div>
-
-        <div class="form-group">
-          <label>Remember Me</label>
-          <ui-switch ng-model="rememberMe" class="ng-pristine ng-untouched ng-valid ng-isolate-scope switch active switch-transition-enabled"><div class="switch-handle"></div></ui-switch>
-        </div>
-    </fieldset>
-    <hr>
-
-    <button class="btn btn-primary btn-block">
-      Login
-    </button>
-
-
-
-  </form>
- </div>
-</div>
-</ng-view>
-        </div>
-
-</html>#}
