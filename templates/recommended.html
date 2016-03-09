@@ -7,21 +7,52 @@
 </head>
 <body>
 <div data-role="page" id="rec_page">
+{#    <!--LOCATION PANEL, must be first or last in rec_page div-->#}
+{#    <div data-role="panel" id="current_location_panel" data-display="overlay"  data-position="right">#}
+{#        <p>Click the button to get your coordinates.</p>#}
+{#        <button onclick="getLocation()">Try It</button>#}
+{#        <p id="demo"></p>#}
+{#    </div><!-- /location_panel -->#}
 
-    <div data-role="header" style="overflow:hidden;" data-position="fixed">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="/"><img src="../static/assets/fooddy_logo.png" height="50px"/></a></li>
-            </ul>
-        </div><!--/navbar-->
-        <center>Recommended for you :)</center>
-    </div><!--/header-->
+    <div data-role="header" data-position="fixed" style="padding-top:2px; padding-bottom:0px;">
+        <a href="/" data-icon="home" class="ui-btn-left ui-btn-inline ui-mini">Home</a>
+        <h1>Fooddy recommends...</h1>
+{#        <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>#}
+        <div data-role="collapsible" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">
+            <h1>Location</h1>
+            <div data-role="collapsibleset" onclick="getLocation()" data-inset="false">
 
-<ul data-role="listview">
+                <div data-role="collapsible">
+                    <!--TODO: you have to click in <p id="demo> for the location to show... FIX!-->
+                    <h3>Use my current location</h3>
+                    We'll use this location: <p id="demo"></p> to recommend nearby restaurants.
+                </div><!--/current location collapsible-->
+                <div data-role="collapsible">
+                    <h3>Use my next location</h3>
+                    TODO: From calendar API-- ask Dolly
+                </div>
+                <div data-role="collapsible">
+                    <h3>Enter location manually</h3>
+                    TODO: Address form
+                </div>
+            </div>
+
+
+{#            <ul data-role="listview">#}
+{#                <li><a href="#current_location_panel">Current Location</a></li>#}
+{#                <li><a href="#">Next location</a></li>#}
+{#                <li><a href="#">Manually enter location</a></li>#}
+{#            </ul>#}
+        </div><!--/collapsible-->
+
+    </div>
+
+    <ul data-role="listview">
     {% for bus in list_results %}
         <li><a href="restaurant/{{ bus['id'] }}">{{ bus['name'] }}</a></li>
     {%endfor%}
-</ul>
+    </ul>
+
 
 <div data-role="footer" data-position="fixed">
 <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
@@ -29,4 +60,8 @@
 
 </div> <!--/end rec_page-->
 </body>
+
+<!-- location script -->
+<script src="../static/js/get_user_location.js"></script>
+
 </html>
