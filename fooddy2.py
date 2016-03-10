@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager, UserMixin
 from oauth2client.client import OAuth2WebServerFlow
 
@@ -61,18 +61,14 @@ def login():
         user_name = request.form['user_name']
         form_password = request.form['user_password']
         user = mm.get_user(user_name)
-
-        # ADD A BOOLEAN FOR LOGGED_IN
         if user:
             muser = User(user)
             if muser.password == form_password:
-                # if logged_in:
-                print(muser)
-                login_user(muser)
-
+                # if valid login info:
+                # print(muser) #DEBUG
+                login_user(muser) # Save user in context as "logged_in"
                 return render_template("index.html", logged_in=True, username=muser.id)
-                #redirect(request.args.get('next') or url_for('index'))
-
+                #redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
             else:
                 print("ERROR in logging in")
                 return render_template("login.html", error_msg="You entered a wrong password, please try again")
@@ -139,6 +135,7 @@ def calendartest():
 @app.route('/profile.html')
 @login_required
 def profile():
+    # print(current_user.get_id()) #EXAMPLE TO GET USER
     # TODO: Need to pass in correct user!, using 'jeet' in the mean time
     cat_names = mm.get_list_categories_for_profile_edit('jeet')
     return render_template("profile.html", category_names=cat_names)
@@ -149,7 +146,7 @@ def profile():
 def upload():
     if request.method == 'GET':
         return redirect("/", code=302)
-    print("Trying to upload categories for user profile")
+    # print("Trying to upload categories for user profile")
     selected_categories = request.form.getlist('checkbox')
     # print(selected_categories) #DEBUG
     for cat_name in selected_categories:
