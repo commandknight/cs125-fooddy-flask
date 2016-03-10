@@ -61,12 +61,18 @@ def login():
         user_name = request.form['user_name']
         form_password = request.form['user_password']
         user = mm.get_user(user_name)
+
+        # ADD A BOOLEAN FOR LOGGED_IN
         if user:
             muser = User(user)
             if muser.password == form_password:
+                # if logged_in:
                 print(muser)
                 login_user(muser)
-                return redirect(request.args.get('next') or url_for('index'))
+
+                return render_template("index.html", logged_in=True, username=muser.id)
+                #redirect(request.args.get('next') or url_for('index'))
+
             else:
                 print("ERROR in logging in")
                 return render_template("login.html", error_msg="You entered a wrong password, please try again")
