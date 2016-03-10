@@ -50,7 +50,7 @@ class YelpData:
 # Query the Yelp API for a Business, by passing restaurant_id.
 def get_business_by_id(restaurant_id):
     response = yelp_client.get_business(restaurant_id)
-    return response  # returns a Yelp BUSINESS Object
+    return response.business  # returns a Yelp BUSINESS Object
 
 def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)

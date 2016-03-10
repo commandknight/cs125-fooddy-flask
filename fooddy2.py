@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager, UserMixin
 from oauth2client.client import OAuth2WebServerFlow
 
