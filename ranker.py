@@ -20,7 +20,7 @@ def get_ranking_by_cosine(username, category_filter, coords=[(37.77493,-122.4194
     list_yelp_data = ydp.get_restaurant_vectors_by_query(category_filter,coords);
     user_weight_vec = get_user_weights_vector(username);
     for yelp_data in list_yelp_data:
-        yelp_data.cosine_sim = spatial.distance.cosine(user_weight_vec, yelp_data.restaurant_vector)
+        yelp_data.cosine_sim = 1 - spatial.distance.cosine(user_weight_vec, yelp_data.restaurant_vector);
     # sots by ascending order
     list_yelp_data.sort(key=lambda x: x.cosine_sim);
     return list_yelp_data
