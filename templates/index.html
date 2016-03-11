@@ -24,30 +24,17 @@
         <img src="static/assets/fooddy_logo.png" width="60%" />
         <h3>Your Food Buddy</h3>
 </center>
-    <!--
-    <script>function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
-      console.log('Email: ' + profile.getEmail());
-    }
-    </script>
 
-    <center><div class="g-signin2" data-onsuccess="onSignIn"></div></center>-->
-    <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a> <!--return to listview page-->
-    {% if not logged_in %}
+{#    {% if not logged_in %}#}
+    {% if not current_user.is_authenticated %}
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
-        <center><h4>Hey, {{ username }}</h4></center>
-        <a href="/profile.html" rel="external" class="ui-btn">Profile</a> <!--return to listview page-->
+        <center><h4>Hey, {{ current_user.get_id() }}</h4></center>
+        <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a> <!--return to listview page-->
+        <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a> <!--return to listview page-->
         <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
 
     {% endif %}
-{#    {% if logged_in %}#}
-{#        Logged in!#}
-{#    {% else %}#}
-{#        Not logged in.#}
 
 
 <script>
@@ -59,8 +46,19 @@
   }
 </script>
 
-</div>
-
-
+</div><!--/end page-->
 </body>
 </html>
+
+<!--DOLLY'S OLD CODE for calendar:-->
+    <!--
+    <script>function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail());
+    }
+    </script>
+
+    <center><div class="g-signin2" data-onsuccess="onSignIn"></div></center>-->

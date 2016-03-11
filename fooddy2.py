@@ -67,7 +67,7 @@ def login():
                 # if valid login info:
                 # print(muser) #DEBUG
                 login_user(muser) # Save user in context as "logged_in"
-                return render_template("index.html", logged_in=True, username=muser.id)
+                return render_template("index.html")
                 #redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
             else:
                 print("ERROR in logging in")
@@ -132,18 +132,19 @@ def calendartest():
     next_event = google_calendar_data_source.get_next_event_timedateloc_on_google_calendar(credentials)
     return render_template("calendartest.html", event = next_event)
 
-@app.route('/profile.html')
+@app.route('/profile/<username>')
 @login_required
-def profile():
-    # print(current_user.get_id()) #EXAMPLE TO GET USER
-    # TODO: Need to pass in correct user!, using 'jeet' in the mean time
-    cat_names = mm.get_list_categories_for_profile_edit('jeet')
+def profile(username):
+    print(current_user.get_id()) #EXAMPLE TO GET USER
+    username= "jeet" # TODO: Need to pass in correct user!, using 'jeet' in the mean time
+    cat_names = mm.get_list_categories_for_profile_edit(username)
     return render_template("profile.html", category_names=cat_names)
 
 
 @app.route('/upload', methods=['POST','GET'])
 @login_required
 def upload():
+    username = "jeet"
     if request.method == 'GET':
         return redirect("/", code=302)
     # print("Trying to upload categories for user profile")
@@ -151,8 +152,8 @@ def upload():
     # print(selected_categories) #DEBUG
     for cat_name in selected_categories:
         # TODO: Need to pass in correct user!, using 'jeet' in the mean time
-        mm.init_category_weight_if_not_present('jeet',cat_name,1.0)
-    return redirect("/", code=302)
+        mm.init_category_weight_if_not_present(username,cat_name,1.0)
+    return render_template("index.html", logged_in=True, username = username, code=302)
 
 
 if __name__ == '__main__':
