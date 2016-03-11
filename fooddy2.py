@@ -1,5 +1,11 @@
+import datetime
+import json
+
+import httplib2
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager, UserMixin
+from googleapiclient import discovery
+from oauth2client import client
 from oauth2client.client import OAuth2WebServerFlow
 
 import google_calendar_data_source
@@ -85,30 +91,43 @@ def logout():
     return render_template("logout.html")
 
 
+@app.route('/calendar_list')
+def calendar_list():
+    if 'credentials' not in session:
+        return redirect(url_for('oauth2callback'))
+    credentials = client.OAuth2Credentials.from_json(session['credentials'])
+    if credentials.access_token_expired:
+        return redirect(url_for('oauth2callback'))
+    else:
+        http_auth = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http_auth)
+        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+        events_result = service.events().list(
+            calendarId='primary', timeMin=now, maxResults=1, singleEvents=True,
+            orderBy='startTime').execute()
+        return json.dumps(events_result)
+
+
 @app.route('/oauth2callback')
 def oauth2callback():
-    print("TRYING TO oauth2callback")
-    code = request.args.get('code')
-    print(code)
-    if code:
-        print("THE IF STATEMENT IS OK")
-        # exchange the authorization code for user credentials
-        flow = OAuth2WebServerFlow(CLIENT_ID,
-                                   CLIENT_SECRET,
-                                   "https://www.googleapis.com/auth/calendar")
-        flow.redirect_uri = request.base_url
-        # flow.redirect_uri = 'http://localhost:5000'
-        print("TEST", flow.redirect_uri)
-        try:
-            credentials = flow.step2_exchange(code)
-        except Exception as e:
-            print("Unable to get an access token because ", e.message())
-        # store these credentials for the current user in the session
-        # This stores them in a cookie, which is insecure. Update this
-        # with something better if you deploy to production land
-        print("TEST2", type(credentials))
-        #session['credentials'] = credentials
-    return 'I HATE LIFE'
+    print('HERE')
+    flow = client.flow_from_clientsecrets(
+        'resources/google_calendar_client_secret.json',
+        scope='https://www.googleapis.com/auth/calendar.readonly',
+        redirect_uri=url_for('oauth2callback', _external=True))
+    print('flow was established')
+    if 'code' not in request.args:
+        print("code was not in the args, so we will authorize this shit")
+        auth_uri = flow.step1_get_authorize_url()
+        return redirect(auth_uri)
+    else:
+        print("TRYING TO AUTHORIZE, HOLD UP")
+        auth_code = request.args.get('code')
+        credentials = flow.step2_exchange(auth_code)
+        print("AUTHORIZE SUCCESSFUL")
+        print("CREDENTIALS",credentials.to_json())
+        session['credentials'] = credentials.to_json()
+        return redirect(url_for('index'))
 
 
 @app.route('/recommended')
