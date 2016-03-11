@@ -1,10 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Logged out</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
 <body>
-    <h3>You are logged out!</h3>
+<!-- page 1-->
+<div data-role="page" id="login_page">
+
+    <div data-role="header" style="overflow:hidden;" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/"><img src="../static/assets/fooddy_logo.png" height="50px"/></a></li>
+            </ul>
+        </div><!--/navbar-->
+        <h1>You have logged out.</h1>
+    </div><!--/header-->
+
+    <h1>Please come back soon!</h1>
+
+    <div data-role="footer" data-position="fixed">
+        <center>Fooddy 2016</center>
+    </div><!--/footer-->
+</div><!--/login_page-->
 </body>
 </html>
