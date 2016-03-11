@@ -44,7 +44,7 @@ def is_google_auth():
     """
     if 'credentials' not in session.keys():
         return False
-    print(session['credentials']) #DEBUG
+    #print(session['credentials'])  # DEBUG
     return True
 
 
@@ -99,11 +99,7 @@ def auth_google():
     credentials = client.OAuth2Credentials.from_json(session['credentials'])
     if credentials.access_token_expired:
         return redirect(url_for('oauth2callback'))
-    else:
-        global http_auth
-        http_auth = credentials.authorize(httplib2.Http())
-        # service = discovery.build('calendar', 'v3', http=http_auth)
-        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 
 @app.route('/get_location')
@@ -138,7 +134,7 @@ def oauth2callback():
         'resources/google_calendar_client_secret.json',
         scope='https://www.googleapis.com/auth/calendar.readonly',
         redirect_uri=url_for('oauth2callback', _external=True))
-    print('flow was established')
+    #print('flow was established')
     if 'code' not in request.args:
         auth_uri = flow.step1_get_authorize_url()
         return redirect(auth_uri)
@@ -146,6 +142,9 @@ def oauth2callback():
         auth_code = request.args.get('code')
         credentials = flow.step2_exchange(auth_code)
         session['credentials'] = credentials.to_json()
+        global http_auth
+        http_auth = credentials.authorize(httplib2.Http())
+        print(http_auth)
         return redirect(url_for('index'))
 
 
@@ -156,12 +155,11 @@ def recommended():
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
     if is_google_auth():
-        print(is_google_auth())
         location = get_location(http_auth)
     else:
         location = "Connect with Google Calendar to see your next event's location!"
     return render_template("recommended.html",
-                           list_results= yelp_data_source.get_results_from_locations(user_categories),
+                           list_results=yelp_data_source.get_results_from_locations(user_categories),
                            next_location=location)
 
 
