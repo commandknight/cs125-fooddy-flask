@@ -83,7 +83,6 @@ def auth_google():
         global http_auth
         http_auth = credentials.authorize(httplib2.Http())
         #service = discovery.build('calendar', 'v3', http=http_auth)
-
         return redirect(url_for('index'))
 
 
@@ -112,15 +111,11 @@ def oauth2callback():
         redirect_uri=url_for('oauth2callback', _external=True))
     print('flow was established')
     if 'code' not in request.args:
-        print("code was not in the args, so we will authorize this shit")
         auth_uri = flow.step1_get_authorize_url()
         return redirect(auth_uri)
     else:
-        print("TRYING TO AUTHORIZE, HOLD UP")
         auth_code = request.args.get('code')
         credentials = flow.step2_exchange(auth_code)
-        print("AUTHORIZE SUCCESSFUL")
-        print("CREDENTIALS",credentials.to_json())
         session['credentials'] = credentials.to_json()
         return redirect(url_for('index'))
 
