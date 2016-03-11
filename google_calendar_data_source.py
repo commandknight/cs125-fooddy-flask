@@ -12,6 +12,7 @@ import datetime
 
 try:
     import argparse
+
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except ImportError:
     flags = None
@@ -49,10 +50,11 @@ def get_credentials():
         flow.user_agent = APPLICATION_NAME
         if flags:
             credentials = tools.run_flow(flow, store, flags)
-        else: # Needed only for compatibility with Python 2.6
+        else:  # Needed only for compatibility with Python 2.6
             credentials = tools.run(flow, store)
         print('Storing credentials to ' + credential_path)
     return credentials
+
 
 def get_next_event_timedateloc_on_google_calendar(credentials):
     """Shows basic usage of the Google Calendar API.
@@ -60,11 +62,11 @@ def get_next_event_timedateloc_on_google_calendar(credentials):
     Creates a Google Calendar API service object and outputs a list of the next
     10 events on the user's calendar.
     """
-    #credentials = get_credentials()
+    # credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     print('Getting the next event')
     eventsResult = service.events().list(
         calendarId='primary', timeMin=now, maxResults=1, singleEvents=True,
@@ -73,15 +75,14 @@ def get_next_event_timedateloc_on_google_calendar(credentials):
 
     if not events:
         print('No upcoming events found.')
-    #for event in events:
+    # for event in events:
     start = events[0]['start'].get('dateTime', events[0]['start'].get('date'))
     name = events[0]['summary']
-    location = 'unspecified'
     if 'location' in events[0].keys():
         location = events[0]['location']
 
     return events[0]['summary']
-    #return start + "--" + name + "--" + location (RETURNS SIMPLE STRING SEPARATED BY "--")
+    # return start + "--" + name + "--" + location (RETURNS SIMPLE STRING SEPARATED BY "--")
 
 
 if __name__ == '__main__':

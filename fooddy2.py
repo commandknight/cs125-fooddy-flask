@@ -42,25 +42,6 @@ def user_loader(user_name):
 def index():
     return render_template("index.html")
 
-""" GOOGLE LOGIN """
-# @app.route('/login')
-# def login():
-#   flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
-#     client_secret=CLIENT_SECRET,
-#     scope='https://www.googleapis.com/auth/calendar',
-#     redirect_uri='http://localhost:5000/oauth2callback',
-#     approval_prompt='force',
-#     access_type='offline')
-#   auth_uri = flow.step1_get_authorize_url()
-#   return redirect(auth_uri)
-""" GOOGLE SIGNOUT """
-# @app.route('/signout')
-# def signout():
-#   del session['credentials']
-#   session['message'] = "You have logged out"
-#   return redirect(url_for('index'))
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
@@ -91,21 +72,35 @@ def logout():
     return render_template("logout.html")
 
 
-@app.route('/calendar_list')
-def calendar_list():
+@app.route('/auth_google')
+def auth_google():
     if 'credentials' not in session:
         return redirect(url_for('oauth2callback'))
     credentials = client.OAuth2Credentials.from_json(session['credentials'])
     if credentials.access_token_expired:
         return redirect(url_for('oauth2callback'))
     else:
+        global http_auth
         http_auth = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http_auth)
-        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        events_result = service.events().list(
-            calendarId='primary', timeMin=now, maxResults=1, singleEvents=True,
-            orderBy='startTime').execute()
-        return json.dumps(events_result)
+        #service = discovery.build('calendar', 'v3', http=http_auth)
+
+        return redirect(url_for('index'))
+
+
+@app.route('/get_location')
+def get_location(http_auth):
+    service = discovery.build('calendar', 'v3', http=http_auth)
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+    events_result = service.events().list(
+        calendarId='primary', timeMin=now, maxResults=1, singleEvents=True,
+        orderBy='startTime').execute()
+    # note: events_result['items'][0] is a Event resource object
+    # see: https://developers.google.com/google-apps/calendar/v3/reference/events
+    if 'location' in events_result['items'][0].keys():
+        location = events_result['items'][0]['location']
+    else:
+        location = 'unspecified'
+    return location
 
 
 @app.route('/oauth2callback')
@@ -135,8 +130,10 @@ def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
     user_categories = mm.get_list_of_category_names_user_likes("jeet")
-    return render_template("recommended.html", list_results= yelp_data_source.get_results_from_locations(user_categories))
-
+    location = get_location(http_auth)
+    print(location)
+    return render_template("recommended.html",
+                           list_results= [yelp_data_source.get_results_from_locations(user_categories),location])
 
 # This is used AFTER we display recme_temp (list of restaurants)
 @app.route('/restaurant/<restaurant_id>')
@@ -178,4 +175,4 @@ def upload():
 if __name__ == '__main__':
     app.run(host='localhost')
     # to make public
-    # app.run(host='0.0.0.0')
+    #app.run(host='0.0.0.0')

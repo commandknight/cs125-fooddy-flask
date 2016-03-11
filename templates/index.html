@@ -30,6 +30,7 @@
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
         <center><h4>Hey, {{ current_user.get_id() }}</h4></center>
+        <a href="/auth_google" rel="external" class="ui-btn"> Connect to Google Calendar</a>
         <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a> <!--return to listview page-->
         <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a> <!--return to listview page-->
         <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
@@ -49,16 +50,3 @@
 </div><!--/end page-->
 </body>
 </html>
-
-<!--DOLLY'S OLD CODE for calendar:-->
-    <!--
-    <script>function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
-      console.log('Email: ' + profile.getEmail());
-    }
-    </script>
-
-    <center><div class="g-signin2" data-onsuccess="onSignIn"></div></center>-->
