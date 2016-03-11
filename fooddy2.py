@@ -37,28 +37,22 @@ def user_loader(user_name):
     return None
 
 
-# HOME PAGE
-@app.route('/')
-def index():
-    return render_template("index.html")
-
 def is_google_auth():
     """
     Function that returns true if the user has autheticated Google Calender Read Only Access
     :return: Boolean
     """
-    print("here")
     if 'credentials' not in session.keys():
-        print("NOT HERE")
         return False
-    print("dead")
-    print(session['credentials'])
+    print(session['credentials']) #DEBUG
     return True
-    # if temp:
-    #     return True
-    # else:
-    #     return False
-    #return True if session['credentials'] is not None else False
+
+
+# HOME PAGE
+@app.route('/')
+def index():
+    return render_template("index.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -136,9 +130,9 @@ def get_location(http_auth):
         location = 'unspecified'
     return location
 
+
 @app.route('/oauth2callback')
 def oauth2callback():
-    print('HERE')
     flow = client.flow_from_clientsecrets(
         'resources/google_calendar_client_secret.json',
         scope='https://www.googleapis.com/auth/calendar.readonly',
@@ -158,7 +152,8 @@ def oauth2callback():
 def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
-    user_categories = mm.get_list_of_category_names_user_likes("jeet")
+    username = current_user.get_id()
+    user_categories = mm.get_list_of_category_names_user_likes(username)
     if is_google_auth():
         location = get_location(http_auth)
     else:
@@ -178,8 +173,8 @@ def restaurant(restaurant_id):
 @app.route('/profile/<username>')
 @login_required
 def profile(username):
-    print(current_user.get_id())  # EXAMPLE TO GET USER
-    username = "jeet"  # TODO: Need to pass in correct user!, using 'jeet' in the mean time
+    # print(current_user.get_id())  # EXAMPLE TO GET USER
+    username = current_user.get_id()
     cat_names = mm.get_list_categories_for_profile_edit(username)
     return render_template("profile.html", category_names=cat_names)
 
@@ -187,14 +182,13 @@ def profile(username):
 @app.route('/upload', methods=['POST', 'GET'])
 @login_required
 def upload():
-    username = "jeet"
+    username = current_user.get_id()
     if request.method == 'GET':
         return redirect("/", code=302)
     # print("Trying to upload categories for user profile")
     selected_categories = request.form.getlist('checkbox')
     # print(selected_categories) #DEBUG
     for cat_name in selected_categories:
-        # TODO: Need to pass in correct user!, using 'jeet' in the mean time
         mm.init_category_weight_if_not_present(username, cat_name, 1.0)
     return render_template("index.html", logged_in=True, username=username, code=302)
 
