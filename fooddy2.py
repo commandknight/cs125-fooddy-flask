@@ -130,10 +130,10 @@ def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
     user_categories = mm.get_list_of_category_names_user_likes("jeet")
-    location = get_location(http_auth)
-    print(location)
+    # location = get_location(http_auth)
+    # print(location)
     return render_template("recommended.html",
-                           list_results= [yelp_data_source.get_results_from_locations(user_categories),location])
+                           list_results= yelp_data_source.get_results_from_locations(user_categories))
 
 # This is used AFTER we display recme_temp (list of restaurants)
 @app.route('/restaurant/<restaurant_id>')
@@ -175,4 +175,4 @@ def upload():
 if __name__ == '__main__':
     app.run(host='localhost')
     # to make public
-    #app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
