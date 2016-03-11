@@ -39,7 +39,7 @@ def get_list_of_category_names():
     :return: category names as list(tuples(string,))
     """
     curr = cnx.cursor()
-    curr.execute('SELECT category_name From Categories')
+    curr.execute('SELECT category_name From Categories ORDER BY category_name ASC')
     result = curr.fetchall()
     curr.close()
     return result
