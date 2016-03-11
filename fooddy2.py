@@ -42,6 +42,23 @@ def user_loader(user_name):
 def index():
     return render_template("index.html")
 
+def is_google_auth():
+    """
+    Function that returns true if the user has autheticated Google Calender Read Only Access
+    :return: Boolean
+    """
+    print("here")
+    if 'credentials' not in session.keys():
+        print("NOT HERE")
+        return False
+    print("dead")
+    print(session['credentials'])
+    return True
+    # if temp:
+    #     return True
+    # else:
+    #     return False
+    #return True if session['credentials'] is not None else False
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -99,16 +116,25 @@ def get_location(http_auth):
     service = discovery.build('calendar', 'v3', http=http_auth)
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     events_result = service.events().list(
-        calendarId='primary', timeMin=now, maxResults=1, singleEvents=True,
+        calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
         orderBy='startTime').execute()
     # note: events_result['items'][0] is a Event resource object
     # see: https://developers.google.com/google-apps/calendar/v3/reference/events
-    if 'location' in events_result['items'][0].keys():
-        location = events_result['items'][0]['location']
+
+    index_of_valid_event = 0
+    # need to handle when user has no more events in events_result
+    for i in range(len(events_result['items'])):
+        example = events_result['items'][i]['start']
+        if 'dateTime' in example.keys():
+            index_of_valid_event = i
+            print(index_of_valid_event)
+            break
+
+    if 'location' in events_result['items'][index_of_valid_event].keys():
+        location = events_result['items'][index_of_valid_event]['location']
     else:
         location = 'unspecified'
     return location
-
 
 @app.route('/oauth2callback')
 def oauth2callback():
@@ -133,10 +159,13 @@ def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
     user_categories = mm.get_list_of_category_names_user_likes("jeet")
-    #location = get_location(http_auth)
-    #print(location)
+    if is_google_auth():
+        location = get_location(http_auth)
+    else:
+        location = "Connect with Google Calendar to see your next event's location!"
     return render_template("recommended.html",
-                           list_results=yelp_data_source.get_results_from_locations(user_categories))
+                           list_results= yelp_data_source.get_results_from_locations(user_categories),
+                           next_location=location)
 
 
 # This is used AFTER we display recme_temp (list of restaurants)
