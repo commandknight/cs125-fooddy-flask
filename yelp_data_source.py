@@ -1,9 +1,9 @@
-import math;
-import time;
-import urllib;
-import json;
+import math
+import time
+import urllib
+import json
 import mysql_manager as mm
-import numpy as np;
+import numpy as np
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 

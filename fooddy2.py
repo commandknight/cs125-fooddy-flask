@@ -42,25 +42,33 @@ def user_loader(user_name):
 def index():
     return render_template("index.html")
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
         user_name = request.form['user_name']
         form_password = request.form['user_password']
-        user = mm.get_user(user_name)
-        if user:
-            muser = User(user)
-            if muser.password == form_password:
-                # if valid login info:
-                # print(muser) #DEBUG
-                login_user(muser) # Save user in context as "logged_in"
-                return render_template("index.html")
-                #redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
+        if request.form['submit'] == 'Sign In':
+            user = mm.get_user(user_name)
+            if user:
+                muser = User(user)
+                if muser.password == form_password:
+                    login_user(muser)  # Save user in context as "logged_in"
+                    return render_template("index.html")
+                    # redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
+                else:
+                    # print("ERROR in logging in") #DEBUG
+                    return render_template("login.html", error_msg="You entered a wrong password, please try again")
             else:
-                print("ERROR in logging in")
-                return render_template("login.html", error_msg="You entered a wrong password, please try again")
-        else:
-            return render_template("login.html", error_msg="Unknown username, please try again")
+                return render_template("login.html", error_msg="Unknown username, please try again")
+        elif request.form['submit'] == 'Sign Up':
+            # print("Trying to sign user up") #DEBUG
+            if user_name is "" or form_password is "":
+                return render_template("login.html", error_msg="Empty Username or Password Fields, please try again")
+            mm.insert_new_user_profile(user_name, form_password)
+            new_user = User((user_name, form_password))
+            login_user(new_user)
+            return render_template("index.html")
     return render_template("login.html")
 
 
@@ -82,7 +90,7 @@ def auth_google():
     else:
         global http_auth
         http_auth = credentials.authorize(httplib2.Http())
-        #service = discovery.build('calendar', 'v3', http=http_auth)
+        # service = discovery.build('calendar', 'v3', http=http_auth)
         return redirect(url_for('index'))
 
 
@@ -125,34 +133,29 @@ def recommended():
     # Right now, we are using a static category_filter=["Italian"],
     # TODO: later use the user's checked categories.
     user_categories = mm.get_list_of_category_names_user_likes("jeet")
-    # location = get_location(http_auth)
-    # print(location)
+    #location = get_location(http_auth)
+    #print(location)
     return render_template("recommended.html",
-                           list_results= yelp_data_source.get_results_from_locations(user_categories))
+                           list_results=yelp_data_source.get_results_from_locations(user_categories))
+
 
 # This is used AFTER we display recme_temp (list of restaurants)
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
-    business = yelp_data_source.get_business_by_id(restaurant_id) #this is a dictionary
-    return render_template("restaurant.html", business= business)
+    business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
+    return render_template("restaurant.html", business=business)
 
-
-@app.route('/calendartest')
-def calendartest():
-    credentials = request.session['credentials']
-    next_event = google_calendar_data_source.get_next_event_timedateloc_on_google_calendar(credentials)
-    return render_template("calendartest.html", event = next_event)
 
 @app.route('/profile/<username>')
 @login_required
 def profile(username):
-    print(current_user.get_id()) #EXAMPLE TO GET USER
-    username= "jeet" # TODO: Need to pass in correct user!, using 'jeet' in the mean time
+    print(current_user.get_id())  # EXAMPLE TO GET USER
+    username = "jeet"  # TODO: Need to pass in correct user!, using 'jeet' in the mean time
     cat_names = mm.get_list_categories_for_profile_edit(username)
     return render_template("profile.html", category_names=cat_names)
 
 
-@app.route('/upload', methods=['POST','GET'])
+@app.route('/upload', methods=['POST', 'GET'])
 @login_required
 def upload():
     username = "jeet"
@@ -163,8 +166,8 @@ def upload():
     # print(selected_categories) #DEBUG
     for cat_name in selected_categories:
         # TODO: Need to pass in correct user!, using 'jeet' in the mean time
-        mm.init_category_weight_if_not_present(username,cat_name,1.0)
-    return render_template("index.html", logged_in=True, username = username, code=302)
+        mm.init_category_weight_if_not_present(username, cat_name, 1.0)
+    return render_template("index.html", logged_in=True, username=username, code=302)
 
 
 if __name__ == '__main__':
