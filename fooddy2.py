@@ -88,6 +88,7 @@ def login():
 def logout():
     """Logout the current user."""
     logout_user()
+    session.clear()
     return render_template("logout.html")
 
 
@@ -155,6 +156,7 @@ def recommended():
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
     if is_google_auth():
+        print(is_google_auth())
         location = get_location(http_auth)
     else:
         location = "Connect with Google Calendar to see your next event's location!"

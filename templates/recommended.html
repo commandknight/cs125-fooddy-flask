@@ -21,7 +21,8 @@
         <!--TODO: add calendar location from dolly-->
 {#        if calendar_is_authenticated#}
         <button>Use my next event</button>
-
+            Is {{ next_location }} <br/>
+            your next location?
         <!--MANUAL LOCATION-->
         <!--TODO: form for new location-->
         <button>Manually enter location</button>
@@ -59,7 +60,7 @@
 {#                </div><!--/current location collapsible-->#}
 {#                <div data-role="collapsible">#}
 {#                    <h3>Use my next location</h3>#}
-{#                    Is {{ list_results }} <br/>#}
+{#                    Is {{ next_location }} <br/>#}
 {#                    your next location?#}
 {#                </div>#}
 {#                <div data-role="collapsible">#}
