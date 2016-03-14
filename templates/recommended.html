@@ -22,11 +22,10 @@
         </div>
         <!--CURRENT LOCATION-->
         <button onclick="getLocation()">Use my current location</button>
-        <p id="demo"></p>
+        <p id="current_location"></p>
 
         <!--CALENDAR LOCATION-->
         <!--TODO: add calendar location from dolly-->
-{#        if calendar_is_authenticated#}
         <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>
         <div id="next_event_location" style="display:none;">
             Is {{ next_location }} <br/>
@@ -39,22 +38,6 @@
         </script>
         <!--MANUAL LOCATION-->
         <!--TODO: form for new location-->
-{#        <button>Manually enter location</button>#}
-{#        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>#}
-{#        <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">#}
-{##}
-{#        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>#}
-{#        <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">#}
-{##}
-{#        <label for="textinput-hide" class="ui-hidden-accessible">City</label>#}
-{#        <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">#}
-{##}
-{#        <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
-{#        <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">#}
-{##}
-{#        <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
-{#        <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">#}
-
         <button onclick="openAddressForm('address_form')">Manually enter location</button>
         <div id="address_form" style="display:none;">
             <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>

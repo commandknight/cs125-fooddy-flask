@@ -1,5 +1,5 @@
 //code from http://www.w3schools.com/html/html5_geolocation.asp
-var x = document.getElementById("demo");
+var x = document.getElementById("current_location");
 
 function getLocation() {
     if (navigator.geolocation) {
