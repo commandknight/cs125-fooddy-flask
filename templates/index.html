@@ -2,18 +2,24 @@
 <html lang="en">
 <head>
     <title>Fooddy Home</title>
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+    <!--jQueryMobile scripts-->
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"><!-- to work with portrait mode-->
+
+
+    <!--Google API scripts-->
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="113602676382-vom8i9393ldj0vcuk32emk3c4elf20vo.apps.googleusercontent.com">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1"> <!-- to work with portrait mode-->
 </head>
+
 <body>
-
-
 <!-- page 1-->
-<div data-role="page" id="page1">
+<div data-role="page" id="index_page">
 
     <div data-role="header">
         <div data-role="navbar"><ul><li><a href="/">Fooddy Home</a></li></ul></div>
@@ -25,7 +31,6 @@
         <h3>Your Food Buddy</h3>
 </center>
 
-{#    {% if not logged_in %}#}
     {% if not current_user.is_authenticated %}
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
@@ -47,6 +52,6 @@
   }
 </script>
 
-</div><!--/end page-->
+</div><!--/end index_page-->
 </body>
 </html>

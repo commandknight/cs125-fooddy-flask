@@ -13,3 +13,12 @@ function showPosition(position) {
     x.innerHTML = "Latitude: " + position.coords.latitude +
     "<br>Longitude: " + position.coords.longitude;
 }
+
+//function getNextEventLocation(target) {
+//    document.getElementById(target).style.display='block';
+//}
+//
+//
+//function openAddressForm(target) {
+//    document.getElementById(target).style.display='block';
+//}

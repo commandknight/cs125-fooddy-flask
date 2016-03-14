@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Fooddy Log-out</title>
+
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+    <!--jQueryMobile scripts-->
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
@@ -8,7 +14,7 @@
 </head>
 <body>
 <!-- page 1-->
-<div data-role="page" id="login_page">
+<div data-role="page" id="logout_page">
 
     <div data-role="header" style="overflow:hidden;" data-position="fixed">
         <div data-role="navbar">
@@ -19,11 +25,15 @@
         <h1>You have logged out.</h1>
     </div><!--/header-->
 
-    <h1>Please come back soon!</h1>
+    <center><h1>Please come back soon!</h1>
+    <br/>
+        <img src="../static/assets/fooddy_mascot.png" width="30%"/>
+
+    </center>
 
     <div data-role="footer" data-position="fixed">
         <center>Fooddy 2016</center>
     </div><!--/footer-->
-</div><!--/login_page-->
+</div><!--/logout_page-->
 </body>
 </html>
