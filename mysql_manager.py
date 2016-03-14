@@ -234,6 +234,46 @@ def get_user(user_name):
     return result
 
 
+def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name):
+    """
+    Function that will insert business into Business Table if not exists.
+    Then inserts the associated category_alias and business_id in relational table
+    :param business_obj: YelpData Object
+    :param list_of_categories: category aliases that the business belongs to
+    :param user_name: user_name of user
+    :return: None
+    """
+    business_name = business_obj.restaurant_info.__getattribute__('name')
+    business_id = business_obj.restaurant_info.__getattribute__('id')
+    curr = cnx.cursor()
+    sql_insert_new_business = 'INSERT IGNORE INTO Businesses (business_id,business_name,user_name) VALUES (%s,%s,%s)'
+    curr.execute(sql_insert_new_business, (business_id, business_name, user_name))
+    sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
+                                   '(SELECT category_id FROM Categories WHERE category_name = %s))'
+    for category_alias in list_of_categories_alias:
+        curr.execute(sql_insert_business_category, (business_id, category_alias))
+    cnx.commit()
+    curr.close()
+
+
+#TODO: insert_visit_to_business(business_obj,date_time_string)
+    # need to validate that business_id is valid
+
+def insert_visit_to_business(business_id, date_time_string, user_name):
+    """
+    Function to insert a visit to a business_id for a given user_name and datetime string
+    :param business_id: id of the business that user_name visisted
+    :param date_time_string: the datetime string that the visit occured
+    :param user_name: user_name of the user that made the visit
+    :return: None
+    """
+    sql_insert_visit = 'INSERT INTO Business_LOG (business_id,user_name,visit) VALUES(%s,%s,%s)'
+    curr = cnx.cursor()
+    curr.execute(sql_insert_visit, (business_id, user_name, date_time_string))
+    cnx.commit()
+    curr.close()
+
+
 def close_connection():
     """
     Function to close connection to MySQL Database
