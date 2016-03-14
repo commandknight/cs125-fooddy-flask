@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Reccomendations</title>
+
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+    <!--jQueryMobile scripts-->
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"> <!-- to work with portrait mode-->
 </head>
+
 <body>
 <div data-role="page" id="rec_page">
     <!--LOCATION PANEL, must be first or last in rec_page div-->
@@ -20,26 +27,58 @@
         <!--CALENDAR LOCATION-->
         <!--TODO: add calendar location from dolly-->
 {#        if calendar_is_authenticated#}
-        <button>Use my next event</button>
+        <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>
+        <div id="next_event_location" style="display:none;">
             Is {{ next_location }} <br/>
             your next location?
+        </div>
+        <script>
+            function getNextEventLocation(target) {
+                document.getElementById(target).style.display='block';
+            }
+        </script>
         <!--MANUAL LOCATION-->
         <!--TODO: form for new location-->
-        <button>Manually enter location</button>
-        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
-        <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">
+{#        <button>Manually enter location</button>#}
+{#        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>#}
+{#        <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">#}
+{##}
+{#        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>#}
+{#        <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">#}
+{##}
+{#        <label for="textinput-hide" class="ui-hidden-accessible">City</label>#}
+{#        <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">#}
+{##}
+{#        <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
+{#        <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">#}
+{##}
+{#        <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
+{#        <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">#}
 
-        <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>
-        <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">
+        <button onclick="openAddressForm('address_form')">Manually enter location</button>
+        <div id="address_form" style="display:none;">
+            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
+            <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">
 
-        <label for="textinput-hide" class="ui-hidden-accessible">City</label>
-        <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">
+            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>
+            <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">
 
-        <label for="textinput-hide" class="ui-hidden-accessible">State</label>
-        <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">
+            <label for="textinput-hide" class="ui-hidden-accessible">City</label>
+            <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">
 
-        <label for="textinput-hide" class="ui-hidden-accessible">State</label>
-        <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">
+            <label for="textinput-hide" class="ui-hidden-accessible">State</label>
+            <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">
+
+            <label for="textinput-hide" class="ui-hidden-accessible">State</label>
+            <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">
+
+            <input type="submit" name="submit_location" value="OK" class="ui-mini" />
+        </div><!--/addressform-->
+        <script>
+            function openAddressForm(target) {
+                document.getElementById(target).style.display='block';
+            }
+        </script>
 
 
     </div><!-- /location_panel -->
@@ -50,27 +89,6 @@
  recommends...</h1>
         <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
     </div>
-{#        <div data-role="collapsible" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">#}
-{#            <h1>Location</h1>#}
-{#            <div data-role="collapsibleset" data-inset="false">#}
-{##}
-{#                <div data-role="collapsible" onclick="getLocation()">#}
-{#                    <!--TODO: you have to click in <p id="demo> for the location to show... FIX!-->#}
-{#                    <h3>Use my current location</h3>#}
-{#                    We'll use this location: <p id="demo"></p> to recommend nearby restaurants.#}
-{#                </div><!--/current location collapsible-->#}
-{#                <div data-role="collapsible">#}
-{#                    <h3>Use my next location</h3>#}
-{#                    Is {{ next_location }} <br/>#}
-{#                    your next location?#}
-{#                </div>#}
-{#                <div data-role="collapsible">#}
-{#                    <h3>Enter location manually</h3>#}
-{#                    TODO: Address form#}
-{#                </div>#}
-{#            </div>#}
-{#        </div><!--/collapsible-->#}
-{#    </div>#}
 
     <ul data-role="listview">
     {% for bus in list_results %}
