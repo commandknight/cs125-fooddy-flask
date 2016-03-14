@@ -1,5 +1,5 @@
 //code from http://www.w3schools.com/html/html5_geolocation.asp
-var x = document.getElementById("current_location");
+var x = document.getElementById("successfully_grabbed_location");
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -10,8 +10,15 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude +
-    "<br>Longitude: " + position.coords.longitude;
+    document.getElementById("current_location_latitude").innerHTML = position.coords.latitude;
+    document.getElementById("current_location_longitude").innerHTML = position.coords.longitude;
+    //console.log("got latitude/longitudde", position);
+    x.innerHTML =
+        //"<div data-role='popup'>" +
+        //    "<a href='#' data-rel='back' class='ui-btn ui-icon-delete ui-btn-right ui-btn-icon-notext'>Close</a>" +
+            "Fooddy is now using your current location to recommend restaurants!";
+        //"</div>";
+    //x.innerHTML("Hey wsup bruh");
 }
 
 //function getNextEventLocation(target) {
