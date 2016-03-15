@@ -143,22 +143,48 @@ def oauth2callback():
         return redirect(url_for('index'))
 
 
-@app.route('/recommended')
+@app.route('/recommended', methods=["GET", "POST"])
 def recommended():
-    # Right now, we are using a static category_filter=["Italian"],
-    # TODO: later use the user's checked categories.
+
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
-    if is_google_auth():
-        location = get_location(http_auth)
+    if request.method=="POST":
+
+        for i in request.form.items():
+            print(i)
+        if request.form['confirm_current_loc'] == "OK":
+
+            long = request.form.get("current_location_longitude")
+            lat = request.form.get("current_location_latitude")
+
+            print(long, lat)
+
+            if is_google_auth():
+                location = get_location(http_auth)
+
+            elif not is_google_auth():
+                location = "Connect with Google Calendar to see your next event's location!"
+
+            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
+            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
+            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
+            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
+            return render_template("recommended.html",
+                                   list_results=yelp_data_source.get_results_from_locations(user_categories),
+                                   next_location=location)
     else:
-        location = "Connect with Google Calendar to see your next event's location!"
-    return render_template("recommended.html",
-                           list_results=yelp_data_source.get_results_from_locations(user_categories),
-                           next_location=location)
+        print('still using GET')
+        if is_google_auth():
+            location = get_location(http_auth)
 
+        else:
+            location = "Connect with Google Calendar to see your next event's location!"
 
-# This is used AFTER we display recme_temp (list of restaurants)
+        return render_template("recommended.html",
+                               list_results=yelp_data_source.get_results_from_locations(user_categories),
+                               next_location=location)
+
+#Single Restaurant View
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary

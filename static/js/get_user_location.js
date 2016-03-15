@@ -10,8 +10,8 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    document.getElementById("current_location_latitude").innerHTML = position.coords.latitude;
-    document.getElementById("current_location_longitude").innerHTML = position.coords.longitude;
+    document.getElementById("current_location_latitude").value = position.coords.latitude;
+    document.getElementById("current_location_longitude").value = position.coords.longitude;
     //console.log("got latitude/longitudde", position);
     x.innerHTML =
         //"<div data-role='popup'>" +
