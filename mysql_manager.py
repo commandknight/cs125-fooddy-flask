@@ -1,13 +1,11 @@
 """
 Created by Jeet Nagda
-To Use: please import right before you call it, and close immediately after finish
 import mysql_manager as mm
 result = mm.get_list....
 """
 
 import mysql.connector
 import numpy as np
-
 
 # Configuration for mysql database
 config = {
@@ -21,7 +19,6 @@ config = {
 cnx = mysql.connector.connect(**config)
 
 
-
 def get_category_dict():
     """
     function to make dictionary of category names -> id
@@ -29,10 +26,18 @@ def get_category_dict():
     """
     category_dict = {}
     print("making dict")
-    result = get_list_of_category_names()
-    for idx,tup in enumerate(result):
+    category_names = get_list_of_category_names()
+    for idx, tup in enumerate(category_names):
         category_dict[tup[0]] = idx
     return category_dict
+
+
+def get_idx_to_category_dict():
+    idx_category_dict = {}
+    category_names = get_list_of_category_names()
+    for idx, category_name_tuple in enumerate(category_names):
+        idx_category_dict[idx] = category_name_tuple[0]
+    return idx_category_dict
 
 
 def get_category_name_to_alias_dict():
@@ -46,18 +51,9 @@ def get_category_name_to_alias_dict():
     result = curr.fetchall()
     curr.close()
     name_to_alias_dict = {}
-    for category_alias,category_name in result:
+    for category_alias, category_name in result:
         name_to_alias_dict[category_name] = category_alias
     return name_to_alias_dict
-
-
-
-
-# constants
-
-category_dict = get_category_dict();
-num_categories = len(category_dict)
-category_name_to_alias_dict = get_category_name_to_alias_dict();
 
 
 def get_list_categories_for_profile_edit(user_name):
@@ -70,7 +66,7 @@ def get_list_categories_for_profile_edit(user_name):
     categories_liked = get_list_of_category_names_user_likes(username=user_name)
     result = []
     for category in category_names:
-        result.append((category[0],True if category[0] in categories_liked else False))
+        result.append((category[0], True if category[0] in categories_liked else False))
     return result
 
 
@@ -84,6 +80,7 @@ def get_list_of_category_names():
     result = curr.fetchall()
     curr.close()
     return result
+
 
 def get_list_of_category_alias():
     """
@@ -108,7 +105,7 @@ def get_list_of_category_names_user_likes(username):
                  'WHERE UserWeights.category_id = Categories.category_id AND '
                  'UserProfile.user_name = UserWeights.user_name '
                  'AND UserWeights.weight > 0.0'
-                 'AND UserProfile.user_name = %s',(username,))
+                 'AND UserProfile.user_name = %s', (username,))
     result = curr.fetchall()
     curr.close()
     return [x[0] for x in result]
@@ -125,7 +122,7 @@ def get_category_weights_for_user(username):
                  'WHERE UserWeights.category_id = Categories.category_id AND '
                  'UserProfile.user_name = UserWeights.user_name '
                  'AND UserWeights.weight > 0.0'
-                 'AND UserProfile.user_name = %s',(username,))
+                 'AND UserProfile.user_name = %s', (username,))
     result = curr.fetchall()
     curr.close()
     return result
@@ -143,7 +140,7 @@ def get_number_of_categories():
     return result[0]
 
 
-def is_login_valid(username,password):
+def is_login_valid(username, password):
     """
     Function to check if given login information is valid
     :param username: user_names as profile, used as PK
@@ -151,7 +148,7 @@ def is_login_valid(username,password):
     :return: Boolean response if login is accepted or not
     """
     curr = cnx.cursor()
-    curr.execute('SELECT password FROM UserProfile WHERE user_name = %s',(username,))
+    curr.execute('SELECT password FROM UserProfile WHERE user_name = %s', (username,))
     password_tmp = curr.fetchone()
     curr.close()
     if password_tmp is None:
@@ -159,7 +156,7 @@ def is_login_valid(username,password):
     return password == password_tmp[0]
 
 
-def insert_category(category_name,category_alias):
+def insert_category(category_name, category_alias):
     """
     Function to insert new category record
     :param category_name: String formal name of category to insert Ex: "Italian"
@@ -167,12 +164,12 @@ def insert_category(category_name,category_alias):
     :return: None
     """
     curr = cnx.cursor()
-    curr.execute('INSERT IGNORE INTO Categories(category_name,category_alias)',(category_name,category_alias))
+    curr.execute('INSERT IGNORE INTO Categories(category_name,category_alias)', (category_name, category_alias))
     cnx.commit()
     curr.close()
 
 
-def insert_new_user_profile(username,password):
+def insert_new_user_profile(username, password):
     """
     Function to insert new user_profile into database
     :param username: String PK user_name to insert
@@ -181,12 +178,12 @@ def insert_new_user_profile(username,password):
     """
     curr = cnx.cursor()
     curr.execute('INSERT IGNORE INTO UserProfile(user_name,password) VALUES (%s,%s)'
-                 'ON DUPLICATE KEY UPDATE password = %s',(username,password,password))
+                 'ON DUPLICATE KEY UPDATE password = %s', (username, password, password))
     cnx.commit()
     curr.close()
 
 
-def init_category_weight_if_not_present(user_name,category_name,weight):
+def init_category_weight_if_not_present(user_name, category_name, weight):
     """
     Function to INSERT or IGNORE UserWeight for given category_name and weight
     :param user_name: string UserName of UserWeight to update/insert
@@ -197,12 +194,29 @@ def init_category_weight_if_not_present(user_name,category_name,weight):
     curr = cnx.cursor()
     sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
                                    'VALUES (%s,(SELECT category_id FROM Categories WHERE category_name = %s),%s)'
-    curr.execute(sql_insert_update_UserWeight,(user_name,category_name,weight))
+    curr.execute(sql_insert_update_UserWeight, (user_name, category_name, weight))
     cnx.commit()
     curr.close()
 
 
-def update_category_alias_weight(user_name,category_alias,weight):
+def update_category_alias_weight(user_name, category_alias, weight):
+    """
+    Function to INSERT or UPDATE UserWeight for given category_alias and weight
+    :param user_name: string UserName of UserWeight to update/insert
+    :param category_alias: String alias of category weight to update
+    :param weight: Double of the weight to insert
+    :return: None
+    """
+    curr = cnx.cursor()
+    sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
+                                   'VALUES (%s,(SELECT category_id FROM Categories WHERE category_alias = %s),%s) ' \
+                                   'ON DUPLICATE KEY UPDATE weight = %s'
+    curr.execute(sql_insert_update_UserWeight, (user_name, category_alias, weight, weight))
+    cnx.commit()
+    curr.close()
+
+
+def update_category_name_weight(user_name, category_name, weight):
     """
     Function to INSERT or UPDATE UserWeight for given category_alias and weight
     :param user_name: string UserName of UserWeight to update/insert
@@ -214,7 +228,7 @@ def update_category_alias_weight(user_name,category_alias,weight):
     sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
                                    'VALUES (%s,(SELECT category_id FROM Categories WHERE category_name = %s),%s) ' \
                                    'ON DUPLICATE KEY UPDATE weight = %s'
-    curr.execute(sql_insert_update_UserWeight,(user_name,category_alias,weight,weight))
+    curr.execute(sql_insert_update_UserWeight, (user_name, category_name, weight, weight))
     cnx.commit()
     curr.close()
 
@@ -239,18 +253,23 @@ def get_user(user_name):
     :return: tuple(String username, String password)
     """
     curr = cnx.cursor()
-    curr.execute('SELECT user_name, password FROM UserProfile WHERE user_name = %s',(user_name,))
+    curr.execute('SELECT user_name, password FROM UserProfile WHERE user_name = %s', (user_name,))
     result = curr.fetchone()
     curr.close()
     return result
 
 
 def get_user_weights_vector(username):
-    user_weight_vec = np.zeroes(num_categories);
+    """
+    Function to get user_vector from DB
+    :param username: user_name of vector to get
+    :return: Array(double) user_vector
+    """
+    user_weight_vec = np.zeros(num_categories)
     weights = get_category_weights_for_user(username)
     for tup in weights:
         user_weight_vec[category_dict[tup[0]]] = tup[1]
-    if (np.count_nonzero(user_weight_vec) == 0):
+    if np.count_nonzero(user_weight_vec) == 0:
         raise Exception("user weight vector is zero~!!!")
     return user_weight_vec
 
@@ -277,8 +296,6 @@ def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name)
     curr.close()
 
 
-    # need to validate that business_id is valid
-
 def insert_visit_to_business(business_id, date_time_string, user_name):
     """
     Function to insert a visit to a business_id for a given user_name and datetime string
@@ -294,34 +311,53 @@ def insert_visit_to_business(business_id, date_time_string, user_name):
     curr.close()
 
 
-# update categories based on where they have visited.
 def update_category_weights_by_visit(username, list_categories):
+    """
+    Update categories based on where the user_name has visited
+    :param username: user_name of the user to update
+    :param list_categories: categories of the visit
+    :return: None
+    """
     user_vector = get_user_weights_vector(username)
     for category in list_categories:
         if category in category_dict:
-            current_weight = user_vector[category_dict[category]];
-            new_weight = current_weight + (.75/current_weight) + .5; # 2 is multiplicative constant for original boost,
-                                                                    #  .5 ensuring is constant increase. necessary for good probabilistic returns
-            update_category_alias_weight(username, category_name_to_alias_dict[category], new_weight);
+            current_weight = user_vector[category_dict[category]]
+            new_weight = current_weight + (
+                .75 / current_weight) + .5  # 2 is multiplicative constant for original boost,
+            #  .5 ensuring is constant increase. necessary for good probabilistic returns
+            update_category_alias_weight(username, category_name_to_alias_dict[category], new_weight)
 
 
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
 # Planning to use this at the start of every user login so they can have the most updated vector
-def degenerate_categories(username):
+def degenerate_categories(user_name):
     # need to talk to Jeet for this. two approaches: one is to check every day server side
     # other way is to update whenver user logs in. still need to keep track of last update/last went to restaurant
     # second one is easier given our architecture that we've built i think.
-
-    user_vector = get_user_weights_vector(username)
-    for idx,category_weight in enumerate(user_vector):
-        # if we use latter: floor (last visited / decay_threshold) i.e. 3 days ago / decay in 3 days
+    user_vector = get_user_weights_vector(user_name)
+    for idx, category_weight in enumerate(user_vector):
+        # if we use latter: floor (time_from_last_visited / decay_threshold) i.e. 3 days ago / decay in 3 days
         # for loop the decay for that category.
-        decayed_weight = category_weight - (.75/category_weight) + .5;
-        if decayed_weight < .15: # we will set .5 as the start weight.
+        decayed_weight = category_weight - (.75 / category_weight) + .5
+        if decayed_weight < .15:  # we will set .5 as the start weight.
             decayed_weight = .15
-        user_vector[idx] = decayed_weight;
-    # update the whole vector by removing old one and replacing with new one. less db calls? or just update it all at once
+        user_vector[idx] = decayed_weight
+        # update the whole vector by removing old one and replacing with new one.
+        # less db calls? or just update it all at once
+
+
+def update_user_vector(user_name, new_user_vector):
+    """
+    Method to update the user weights with new user_vector
+    :param user_name: user_name of vector to update
+    :param new_user_vector: vector 1D array with idx as order of get_category_names, and value category_weight
+    :return: None
+    """
+    lookup = get_idx_to_category_dict()
+    for idx, category_weight in enumerate(new_user_vector):
+        category_name = lookup[idx]
+        update_category_name_weight(user_name, category_name, category_weight)
 
 
 def close_connection():
@@ -330,3 +366,9 @@ def close_connection():
     :return: None
     """
     cnx.close()
+
+
+# CONSTANTS! #####
+category_dict = get_category_dict()
+num_categories = len(category_dict)
+category_name_to_alias_dict = get_category_name_to_alias_dict()
