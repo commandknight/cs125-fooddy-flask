@@ -311,6 +311,19 @@ def insert_visit_to_business(business_id, date_time_string, user_name):
     curr.close()
 
 
+def update_user_vector(user_name, new_user_vector):
+    """
+    Method to update the user weights with new user_vector
+    :param user_name: user_name of vector to update
+    :param new_user_vector: vector 1D array with idx as order of get_category_names, and value category_weight
+    :return: None
+    """
+    lookup = get_idx_to_category_dict()
+    for idx, category_weight in enumerate(new_user_vector):
+        category_name = lookup[idx]
+        update_category_name_weight(user_name, category_name, category_weight)
+
+
 def update_category_weights_by_visit(username, list_categories):
     """
     Update categories based on where the user_name has visited
@@ -321,12 +334,13 @@ def update_category_weights_by_visit(username, list_categories):
     user_vector = get_user_weights_vector(username)
     for category in list_categories:
         if category in category_dict:
-            current_weight = user_vector[category_dict[category]]
+            category_index = category_dict[category]
+            current_weight = user_vector[category_index]
             new_weight = current_weight + (
                 .75 / current_weight) + .5  # 2 is multiplicative constant for original boost,
             #  .5 ensuring is constant increase. necessary for good probabilistic returns
-            update_category_alias_weight(username, category_name_to_alias_dict[category], new_weight)
-
+            user_vector[category_index] = new_weight;
+    update_user_vector(username, user_vector);
 
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
@@ -345,19 +359,6 @@ def degenerate_categories(user_name):
         user_vector[idx] = decayed_weight
         # update the whole vector by removing old one and replacing with new one.
         # less db calls? or just update it all at once
-
-
-def update_user_vector(user_name, new_user_vector):
-    """
-    Method to update the user weights with new user_vector
-    :param user_name: user_name of vector to update
-    :param new_user_vector: vector 1D array with idx as order of get_category_names, and value category_weight
-    :return: None
-    """
-    lookup = get_idx_to_category_dict()
-    for idx, category_weight in enumerate(new_user_vector):
-        category_name = lookup[idx]
-        update_category_name_weight(user_name, category_name, category_weight)
 
 
 def close_connection():
