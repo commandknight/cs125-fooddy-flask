@@ -111,14 +111,14 @@ def get_list_of_category_names_user_likes(username):
     return [x[0] for x in result]
 
 
-def get_category_weights_for_user(username):
+def get_category_weights_and_last_visit_for_user(username):
     """
     Function to get list of category names and weights, note need to cast tuple Decimal as float
     :param username of profile
     :return: list(tuples(string,Decimal))
     """
     curr = cnx.cursor()
-    curr.execute('SELECT category_name,weight FROM UserProfile,UserWeights,Categories '
+    curr.execute('SELECT category_name,weight,last_visit FROM UserProfile,UserWeights,Categories '
                  'WHERE UserWeights.category_id = Categories.category_id AND '
                  'UserProfile.user_name = UserWeights.user_name '
                  'AND UserWeights.weight > 0.0'
@@ -179,6 +179,28 @@ def insert_new_user_profile(username, password):
     curr = cnx.cursor()
     curr.execute('INSERT IGNORE INTO UserProfile(user_name,password) VALUES (%s,%s)'
                  'ON DUPLICATE KEY UPDATE password = %s', (username, password, password))
+    cnx.commit()
+    curr.close()
+
+
+def init_category_weight_vector_for_user(user_name, init_weight):
+    """
+    Function to init the user vector
+    :param user_name: user_name to init
+    :param init_weight: the weight to init the vector
+    :return:
+    """
+    category_names = get_list_of_category_names()
+    for category in category_names:
+        init_category_weight_if_not_present(user_name, category, init_weight)
+
+
+def update_datetime_of_categories_for_user(user_name, list_of_categories):
+    sql_update_last_visit = 'UPDATE UserWeights SET last_visit = NOW() WHERE user_name = %s and category_id = ' \
+                            '(SELECT category_id FROM Categories WHERE category_name = %s)'
+    curr = cnx.cursor()
+    for category in list_of_categories:
+        curr.execute(sql_update_last_visit, (user_name, category))
     cnx.commit()
     curr.close()
 
@@ -266,7 +288,7 @@ def get_user_weights_vector(username):
     :return: Array(double) user_vector
     """
     user_weight_vec = np.zeros(num_categories)
-    weights = get_category_weights_for_user(username)
+    weights = get_category_weights_and_last_visit_for_user(username)
     for tup in weights:
         user_weight_vec[category_dict[tup[0]]] = tup[1]
     if np.count_nonzero(user_weight_vec) == 0:
