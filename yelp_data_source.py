@@ -151,7 +151,7 @@ def get_results_from_locations(category_filter, coords=[(33.6694, -117.8231)],
 
     elif len(normal_coords) == 1:
         long = normal_coords[0][0]
-        lat = normal_coords[0][1];
+        lat = normal_coords[0][1]
         for i in range(iterations):
             time.sleep(.3)
             params['offset'] = i * limit

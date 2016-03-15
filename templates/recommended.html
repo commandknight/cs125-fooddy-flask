@@ -116,12 +116,13 @@
              <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
     </div>
 
+
+
     <ul data-role="listview">
-        {% for bus in list_results %}
-            <li><a href="restaurant/{{ bus['id'] }}">{{ bus['name'] }}</a></li>
+        {% for yelp_data in list_results %}
+            <li><a href="restaurant/{{ yelp_data.restaurant_info['id'] }}">{{ yelp_data.restaurant_info['name'] }}</a></li>
         {% endfor %}
     </ul>
-
 
     <div data-role="footer" data-position="fixed">
         <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
