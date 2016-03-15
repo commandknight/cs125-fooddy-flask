@@ -192,6 +192,15 @@ def upload():
         mm.init_category_weight_if_not_present(username, cat_name, 1.0)
     return render_template("index.html", logged_in=True, username=username, code=302)
 
+@app.route('/rating', methods=['POST'])
+@login_required
+def update_user_weights():
+    username = current_user.get_id()
+    rating = request.form['rating'];
+    restaurant_id = request.form['restaurant_id']
+    business_id = request.form['business_id']
+    categories = request.form['categories']
+
 
 if __name__ == '__main__':
     app.run(host='localhost')

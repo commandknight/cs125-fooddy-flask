@@ -6,6 +6,8 @@ result = mm.get_list....
 """
 
 import mysql.connector
+import numpy as np
+
 
 # Configuration for mysql database
 config = {
@@ -18,31 +20,6 @@ config = {
 
 cnx = mysql.connector.connect(**config)
 
-
-def get_list_categories_for_profile_edit(user_name):
-    """
-    Function that returns tuple of (Category_Name,liked)
-    :param user_name: username to get liked categories of
-    :return: List(Tuple(String,Boolean)) ex: ('Italian',True)
-    """
-    category_names = get_list_of_category_names()
-    categories_liked = get_list_of_category_names_user_likes(username=user_name)
-    result = []
-    for category in category_names:
-        result.append((category[0],True if category[0] in categories_liked else False))
-    return result
-
-
-def get_list_of_category_names():
-    """
-    Function to return list of category names as list(tuples(string,))
-    :return: category names as list(tuples(string,))
-    """
-    curr = cnx.cursor()
-    curr.execute('SELECT category_name From Categories ORDER BY category_name ASC')
-    result = curr.fetchall()
-    curr.close()
-    return result
 
 
 def get_category_dict():
@@ -73,6 +50,40 @@ def get_category_name_to_alias_dict():
         name_to_alias_dict[category_name] = category_alias
     return name_to_alias_dict
 
+
+
+
+# constants
+
+category_dict = get_category_dict();
+num_categories = len(category_dict)
+category_name_to_alias_dict = get_category_name_to_alias_dict();
+
+
+def get_list_categories_for_profile_edit(user_name):
+    """
+    Function that returns tuple of (Category_Name,liked)
+    :param user_name: username to get liked categories of
+    :return: List(Tuple(String,Boolean)) ex: ('Italian',True)
+    """
+    category_names = get_list_of_category_names()
+    categories_liked = get_list_of_category_names_user_likes(username=user_name)
+    result = []
+    for category in category_names:
+        result.append((category[0],True if category[0] in categories_liked else False))
+    return result
+
+
+def get_list_of_category_names():
+    """
+    Function to return list of category names as list(tuples(string,))
+    :return: category names as list(tuples(string,))
+    """
+    curr = cnx.cursor()
+    curr.execute('SELECT category_name From Categories ORDER BY category_name ASC')
+    result = curr.fetchall()
+    curr.close()
+    return result
 
 def get_list_of_category_alias():
     """
@@ -234,6 +245,16 @@ def get_user(user_name):
     return result
 
 
+def get_user_weights_vector(username):
+    user_weight_vec = np.zeroes(num_categories);
+    weights = get_category_weights_for_user(username)
+    for tup in weights:
+        user_weight_vec[category_dict[tup[0]]] = tup[1]
+    if (np.count_nonzero(user_weight_vec) == 0):
+        raise Exception("user weight vector is zero~!!!")
+    return user_weight_vec
+
+
 def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name):
     """
     Function that will insert business into Business Table if not exists.
@@ -249,14 +270,13 @@ def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name)
     sql_insert_new_business = 'INSERT IGNORE INTO Businesses (business_id,business_name,user_name) VALUES (%s,%s,%s)'
     curr.execute(sql_insert_new_business, (business_id, business_name, user_name))
     sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
-                                   '(SELECT category_id FROM Categories WHERE category_name = %s))'
+                                   '(SELECT category_id FROM Categories WHERE category_alias = %s))'
     for category_alias in list_of_categories_alias:
         curr.execute(sql_insert_business_category, (business_id, category_alias))
     cnx.commit()
     curr.close()
 
 
-#TODO: insert_visit_to_business(business_obj,date_time_string)
     # need to validate that business_id is valid
 
 def insert_visit_to_business(business_id, date_time_string, user_name):
@@ -272,6 +292,36 @@ def insert_visit_to_business(business_id, date_time_string, user_name):
     curr.execute(sql_insert_visit, (business_id, user_name, date_time_string))
     cnx.commit()
     curr.close()
+
+
+# update categories based on where they have visited.
+def update_category_weights_by_visit(username, list_categories):
+    user_vector = get_user_weights_vector(username)
+    for category in list_categories:
+        if category in category_dict:
+            current_weight = user_vector[category_dict[category]];
+            new_weight = current_weight + (.75/current_weight) + .5; # 2 is multiplicative constant for original boost,
+                                                                    #  .5 ensuring is constant increase. necessary for good probabilistic returns
+            update_category_alias_weight(username, category_name_to_alias_dict[category], new_weight);
+
+
+# Todo: degenerate categories by looking at the last visited time.
+# Need to get the last time updated/visited category attribute from DB. jeet pls.
+# Planning to use this at the start of every user login so they can have the most updated vector
+def degenerate_categories(username):
+    # need to talk to Jeet for this. two approaches: one is to check every day server side
+    # other way is to update whenver user logs in. still need to keep track of last update/last went to restaurant
+    # second one is easier given our architecture that we've built i think.
+
+    user_vector = get_user_weights_vector(username)
+    for idx,category_weight in enumerate(user_vector):
+        # if we use latter: floor (last visited / decay_threshold) i.e. 3 days ago / decay in 3 days
+        # for loop the decay for that category.
+        decayed_weight = category_weight - (.75/category_weight) + .5;
+        if decayed_weight < .15: # we will set .5 as the start weight.
+            decayed_weight = .15
+        user_vector[idx] = decayed_weight;
+    # update the whole vector by removing old one and replacing with new one. less db calls? or just update it all at once
 
 
 def close_connection():

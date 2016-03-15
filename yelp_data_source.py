@@ -20,9 +20,6 @@ auth = Oauth1Authenticator(
     token_secret=token_secret
 )
 yelp_client = Client(auth)
-category_dict = mm.get_category_dict();
-num_categories = len(category_dict)
-category_name_to_alias_dict = mm.get_category_name_to_alias_dict();
 
 
 
@@ -31,17 +28,17 @@ class YelpData:
     def __init__(self, business):
         self.restaurant_info = business;  # dictionary information for the restaurant/business
         self.restaurant_vector = self.__get_restaurant_vector(); # restaurant weights
-        self.cosine_sim = -1; # cosine simlarity.
+        self.cosine_sim = -1;  # cosine simlarity.
 
 
     # return weight vectors for restaurant
     def __get_restaurant_vector(self):
-        vec = np.zeros(num_categories);
+        vec = np.zeros(mm.num_categories);
         for category_list_item in self.restaurant_info.categories:
             category = category_list_item.name
             print(category)
-            if(category in category_dict.keys()):
-                vec[category_dict[category]] = 1;
+            if category in mm.category_dict.keys():
+                vec[mm.category_dict[category]] = 1;
         return vec;
 
 
@@ -135,7 +132,7 @@ def get_results_from_locations(category_filter, coords=[(37.77493,-122.419415), 
     normal_coords = swap_coords(coords);
     aliases = ''
     for category in category_filter:
-        aliases += category_name_to_alias_dict[category] + ','
+        aliases += mm.category_name_to_alias_dict[category] + ','
     aliases = aliases[:-1]  # strip the last comma
     iterations = math.ceil(num_of_results / limit)
     responses = [];
