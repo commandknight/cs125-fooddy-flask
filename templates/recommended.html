@@ -4,10 +4,10 @@
     <title>Reccomendations</title>
 
     <!--favicon-->
-    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
 
     <!--jQueryMobile scripts-->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"> <!-- to work with portrait mode-->
@@ -16,10 +16,10 @@
 <body>
 <div data-role="page" id="rec_page">
     <!--LOCATION PANEL, must be first or last in rec_page div-->
-    <div data-role="panel" id="location_panel" data-display="overlay"  data-position="right">
+    <div data-role="panel" id="location_panel" data-display="overlay" data-position="right">
         <div data-role="header" id="location_panel_header">
-{#            <h1>Location Settings</h1>#}
-{#            <a href="#" data-icon="delete" class="ui-btn-left ui-btn-icon-notext">Close_button</a>#}
+            {#            <h1>Location Settings</h1>#}
+            {#            <a href="#" data-icon="delete" class="ui-btn-left ui-btn-icon-notext">Close_button</a>#}
             <div data-role="navbar" data-iconpos="left">
                 <ul>
                     <li><a href="#" data-rel="close" data-icon="delete">Location Settings</a></li>
@@ -43,11 +43,11 @@
         <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>
         <div id="next_event_location" style="display:none;">
             {{ next_location }} <br/>
-{#            <button id="confirm_next_location" class="ui-btn ui-btn-inline ui-corner-all">Confirm</button>#}
+            {#            <button id="confirm_next_location" class="ui-btn ui-btn-inline ui-corner-all">Confirm</button>#}
         </div>
         <script>
             function getNextEventLocation(target) {
-                document.getElementById(target).style.display='block';
+                document.getElementById(target).style.display = 'block';
             }
         </script>
         <!--MANUAL LOCATION-->
@@ -69,11 +69,11 @@
             <label for="textinput-hide" class="ui-hidden-accessible">State</label>
             <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">
 
-            <input type="submit" name="submit_location" value="OK" class="ui-mini" />
+            <input type="submit" name="submit_location" value="OK" class="ui-mini"/>
         </div><!--/addressform-->
         <script>
             function openAddressForm(target) {
-                document.getElementById(target).style.display='block';
+                document.getElementById(target).style.display = 'block';
             }
         </script>
 
@@ -82,21 +82,21 @@
 
     <div data-role="header" data-position="fixed" style="padding-top:2px; padding-bottom:0px;">
         <a href="/" data-icon="home" class="ui-btn-left ui-btn-inline ui-mini">Home</a>
-        <h1><img src="../static/assets/logo.png" height="50px" /><br/>
- recommends...</h1>
-        <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
+        <h1><img src="../static/assets/logo.png" height="50px"/><br/>
+            recommends...</h1>
+             <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
     </div>
 
     <ul data-role="listview">
-    {% for bus in list_results %}
-        <li><a href="restaurant/{{ bus['id'] }}">{{ bus['name'] }}</a></li>
-    {%endfor%}
+        {% for bus in list_results %}
+            <li><a href="restaurant/{{ bus['id'] }}">{{ bus['name'] }}</a></li>
+        {% endfor %}
     </ul>
 
 
-<div data-role="footer" data-position="fixed">
-<center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
-</div>
+    <div data-role="footer" data-position="fixed">
+        <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
+    </div>
 
 </div> <!--/end rec_page-->
 </body>

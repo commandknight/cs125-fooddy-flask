@@ -58,7 +58,7 @@ def get_credentials():
 
 def get_next_event_timedateloc_on_google_calendar(credentials):
     """Shows basic usage of the Google Calendar API.
-
+    :param credentials
     Creates a Google Calendar API service object and outputs a list of the next
     10 events on the user's calendar.
     """

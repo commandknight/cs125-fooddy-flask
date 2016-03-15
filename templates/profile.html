@@ -4,9 +4,10 @@
     <title>My Categories</title>
 
     <!--favicon-->
-    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
 
-    <!--jQueryMobile scripts-->    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <!--jQueryMobile scripts-->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"> <!-- to work with portrait mode-->
@@ -23,21 +24,21 @@
         <center>Tell me what you like!</center>
     </div><!--/header-->
 
-<form>
-  <input type="text" data-type="search" id="filterable-input">
-</form>
-        <!--<fieldset data-role="controlgroup" data-filter="true">-->
-            <!-- changing code to a single form to submit -->
+    <form>
+        <input type="text" data-type="search" id="filterable-input">
+    </form>
+    <!--<fieldset data-role="controlgroup" data-filter="true">-->
+    <!-- changing code to a single form to submit -->
     <form id="category_question" action="{{ url_for('upload') }}" method="POST"
           data-role="controlgroup" data-filter="true" data-input="#filterable-input">
         {% for category_name,liked in category_names %}
-        
-             {%  if liked == True %}
-                <input type="checkbox" id="{{ category_name }}" name="checkbox" value="{{ category_name }}" checked />
-             {% else %}
-                 <!-- category is not liked -->
+                
+            {% if liked == True %}
+                <input type="checkbox" id="{{ category_name }}" name="checkbox" value="{{ category_name }}" checked/>
+            {% else %}
+                <!-- category is not liked -->
                 <input type="checkbox" id="{{ category_name }}" name="checkbox" value="{{ category_name }}"/>
-             {% endif %}
+            {% endif %}
             <label for="{{ category_name }}">{{ category_name }}</label>
         {% endfor %}
         <fieldset class="ui-grid-a">
@@ -47,7 +48,7 @@
     </form><!-- TODO: Jeet to add action="DELETE_FUNCTION_ON_FOODDY_PY"-->
 
     <div data-role="footer" data-position="fixed" style="height:40px">
-        <center>Categories from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
+        <center>Categories from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
     </div><!--/footer-->
 
 </div><!--/end profile_page-->
