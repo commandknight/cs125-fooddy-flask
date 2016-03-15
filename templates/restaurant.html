@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Fooddy says: {{ business['name'] }}</title>
-
+    <meta charset="utf-8">
     <!--favicon-->
     <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
 
@@ -11,6 +11,11 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"> <!-- to work with portrait mode-->
+    <style>
+        #map {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
 <!-- page 1-->
@@ -64,12 +69,16 @@
         </div>
     </div>
 
-
     <!--TODO: Button to show on map, right now not supported-->
     {#            {{ business['location']['coordinate'] }}#}
     {#    <button>Show me on the map!</button>#}
-
-
+    <iframe
+            width="500"
+            height="500"
+            frameborder="0" style="border:0"
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBsuMLW414ecSZmIQ3KQ_mg4EXp4Cw8fmM
+    &q={{ business.location.coordinate.latitude }},{{ business.location.coordinate.longitude }}" allowfullscreen>
+    </iframe>
     <!-- TODO: Make prettier, yelp stuff on footer -->
     <div data-role="footer" data-position="fixed">
         <div class="ui-grid-a">
@@ -85,6 +94,7 @@
         <center># yelp reviews: ({{ business['review_count'] }})</center>
 
     </div>
+
 
 </div> <!--/end restaurant_page-->
 
