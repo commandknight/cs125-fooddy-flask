@@ -145,7 +145,6 @@ def oauth2callback():
 
 @app.route('/recommended', methods=["GET", "POST"])
 def recommended():
-
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
     if request.method=="POST":
@@ -153,7 +152,6 @@ def recommended():
         for i in request.form.items():
             print(i)
         if request.form['confirm_current_loc'] == "OK":
-
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
 
@@ -170,16 +168,14 @@ def recommended():
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             return render_template("recommended.html",
-                                   list_results=yelp_data_source.get_results_from_locations(user_categories),
-                                   next_location=location)
+                                   list_results=yelp_data_source.get_results_from_locations(user_categories, coords=[(long,lat)]),
+                                   next_location =location)
     else:
         print('still using GET')
         if is_google_auth():
             location = get_location(http_auth)
-
-        else:
+        elif not is_google_auth():
             location = "Connect with Google Calendar to see your next event's location!"
-
         return render_template("recommended.html",
                                list_results=yelp_data_source.get_results_from_locations(user_categories),
                                next_location=location)

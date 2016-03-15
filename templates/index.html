@@ -19,6 +19,7 @@
 </head>
 
 <body>
+>
 <!-- page 1-->
 <div data-role="page" id="index_page">
 
@@ -40,8 +41,12 @@
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
         <center><h4>Hey, {{ current_user.get_id() }}</h4></center>
+    <script>
+        var loc = getLocation();
+    </script>
         <a href="/auth_google" rel="external" class="ui-btn"> Connect to Google Calendar</a>
-        <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a> <!--return to listview page-->
+        <a href="/recommended" rel="external" class="ui-btn"> Restaurants for you!</a>
+
         <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a>
         <!--return to listview page-->
         <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
@@ -58,6 +63,9 @@
         }
     </script>
 
+
 </div><!--/end index_page-->
 </body>
+<script src="../static/js/get_user_location.js"></script>
+
 </html>

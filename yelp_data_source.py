@@ -123,7 +123,7 @@ def swap_coords(coords):
     return a
 
 
-def get_results_from_locations(category_filter, coords=[(37.77493, -122.419415), (37.3382, -121.8863)],
+def get_results_from_locations(category_filter, coords=[(33.643145, -117.841956)],
                                num_of_results=40, limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
@@ -137,7 +137,6 @@ def get_results_from_locations(category_filter, coords=[(37.77493, -122.419415),
         'category_filter': aliases,
         'limit': limit,
     }
-
     if len(normal_coords) == 2:
         # find bounding box
         southwest_point, northeast_point = get_southwest_northeast_coords(normal_coords);
@@ -155,8 +154,9 @@ def get_results_from_locations(category_filter, coords=[(37.77493, -122.419415),
         for i in range(iterations):
             time.sleep(.3)
             params['offset'] = i * limit
-            response = yelp_client.search_by_coordinates(lat, long, **params)
+            response = yelp_client.search_by_coordinates(long,lat, **params)
             responses += response.businesses  # list of business objects
+
         return responses
 
     else:
