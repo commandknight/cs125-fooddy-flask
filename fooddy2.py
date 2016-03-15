@@ -1,14 +1,11 @@
 import datetime
-import json
 
 import httplib2
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager, UserMixin
+from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager
 from googleapiclient import discovery
 from oauth2client import client
-from oauth2client.client import OAuth2WebServerFlow
 
-import google_calendar_data_source
 import mysql_manager as mm
 import yelp_data_source
 from models.UserModel import User
@@ -44,7 +41,7 @@ def is_google_auth():
     """
     if 'credentials' not in session.keys():
         return False
-    #print(session['credentials'])  # DEBUG
+    # print(session['credentials'])  # DEBUG
     return True
 
 
@@ -111,16 +108,14 @@ def get_location(http_auth):
         orderBy='startTime').execute()
     # note: events_result['items'][0] is a Event resource object
     # see: https://developers.google.com/google-apps/calendar/v3/reference/events
-
     index_of_valid_event = 0
     # need to handle when user has no more events in events_result
     for i in range(len(events_result['items'])):
         example = events_result['items'][i]['start']
         if 'dateTime' in example.keys():
             index_of_valid_event = i
-            print(index_of_valid_event)
+            # print(index_of_valid_event) #DEBUG
             break
-
     if 'location' in events_result['items'][index_of_valid_event].keys():
         location = events_result['items'][index_of_valid_event]['location']
     else:
@@ -134,7 +129,7 @@ def oauth2callback():
         'resources/google_calendar_client_secret.json',
         scope='https://www.googleapis.com/auth/calendar.readonly',
         redirect_uri=url_for('oauth2callback', _external=True))
-    #print('flow was established')
+    # print('flow was established') # DEBUG
     if 'code' not in request.args:
         auth_uri = flow.step1_get_authorize_url()
         return redirect(auth_uri)
@@ -144,7 +139,7 @@ def oauth2callback():
         session['credentials'] = credentials.to_json()
         global http_auth
         http_auth = credentials.authorize(httplib2.Http())
-        print(http_auth)
+        # print(http_auth)
         return redirect(url_for('index'))
 
 
@@ -191,6 +186,7 @@ def upload():
     for cat_name in selected_categories:
         mm.init_category_weight_if_not_present(username, cat_name, 1.0)
     return render_template("index.html", logged_in=True, username=username, code=302)
+
 
 @app.route('/rating', methods=['POST'])
 @login_required
