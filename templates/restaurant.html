@@ -25,14 +25,65 @@
         <center>Did you just find the one?!</center>
     </div><!--/header-->
 
+    <div class="ui-grid-a">
+        <div class="ui-block-a" style="width:30%;">
+            <center><img src="{{ business['image_url'] }}" /></center>
+        </div>
+        <div class="ui-block-b" style="width:70%">
+            <center>
+            <div class="ui-grid-solo">
+                <div class="ui-block-a"><h2>{{ business['name'] }}</h2></div>
+            </div>
+            <div class="ui-grid-solo">
+                <div class="ui-block-a">
+                    <em>Address</em>
+                    {%  for a in business['location']['display_address'] %}
+                        {{ a }}<br/>
+                    {% endfor %}
+                </div>
+            </div>
+            </center>
+            <div class="ui-grid-solo">
+                <div class="ui-block-a">
+                    <center><em>Phone:</em> {{ business['display_phone'] }}</center>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-    <div class="ui-body ui-corner-all">Hey! You want to eat at {{ business['name'] }}?</div>
-    <div class="ui-body ui-corner-all">Address: <br/>{{ business['location']['display_address'] }}</div>
-    <div class="ui-body ui-corner-all">Phone:<br/>{{ business['phone'] }}</div>
+    <div class="ui-grid-solo">
+        <div class="ui-block-a">
+            <form id="my_rating">
+                <center><label for="my_rating_slider"><strong>Eaten here before? Rate it!</strong></label></center>
+                <input type="range" name="my_rating_slider" id="my_rating_slider"
+                   min="0" max="5" step="0.5" value="1" data-highlight="true" />
+                <input type="submit" id="submit_my_rating" name="submit_my_rating" value="Confirm my rating!" />
+                <!--TODO: Terry to grab rating value from slider after this submit-->
+            </form>
+        </div>
+    </div>
 
+
+
+    <!--TODO: Button to show on map, right now not supported-->
+{#            {{ business['location']['coordinate'] }}#}
+{#    <button>Show me on the map!</button>#}
+
+
+    <!-- TODO: Make prettier, yelp stuff on footer -->
     <div data-role="footer" data-position="fixed">
-        <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png" /></center>
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
+                <img src="{{ business['rating_img_url_large'] }}" /><br/>
+            </div>
+            <div class="ui-block-b">
+                <center><a href="{{ business['mobile_url'] }}"><img src="../static/assets/yelp/yelp_review_btn_light@2x.png" style="height:30px;" /></a>
+                </center>
+            </div>
+        </div>
+        <center># yelp reviews: ({{ business['review_count'] }})</center>
+
     </div>
 
 </div> <!--/end restaurant_page-->
