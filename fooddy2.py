@@ -62,7 +62,7 @@ def login():
                 muser = User(user)
                 if muser.password == form_password:
                     login_user(muser)  # Save user in context as "logged_in"
-                    return render_template("index.html")
+                    return redirect(url_for('index'))
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
                 else:
                     # print("ERROR in logging in") #DEBUG
@@ -76,7 +76,7 @@ def login():
             mm.insert_new_user_profile(user_name, form_password)
             new_user = User((user_name, form_password))
             login_user(new_user)
-            return render_template("index.html")
+            return redirect(url_for('index'))
     return render_template("login.html")
 
 
@@ -192,7 +192,7 @@ def upload():
 @login_required
 def update_user_weights():
     username = current_user.get_id()
-    rating = request.form['rating'];
+    rating = request.form['rating']
     restaurant_id = request.form['restaurant_id']
     business_id = request.form['business_id']
     categories = request.form['categories']
