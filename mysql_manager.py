@@ -442,6 +442,11 @@ def close_connection():
     cnx.close()
 
 
+# TODO:
+def get_user_rating_for_resturant(user_name, resturant_id):
+    pass
+
+
 # CONSTANTS! #####
 category_dict = get_category_dict()
 num_categories = len(category_dict)

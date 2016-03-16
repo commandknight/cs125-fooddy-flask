@@ -75,6 +75,7 @@ def login():
                 return render_template("login.html", error_msg="Empty Username or Password Fields, please try again")
             mm.insert_new_user_profile(user_name, form_password)
             new_user = User((user_name, form_password))
+            mm.init_category_weight_vector_for_user(user_name, .015)
             login_user(new_user)
             return redirect(url_for('index'))
     return render_template("login.html")
