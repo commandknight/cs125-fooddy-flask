@@ -123,7 +123,7 @@ def swap_coords(coords):
     return a
 
 # coords are in lat/long
-def get_results_from_locations(category_filter, num_results, coords=[(33.6694, -117.8231)], limit=20):
+def get_results_from_locations(category_filter, num_results, coords, limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
     aliases = ''
@@ -133,7 +133,7 @@ def get_results_from_locations(category_filter, num_results, coords=[(33.6694, -
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
-        'category_filter': aliases,
+        'category_filter':'restaurants',
         'limit': limit,
     }
 
@@ -141,7 +141,7 @@ def get_results_from_locations(category_filter, num_results, coords=[(33.6694, -
         # find bounding box
         southwest_point, northeast_point = get_southwest_northeast_coords(normal_coords);
         for i in range(iterations):
-            time.sleep(.3)
+            time.sleep(.2)
             params['offset'] = i * limit
             response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
                                                           northeast_point[0], **params)

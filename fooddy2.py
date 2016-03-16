@@ -168,6 +168,7 @@ def recommended():
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
+            print(lat,long)
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories, coords=[(lat,long)]),
                                    next_location =location)
@@ -177,6 +178,8 @@ def recommended():
             location = get_location(http_auth)
         elif not is_google_auth():
             location = "Connect with Google Calendar to see your next event's location!"
+
+
         return render_template("recommended.html",
                                list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories),
                                next_location=location)

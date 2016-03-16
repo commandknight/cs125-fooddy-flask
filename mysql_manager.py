@@ -392,15 +392,16 @@ def update_category_weights_by_visit(username, list_categories):
     """
     returns = get_user_weights_vector_and_last_update_vector(username) # has weight vector and a vector containing # of days since last update
     user_vector = returns[0]
+    list_weights = []
     for category in list_categories:
         if category in category_dict:
             category_index = category_dict[category]
             current_weight = user_vector[category_index]
             new_weight = current_weight + (
-                .75 / current_weight) + .5  # 2 is multiplicative constant for original boost,
+                .75 / current_weight) + .5  # .75 is multiplicative constant for original boost,
             #  .5 ensuring is constant increase. necessary for good probabilistic returns
-            user_vector[category_index] = new_weight;
-    update_user_vector(username, user_vector);
+            list_weights.append(new_weight);
+    update_weight_datetime_of_categories_for_user(username, list_weights, list_categories);
 
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
