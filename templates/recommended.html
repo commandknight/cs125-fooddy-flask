@@ -29,11 +29,6 @@
         <!--CURRENT LOCATION-->
         <button onclick="getLocation()">Use my current location</button>
 
-        <!-- hidden because we won't display this to user,
-            only used for Terry to grab by ID to plug into yelp query.-->
-{#        <p id="current_location_latitude" hidden></p>#}
-{#        <p id="current_location_longitude" hidden></p>#}
-
         <script>
             function getLocation() {
                 if (navigator.geolocation) {
@@ -46,21 +41,12 @@
             function showPosition(position) {
                 document.getElementById("current_location_latitude").value = position.coords.latitude;
                 document.getElementById("current_location_longitude").value = position.coords.longitude;
-                //console.log("got latitude/longitudde", position);
-                x.innerHTML =
-                    //"<div data-role='popup'>" +
-                    //    "<a href='#' data-rel='back' class='ui-btn ui-icon-delete ui-btn-right ui-btn-icon-notext'>Close</a>" +
-                        "Fooddy is now using your current location to recommend restaurants!";
-                    //"</div>";
-                //x.innerHTML("Hey wsup bruh");
             }
             </script>
 
 
         <!-- this will display a message to user saying that we will be using
             their location for our recommendations-->
-        <p id="successfully_grabbed_location"></p>
-
         <form id="login_form" action="{{ url_for('recommended') }}" method="POST">
             <input name="current_location_latitude" id="current_location_latitude" value="default_lat" />
             <input name="current_location_longitude" id="current_location_longitude" value="default_long" />
@@ -80,7 +66,7 @@
             }
         </script>
         <!--MANUAL LOCATION-->
-        <!--TODO: form for new location-->
+        <!--TODO: grab this data to backend & pass to yelp query-->
         <button onclick="openAddressForm('address_form')">Manually enter location</button>
         <div id="address_form" style="display:none;">
             <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
@@ -130,8 +116,5 @@
 
 </div> <!--/end rec_page-->
 </body>
-
-<!-- location script -->
-{#<script src="../static/js/get_user_location.js"></script>#}
 
 </html>

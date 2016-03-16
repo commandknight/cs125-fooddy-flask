@@ -41,9 +41,7 @@
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
         <center><h4>Hey, {{ current_user.get_id() }}</h4></center>
-    <script>
-        var loc = getLocation();
-    </script>
+
         <a href="/auth_google" rel="external" class="ui-btn"> Connect to Google Calendar</a>
         <a href="/recommended" rel="external" class="ui-btn"> Restaurants for you!</a>
 
