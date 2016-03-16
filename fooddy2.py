@@ -188,6 +188,10 @@ def recommended():
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
+    username = current_user.get_id();
+    categories = ['Indian', 'Italian']
+    mm.update_category_weights_by_visit(username, categories);
+    print(mm.get_user_weights_vector(username))
     return render_template("restaurant.html", business=business)
 
 
@@ -219,12 +223,8 @@ def upload():
 def update_user_weights():
     username = current_user.get_id()
     rating = request.form['rating']
-    restaurant_id = request.form['restaurant_id']
     business_id = request.form['business_id']
     categories = request.form['categories']
-    update_timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-
-
 if __name__ == '__main__':
     app.run(host='localhost')
     # to make public

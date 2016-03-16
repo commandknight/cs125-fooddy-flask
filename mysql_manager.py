@@ -304,11 +304,14 @@ def get_user_weights_vector_and_last_update_vector(username):
     :return: Array(double) user_vector
     """
     user_weight_vec = np.zeros(num_categories)
+
     weights = get_category_weights_and_last_visit_for_user(username)
-    last_update_vector = np.zeros(num_categories,1)  #last update in days
+
+    last_update_vector = np.zeros(num_categories)  #last update in days
     now = datetime.today()
     milliseconds_now = (now - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
     for tup in weights:
+        print('hi')
         cat_name = tup[0]
         weight = tup[1]
         last_update_datetime = tup[2]
@@ -317,7 +320,7 @@ def get_user_weights_vector_and_last_update_vector(username):
             last_update_vector[category_dict[cat_name]] = 0  # 0 means we wont decay it
         else:
             t = datetime.strptime(last_update_datetime, '%Y-%m-%d %H:%M:%S')
-            milliseconds_last_update = (t - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
+            milliseconds_last_update = (t - datetime.datetime(1970, 1, 1)) // timedelta(milliseconds=1)
             ms_num_days = milliseconds_now - milliseconds_last_update;
             x = ms_num_days / 1000
             seconds = x % 60
@@ -391,11 +394,15 @@ def update_category_weights_by_visit(username, list_categories):
     :param list_categories: categories of the visit
     :return: None
     """
+
     returns = get_user_weights_vector_and_last_update_vector(username) # has weight vector and a vector containing # of days since last update
+    print(returns)
     user_vector = returns[0]
     list_weights = []
+
     for category in list_categories:
         if category in category_dict:
+            print(category)
             category_index = category_dict[category]
             current_weight = user_vector[category_index]
             new_weight = current_weight + (

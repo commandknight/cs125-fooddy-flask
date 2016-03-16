@@ -21,7 +21,11 @@ def get_ranking_by_probabilistic_cosine(username, category_filter, coords=[(33.6
         list_cosine_sims.append(yelp_data.cosine_sim + .1)
         # np.rad2deg(np.arccos(1- spatial.distance.cosine(user_weight_vec, yelp_data.restaurant_vector))) for degrees
     # sorts restaurants by probabilistics by their cosine similarity in an attempt to keep things interesting.
+    print(list_cosine_sims)
+    print(user_weight_vec)
+    print(list_yelp_data)
     list_yelp_data = np.random.choice(list_yelp_data, num_results, p=list_cosine_sims/np.sum(list_cosine_sims), replace=False).tolist()
+    print(list_yelp_data)
     return list_yelp_data
 
 

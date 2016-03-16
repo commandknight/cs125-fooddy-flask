@@ -32,7 +32,7 @@ class YelpData:
         vec = np.zeros(mm.num_categories)
         for category_list_item in self.restaurant_info.categories:
             category = category_list_item.name
-            print(category)
+           #print(category)
             if category in mm.category_dict.keys():
                 vec[mm.category_dict[category]] = 1
         return vec
@@ -127,13 +127,15 @@ def get_results_from_locations(category_filter, num_results, coords, limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
     aliases = ''
-    for category in category_filter:
-        aliases += mm.category_name_to_alias_dict[category] + ','
+    list_aliases = mm.get_list_of_category_alias()
+    for ali in list_aliases:
+        aliases += ali + ','
     aliases = aliases[:-1]  # strip the last comma
+    print(aliases)
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
-        'category_filter':'restaurants',
+        'category_filter': 'italian,chinese',
         'limit': limit,
     }
 
