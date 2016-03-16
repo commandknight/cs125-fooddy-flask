@@ -194,7 +194,7 @@ def init_category_weight_vector_for_user(user_name, init_weight):
     """
     category_names = get_list_of_category_names()
     for category in category_names:
-        init_category_weight_if_not_present(user_name, category, init_weight)
+        init_category_weight_if_not_present(user_name, category[0], init_weight)
 
 
 def update_weight_datetime_of_categories_for_user(user_name, list_of_weights, list_of_categories):
