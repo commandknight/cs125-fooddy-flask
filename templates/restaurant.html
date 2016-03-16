@@ -69,16 +69,20 @@
         </div>
     </div>
 
-    <!--TODO: Button to show on map, right now not supported-->
     {#            {{ business['location']['coordinate'] }}#}
     {#    <button>Show me on the map!</button>#}
-    <iframe
-            width="500"
-            height="500"
-            frameborder="0" style="border:0"
-            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBsuMLW414ecSZmIQ3KQ_mg4EXp4Cw8fmM
-    &q={{ business.location.coordinate.latitude }},{{ business.location.coordinate.longitude }}" allowfullscreen>
-    </iframe>
+
+    <center>
+        <iframe
+                width="500"
+                height="250"
+                frameborder="0" style="border:0"
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBsuMLW414ecSZmIQ3KQ_mg4EXp4Cw8fmM
+        &q={{ business.location.coordinate.latitude }},{{ business.location.coordinate.longitude }}" allowfullscreen>
+        </iframe>
+    </center>
+
+
     <!-- TODO: Make prettier, yelp stuff on footer -->
     <div data-role="footer" data-position="fixed">
         <div class="ui-grid-a">
