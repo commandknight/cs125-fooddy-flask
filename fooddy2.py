@@ -50,7 +50,7 @@ def is_google_auth():
 def index():
     return render_template("index.html")
 
-
+# todo: on login, degenerate the user weights
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
@@ -209,7 +209,7 @@ def upload():
         mm.init_category_weight_if_not_present(username, cat_name, 1.0)
     return render_template("index.html", logged_in=True, username=username, code=302)
 
-
+# todo: rating upload and do stuff with it.
 @app.route('/rating', methods=['POST'])
 @login_required
 def update_user_weights():
