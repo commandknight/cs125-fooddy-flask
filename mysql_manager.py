@@ -195,12 +195,12 @@ def init_category_weight_vector_for_user(user_name, init_weight):
         init_category_weight_if_not_present(user_name, category, init_weight)
 
 
-def update_datetime_of_categories_for_user(user_name, list_of_categories):
-    sql_update_last_visit = 'UPDATE UserWeights SET last_visit = NOW() WHERE user_name = %s and category_id = ' \
+def update_weight_datetime_of_categories_for_user(user_name, list_of_weights, list_of_categories):
+    sql_update_last_visit = 'UPDATE UserWeights SET weight = %s, last_visit = NOW() WHERE user_name = %s and category_id = ' \
                             '(SELECT category_id FROM Categories WHERE category_name = %s)'
     curr = cnx.cursor()
-    for category in list_of_categories:
-        curr.execute(sql_update_last_visit, (user_name, category))
+    for index in range(len(list_of_weights)):
+        curr.execute(sql_update_last_visit, (list_of_weights[index], user_name, list_of_categories[index]))
     cnx.commit()
     curr.close()
 
