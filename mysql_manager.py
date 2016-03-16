@@ -232,7 +232,7 @@ def update_category_alias_weight(user_name, category_alias, weight):
     curr = cnx.cursor()
     sql_insert_update_UserWeight = 'INSERT IGNORE INTO UserWeights(user_name,category_id,weight) ' \
                                    'VALUES (%s,(SELECT category_id FROM Categories WHERE category_alias = %s),%s) ' \
-                                   'ON DUPLICATE KEY UPDATE weight = %s'
+                                   'ON DUPLICATE KEY UPDATE weight = %s last_visit = NOW()'
     curr.execute(sql_insert_update_UserWeight, (user_name, category_alias, weight, weight))
     cnx.commit()
     curr.close()
