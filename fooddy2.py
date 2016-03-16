@@ -5,7 +5,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager
 from googleapiclient import discovery
 from oauth2client import client
-# from flask.ext.googlemaps import GoogleMaps, Map
 
 import mysql_manager as mm
 import yelp_data_source
@@ -25,7 +24,6 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-# GoogleMaps(app)
 
 # Helper Functions
 @login_manager.user_loader
