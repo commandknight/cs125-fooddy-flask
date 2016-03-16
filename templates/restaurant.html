@@ -48,6 +48,10 @@
                         {% for a in business['location']['display_address'] %}
                             {{ a }}<br/>
                         {% endfor %}
+{#                        {% output_list = [] %}#}
+
+{#                        <p>{{ output_list }}</p>#}
+
                     </div>
                 </div>
             </center>
@@ -59,13 +63,16 @@
         </div>
     </div>
 
-
     <div class="ui-grid-solo">
         <div class="ui-block-a">
             <form id="my_rating">
                 <center><label for="my_rating_slider"><strong>Eaten here before? Rate it!</strong></label></center>
                 <input type="range" name="my_rating_slider" id="my_rating_slider"
                        min="0" max="5" step="0.5" value="1" data-highlight="true"/>
+                    {% for i in business['categories'] %}
+                        <input type="hidden" value={{ i[0] }} name={{ i[0] }} id="{{ i[0] }}" />
+                    {% endfor %}
+
                 <input type="submit" id="submit_my_rating" name="submit_my_rating" value="Confirm my rating!"/>
 
             </form>
