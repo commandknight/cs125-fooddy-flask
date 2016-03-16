@@ -6,6 +6,7 @@ result = mm.get_list....
 
 import mysql.connector
 import numpy as np
+from datetime import datetime, timedelta
 
 # Configuration for mysql database
 config = {
@@ -125,6 +126,7 @@ def get_category_weights_and_last_visit_for_user(username):
                  'AND UserProfile.user_name = %s', (username,))
     result = curr.fetchall()
     curr.close()
+
     return result
 
 
@@ -280,7 +282,6 @@ def get_user(user_name):
     curr.close()
     return result
 
-
 def get_user_weights_vector(username):
     """
     Function to get user_vector from DB
@@ -294,6 +295,42 @@ def get_user_weights_vector(username):
     if np.count_nonzero(user_weight_vec) == 0:
         raise Exception("user weight vector is zero~!!!")
     return user_weight_vec
+
+def get_user_weights_vector_and_last_update_vector(username):
+    """
+    Function to get user_vector from DB
+    :param username: user_name of vector to get
+    :return: Array(double) user_vector
+    """
+    user_weight_vec = np.zeros(num_categories)
+    weights = get_category_weights_and_last_visit_for_user(username)
+    last_update_vector = np.zeros(num_categories,1)  #last update in days
+    now = datetime.today()
+    milliseconds_now = (now - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
+    for tup in weights:
+        cat_name = tup[0]
+        weight = tup[1]
+        last_update_datetime = tup[2]
+        user_weight_vec[category_dict[cat_name]] = weight
+        if last_update_datetime == None:
+            last_update_vector[category_dict[cat_name]] = 0  # 0 means we wont decay it
+        else:
+            t = datetime.strptime(last_update_datetime, '%Y-%m-%d %H:%M:%S')
+            milliseconds_last_update = (t - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
+            ms_num_days = milliseconds_now - milliseconds_last_update;
+            x = ms_num_days / 1000
+            seconds = x % 60
+            x /= 60
+            minutes = x % 60
+            x /= 60
+            hours = x % 24
+            x /= 24
+            days = x
+            last_update_vector[category_dict[cat_name]] = days;
+
+    if np.count_nonzero(user_weight_vec) == 0:
+        raise Exception("user weight vector is zero~!!!")
+    return user_weight_vec, last_update_vector
 
 
 def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name):
@@ -353,7 +390,8 @@ def update_category_weights_by_visit(username, list_categories):
     :param list_categories: categories of the visit
     :return: None
     """
-    user_vector = get_user_weights_vector(username)
+    returns = get_user_weights_vector_and_last_update_vector(username) # has weight vector and a vector containing # of days since last update
+    user_vector = returns[0]
     for category in list_categories:
         if category in category_dict:
             category_index = category_dict[category]
@@ -367,20 +405,33 @@ def update_category_weights_by_visit(username, list_categories):
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
 # Planning to use this at the start of every user login so they can have the most updated vector
-def degenerate_categories(user_name):
+def degenerate_categories(username, days_til_deceay):
     # need to talk to Jeet for this. two approaches: one is to check every day server side
     # other way is to update whenver user logs in. still need to keep track of last update/last went to restaurant
     # second one is easier given our architecture that we've built i think.
-    user_vector = get_user_weights_vector(user_name)
+    returns = get_user_weights_vector_and_last_update_vector(username)  # has weight vector and a vector containing # of days since last update
+    user_vector = returns[0]
+    last_update_vector = returns[1]
+    num_of_decay = np.floor(last_update_vector/days_til_deceay)
+    list_categories = [];
+    list_new_weights = []
     for idx, category_weight in enumerate(user_vector):
         # if we use latter: floor (time_from_last_visited / decay_threshold) i.e. 3 days ago / decay in 3 days
         # for loop the decay for that category.
-        decayed_weight = category_weight - (.75 / category_weight) + .5
-        if decayed_weight < .15:  # we will set .5 as the start weight.
-            decayed_weight = .15
-        user_vector[idx] = decayed_weight
+        if(num_of_decay[idx] == 0):
+            continue;
+        decayed_weight = category_weight;
+        for j in range(num_of_decay[idx]): # number of times we decay the weight.
+            decayed_weight = decayed_weight - (.75 / decayed_weight) - .5
+            if decayed_weight < .15:  # we will set .15 as the start weight.
+                decayed_weight = .15
+                break;
+        list_categories.append(idx_to_category_dict[idx]);
+        list_new_weights.append(decayed_weight);
+
         # update the whole vector by removing old one and replacing with new one.
         # less db calls? or just update it all at once
+    update_weight_datetime_of_categories_for_user(username, list_new_weights, list_categories);
 
 
 def close_connection():
@@ -395,3 +446,4 @@ def close_connection():
 category_dict = get_category_dict()
 num_categories = len(category_dict)
 category_name_to_alias_dict = get_category_name_to_alias_dict()
+idx_to_category_dict = get_idx_to_category_dict()

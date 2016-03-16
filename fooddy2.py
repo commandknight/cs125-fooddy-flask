@@ -10,7 +10,7 @@ import mysql_manager as mm
 import yelp_data_source
 import ranker
 from models.UserModel import User
-
+import time;
 # app configuration
 DEBUG = False
 SECRET_KEY = 'development_key'
@@ -218,6 +218,7 @@ def update_user_weights():
     restaurant_id = request.form['restaurant_id']
     business_id = request.form['business_id']
     categories = request.form['categories']
+    update_timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
 
 if __name__ == '__main__':

@@ -122,16 +122,15 @@ def swap_coords(coords):
         a.append((tup[1], tup[0]))
     return a
 
-# coords are in long/lat
-def get_results_from_locations(category_filter, coords=[(33.6694, -117.8231)],
-                               num_of_results=40, limit=20):
+# coords are in lat/long
+def get_results_from_locations(category_filter, num_results, coords=[(33.6694, -117.8231)], limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
     aliases = ''
     for category in category_filter:
         aliases += mm.category_name_to_alias_dict[category] + ','
     aliases = aliases[:-1]  # strip the last comma
-    iterations = math.ceil(num_of_results / limit)
+    iterations = math.ceil(num_results / limit)
     responses = []
     params = {
         'category_filter': aliases,
@@ -171,8 +170,8 @@ def get_yelp_data(list_businesses):
     return list_yelp_data
 
 
-def get_restaurant_vectors_by_query(category_filter, coords):
-    list_businesses = get_results_from_locations(category_filter, coords=coords)
+def get_restaurant_vectors_by_query(category_filter, coords, num_results):
+    list_businesses = get_results_from_locations(category_filter, num_results, coords=coords)
     return get_yelp_data(list_businesses)
 
 
