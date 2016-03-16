@@ -91,8 +91,9 @@ def get_list_of_category_alias():
     curr = cnx.cursor()
     curr.execute('SELECT category_alias FROM Categories')
     result = curr.fetchall()
+    non_tuple_list = [x[0] for x in result]
     curr.close()
-    return result
+    return non_tuple_list
 
 
 def get_list_of_category_names_user_likes(username):
