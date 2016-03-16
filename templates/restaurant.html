@@ -38,6 +38,9 @@
             <center>
                 <div class="ui-grid-solo">
                     <div class="ui-block-a"><h2>{{ business['name'] }}</h2></div>
+                    <div class="ui-block-a">
+                        <img src="{{ business['rating_img_url_large'] }}"/><br/>
+                    </div>
                 </div>
                 <div class="ui-grid-solo">
                     <div class="ui-block-a">
@@ -87,8 +90,9 @@
     <div data-role="footer" data-position="fixed">
         <div class="ui-grid-a">
             <div class="ui-block-a">
-                <img src="{{ business['rating_img_url_large'] }}"/><br/>
-            </div>
+    <!--            <img src="{{ business['rating_img_url_large'] }}"/><br/>
+             </div>
+              -->
             <div class="ui-block-b">
                 <center><a href="{{ business['mobile_url'] }}"><img
                         src="../static/assets/yelp/yelp_review_btn_light@2x.png" style="height:30px;"/></a>
