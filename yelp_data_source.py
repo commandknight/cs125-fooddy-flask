@@ -32,8 +32,7 @@ class YelpData:
         vec = np.zeros(mm.num_categories)
         for category_list_item in self.restaurant_info.categories:
             category = category_list_item.name
-           #print(category)
-            if category in mm.category_dict.keys():
+            if category in mm.set_categories:  # add only the categories that we have.
                 vec[mm.category_dict[category]] = 1
         return vec
 
@@ -123,16 +122,9 @@ def swap_coords(coords):
     return a
 
 # coords are in lat/long
-def get_results_from_locations(category_filter, num_results, coords, limit=20):
+def get_results_from_locations(num_results, coords, limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
-    '''
-    aliases = ''
-    for category in category_filter:
-        aliases += mm.category_name_to_alias_dict[category] + ','
-    aliases = aliases[:-1]  # strip the last comma
-    print(aliases)
-    '''
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
@@ -148,7 +140,11 @@ def get_results_from_locations(category_filter, num_results, coords, limit=20):
             params['offset'] = i * limit
             response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
                                                           northeast_point[0], **params)
-
+            for business in response.businesses:
+                for category in business.categories:  # if it has a category in our categories, we add it.
+                    if category.alias in mm.set_aliases:
+                        responses.append(business)
+                        break
         return responses
 
     elif len(normal_coords) == 1:
@@ -158,8 +154,12 @@ def get_results_from_locations(category_filter, num_results, coords, limit=20):
             time.sleep(.3)
             params['offset'] = i * limit
             response = yelp_client.search_by_coordinates(lat, long, **params)
-            responses += response.businesses  # list of business objects
 
+            for business in response.businesses:
+                for category in business.categories:  # if it has a category in our categories, we add it.
+                    if category.alias in mm.set_aliases:
+                        responses.append(business)
+                        break
         return responses
 
     else:
@@ -173,8 +173,8 @@ def get_yelp_data(list_businesses):
     return list_yelp_data
 
 
-def get_restaurant_vectors_by_query(category_filter, coords, num_results):
-    list_businesses = get_results_from_locations(category_filter, num_results, coords=coords)
+def get_restaurant_vectors_by_query(coords, num_results):
+    list_businesses = get_results_from_locations( num_results, coords=coords)
     return get_yelp_data(list_businesses)
 
 
