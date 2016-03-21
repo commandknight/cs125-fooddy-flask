@@ -126,16 +126,17 @@ def swap_coords(coords):
 def get_results_from_locations(category_filter, num_results, coords, limit=20):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
+    '''
     aliases = ''
-    list_aliases = mm.get_list_of_category_alias()
-    for ali in list_aliases:
-        aliases += ali + ','
+    for category in category_filter:
+        aliases += mm.category_name_to_alias_dict[category] + ','
     aliases = aliases[:-1]  # strip the last comma
     print(aliases)
+    '''
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
-        'category_filter': 'italian,chinese',
+        'category_filter': "food",
         'limit': limit,
     }
 
@@ -147,7 +148,7 @@ def get_results_from_locations(category_filter, num_results, coords, limit=20):
             params['offset'] = i * limit
             response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
                                                           northeast_point[0], **params)
-            responses += response.businesses  # list of business objects
+
         return responses
 
     elif len(normal_coords) == 1:

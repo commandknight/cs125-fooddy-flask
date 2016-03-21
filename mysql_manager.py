@@ -311,15 +311,17 @@ def get_user_weights_vector_and_last_update_vector(username):
     now = datetime.today()
     milliseconds_now = (now - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
     for tup in weights:
-        print('hi')
         cat_name = tup[0]
         weight = tup[1]
         last_update_datetime = tup[2]
         user_weight_vec[category_dict[cat_name]] = weight
+        print(user_weight_vec)
         if last_update_datetime == None:
+            print('hi')
             last_update_vector[category_dict[cat_name]] = 0  # 0 means we wont decay it
         else:
-            t = datetime.strptime(last_update_datetime, '%Y-%m-%d %H:%M:%S')
+            t = datetime.strptime(last_update_datetime[:-1], '%Y-%m-%d %H:%M:%S')
+            print(t)
             milliseconds_last_update = (t - datetime.datetime(1970, 1, 1)) // timedelta(milliseconds=1)
             ms_num_days = milliseconds_now - milliseconds_last_update;
             x = ms_num_days / 1000
