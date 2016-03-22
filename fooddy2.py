@@ -44,10 +44,11 @@ def is_google_auth():
     Function that returns true if the user has autheticated Google Calender Read Only Access
     :return: Boolean
     """
-    if 'credentials' not in session.keys():
-        return False
-    # print(session['credentials'])  # DEBUG
-    return True
+    return False
+    # if 'credentials' not in session.keys():
+    #     return False
+    # # print(session['credentials'])  # DEBUG
+    # return True
 
 
 # HOME PAGE
@@ -224,6 +225,6 @@ def update_user_weights():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost')
+    # app.run(host='localhost')
     # to make app run public
-    # app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')
