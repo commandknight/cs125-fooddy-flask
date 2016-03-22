@@ -4,20 +4,26 @@ import mysql_manager as mm
 result = mm.get_list....
 """
 
-import mysql.connector
-import numpy as np
 from datetime import datetime, timedelta
+
+import numpy as np
+import pymysql as mysql
 
 # Configuration for mysql database
 config = {
     'user': 'ucifooddy',
     'password': 'ucifooddy',
     'host': 'fooddy.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+    'port': 3306,
     'database': 'fooddy2.0',
     'raise_on_warnings': True
 }
 
-cnx = mysql.connector.connect(**config)
+cnx = mysql.connect(host=config['host'], port=config['port'], user=config['user'], passwd=config['password'],
+                    db=config['database'])
+
+
+# cnx = mysql.connector.connect(**config)
 
 
 def get_category_dict():
