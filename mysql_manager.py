@@ -314,14 +314,13 @@ def get_user_weights_vector_and_last_update_vector(username):
     weights = get_category_weights_and_last_visit_for_user(username)
 
     last_update_vector = np.zeros(num_categories)  # last update in days
-    now = datetime.today()
+    now = datetime.utcnow()
     for tup in weights:
         cat_name = tup[0]
         weight = tup[1]
         last_update_datetime = tup[2]
         user_weight_vec[category_dict[cat_name]] = weight
         if last_update_datetime == None:
-            print('hi')
             last_update_vector[category_dict[cat_name]] = 0  # 0 means we wont decay it
         else:
             num_days = (now - last_update_datetime).days;
@@ -391,20 +390,20 @@ def update_category_weights_by_visit(username, list_categories):
     """
 
     returns = get_user_weights_vector_and_last_update_vector(username) # has weight vector and a vector containing # of days since last update
-    print(returns)
     user_vector = returns[0]
     list_weights = []
 
     for category in list_categories:
         if category in set_categories:
-            print(category)
+            #print(category)
             category_index = category_dict[category]
             current_weight = user_vector[category_index]
             new_weight = current_weight + (
                 .75 / current_weight) + .5  # .75 is multiplicative constant for original boost,
             #  .5 ensuring is constant increase. necessary for good probabilistic returns
-            list_weights.append(new_weight);
-    update_weight_datetime_of_categories_for_user(username, list_weights, list_categories);
+            new_weight = "%.4f" % new_weight
+            list_weights.append(new_weight)
+    update_weight_datetime_of_categories_for_user(username, list_weights, list_categories)
 
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
@@ -417,12 +416,12 @@ def degenerate_categories(username, days_til_deceay):
     user_vector = returns[0]
     last_update_vector = returns[1]
     num_of_decay = np.floor(last_update_vector/days_til_deceay)
-    list_categories = [];
+    list_categories = []
     list_new_weights = []
     for idx, category_weight in enumerate(user_vector):
         # if we use latter: floor (time_from_last_visited / decay_threshold) i.e. 3 days ago / decay in 3 days
         # for loop the decay for that category.
-        if(num_of_decay[idx] == 0):
+        if num_of_decay[idx] == 0:
             continue;
         decayed_weight = category_weight;
         for j in range(num_of_decay[idx]): # number of times we decay the weight.
