@@ -417,14 +417,13 @@ def degenerate_categories(username, days_til_decay):
     num_of_decay = np.floor(last_update_vector/days_til_decay)
     list_categories = []
     list_new_weights = []
-    num_of_decay = 2
     for idx, category_weight in enumerate(user_vector):
         # if we use latter: floor (time_from_last_visited / decay_threshold) i.e. 3 days ago / decay in 3 days
         # for loop the decay for that category.
-        if num_of_decay == 0:
+        if num_of_decay[idx] == 0:
             continue;
         decayed_weight = category_weight;
-        for j in range(num_of_decay): # number of times we decay the weight.
+        for j in range(num_of_decay[idx]): # number of times we decay the weight.
             decayed_weight = decayed_weight - (.75 / decayed_weight) - .5
             if decayed_weight < .15:  # we will set .15 as the start weight.
                 decayed_weight = .15
