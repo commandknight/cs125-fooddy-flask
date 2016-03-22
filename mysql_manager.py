@@ -313,32 +313,19 @@ def get_user_weights_vector_and_last_update_vector(username):
 
     weights = get_category_weights_and_last_visit_for_user(username)
 
-    last_update_vector = np.zeros(num_categories)  #last update in days
+    last_update_vector = np.zeros(num_categories)  # last update in days
     now = datetime.today()
-    milliseconds_now = (now - datetime(1970, 1, 1)) // timedelta(milliseconds=1)
     for tup in weights:
         cat_name = tup[0]
         weight = tup[1]
         last_update_datetime = tup[2]
         user_weight_vec[category_dict[cat_name]] = weight
-        print(user_weight_vec)
         if last_update_datetime == None:
             print('hi')
             last_update_vector[category_dict[cat_name]] = 0  # 0 means we wont decay it
         else:
-            t = datetime.strptime(last_update_datetime[:-1], '%Y-%m-%d %H:%M:%S')
-            print(t)
-            milliseconds_last_update = (t - datetime.datetime(1970, 1, 1)) // timedelta(milliseconds=1)
-            ms_num_days = milliseconds_now - milliseconds_last_update;
-            x = ms_num_days / 1000
-            seconds = x % 60
-            x /= 60
-            minutes = x % 60
-            x /= 60
-            hours = x % 24
-            x /= 24
-            days = x
-            last_update_vector[category_dict[cat_name]] = days;
+            num_days = (now - last_update_datetime).days;
+            last_update_vector[category_dict[cat_name]] = num_days;
 
     if np.count_nonzero(user_weight_vec) == 0:
         raise Exception("user weight vector is zero~!!!")
@@ -409,7 +396,7 @@ def update_category_weights_by_visit(username, list_categories):
     list_weights = []
 
     for category in list_categories:
-        if category in category_dict:
+        if category in set_categories:
             print(category)
             category_index = category_dict[category]
             current_weight = user_vector[category_index]
