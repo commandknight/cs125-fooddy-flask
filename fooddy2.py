@@ -11,6 +11,10 @@ import ranker
 import yelp_data_source
 from models.UserModel import User
 
+# static strings
+connect_to_goog_cal = "Connect with Google Calendar to see your next event's location!"
+
+
 # app configuration
 DEBUG = False
 SECRET_KEY = 'development_key'
@@ -114,6 +118,7 @@ def get_location(http_auth):
     # need to handle when user has no more events in events_result
     for i in range(len(events_result['items'])):
         example = events_result['items'][i]['start']
+        # check if event is all day event, if not, continue
         if 'dateTime' in example.keys():
             index_of_valid_event = i
             # print(index_of_valid_event) #DEBUG
@@ -156,23 +161,21 @@ def recommended():
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
             print(long, lat)
-            if is_google_auth():
-                location = get_location(http_auth)
-            elif not is_google_auth():
-                location = "Connect with Google Calendar to see your next event's location!"
+            location = get_location(http_auth) if is_google_auth() else connect_to_goog_cal
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
-            print(lat,long)
+            print('LOCATION FROM GOOGLE CAL' + lat + "," + long)  # DEBUG
             return render_template("recommended.html",
-                                   list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories, coords=[(lat,long)]),
+                                   list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(),
+                                                                                           coords=[(lat, long)]),
                                    next_location=location)
     else:
-        print('still using GET')
+        print('Trying to get restaurant results using GET method')
         if is_google_auth():
             location = get_location(http_auth)
-        elif not is_google_auth():
+        else:
             location = "Connect with Google Calendar to see your next event's location!"
         return render_template("recommended.html",
-                               list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories),
+                               list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id()),
                                next_location=location)
 
 

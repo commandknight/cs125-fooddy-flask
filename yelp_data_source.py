@@ -50,7 +50,7 @@ def get_business_by_id(restaurant_id):
 
 def get_location_from_coordinates(long, lat) -> str:
     LOCATION = str(long) + "," + str(lat)
-    RADIUS = 1;
+    RADIUS = 1
     MyUrl = ('https://maps.googleapis.com/maps/api/place/nearbysearch/json'
              '?location=%s'
              '&radius=%s'
