@@ -428,6 +428,8 @@ def degenerate_categories(username, days_til_decay):
             if decayed_weight < .15:  # we will set .15 as the start weight.
                 decayed_weight = .15
                 break;
+
+        decayed_weight = float(round(Decimal(decayed_weight),3))
         list_categories.append(idx_to_category_dict[idx]);
         list_new_weights.append(decayed_weight);
 
