@@ -23,6 +23,10 @@ auth = Oauth1Authenticator(
 yelp_client = Client(auth)
 
 
+# Constants
+radius = 50
+limit = 20; # number of results per yelp query
+
 class YelpData:
     def __init__(self, business):
         self.restaurant_info = business  # dictionary information for the restaurant/business
@@ -126,30 +130,37 @@ def swap_coords(coords):
         a.append((tup[1], tup[0]))
     return a
 
+def parse_yelp_responses(yelp_api_response):
+    responses =[]
+    for business in yelp_api_response.businesses:
+        for category in business.categories:  # if it has a category in our categories, we add it.
+            if category.alias in mm.set_aliases:
+                responses.append(business)
+                break
+    return responses
+
+
 # coords are in lat/long
-def get_results_from_locations(num_results, coords, limit=20):
+def get_results_from_locations(num_results, coords):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
     iterations = math.ceil(num_results / limit)
     responses = []
+
     params = {
         'category_filter': "food",
         'limit': limit,
     }
-
     if len(normal_coords) == 2:
         # find bounding box
         southwest_point, northeast_point = get_southwest_northeast_coords(normal_coords);
         for i in range(iterations):
             time.sleep(.2)
             params['offset'] = i * limit
-            response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
+            yelp_api_response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
                                                           northeast_point[0], **params)
-            for business in response.businesses:
-                for category in business.categories:  # if it has a category in our categories, we add it.
-                    if category.alias in mm.set_aliases:
-                        responses.append(business)
-                        break
+            responses += parse_yelp_responses(yelp_api_response)
+
         return responses
 
     elif len(normal_coords) == 1:
@@ -158,17 +169,32 @@ def get_results_from_locations(num_results, coords, limit=20):
         for i in range(iterations):
             time.sleep(.3)
             params['offset'] = i * limit
-            response = yelp_client.search_by_coordinates(lat, long, **params)
+            yelp_api_response = yelp_client.search_by_coordinates(lat, long, **params)
 
-            for business in response.businesses:
-                for category in business.categories:  # if it has a category in our categories, we add it.
-                    if category.alias in mm.set_aliases:
-                        responses.append(business)
-                        break
+            responses += parse_yelp_responses(yelp_api_response)
+
         return responses
 
     else:
         raise Exception("Please provide no more than two location coordinate sets")
+
+
+# pass in location as an address String
+def get_results_from_address(num_results, location):
+    iterations = math.ceil(num_results / limit)
+    responses = []
+    params = {
+        'category_filter': "food",
+        'limit': limit,
+    }
+
+    for i in range(iterations):
+        time.sleep(.3)
+        params['offset'] = i * limit
+        yelp_api_response = yelp_client.search(location, **params)
+        responses += parse_yelp_responses(yelp_api_response)
+
+        return responses
 
 
 def get_yelp_data(list_businesses):
