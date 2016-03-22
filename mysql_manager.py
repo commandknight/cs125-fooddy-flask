@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 import numpy as np
 import pymysql as mysql
-
+from decimal import Decimal
 # Configuration for mysql database
 config = {
     'user': 'ucifooddy',
@@ -395,27 +395,26 @@ def update_category_weights_by_visit(username, list_categories):
 
     for category in list_categories:
         if category in set_categories:
-            #print(category)
             category_index = category_dict[category]
             current_weight = user_vector[category_index]
+            print(current_weight)
             new_weight = current_weight + (
                 .75 / current_weight) + .5  # .75 is multiplicative constant for original boost,
             #  .5 ensuring is constant increase. necessary for good probabilistic returns
-            new_weight = "%.4f" % new_weight
+            new_weight = float(round(Decimal(new_weight),3))
             list_weights.append(new_weight)
     update_weight_datetime_of_categories_for_user(username, list_weights, list_categories)
+    print(list_categories)
+    print(list_weights)
 
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
 # Planning to use this at the start of every user login so they can have the most updated vector
-def degenerate_categories(username, days_til_deceay):
-    # need to talk to Jeet for this. two approaches: one is to check every day server side
-    # other way is to update whenver user logs in. still need to keep track of last update/last went to restaurant
-    # second one is easier given our architecture that we've built i think.
+def degenerate_categories(username, days_til_decay):
     returns = get_user_weights_vector_and_last_update_vector(username)  # has weight vector and a vector containing # of days since last update
     user_vector = returns[0]
     last_update_vector = returns[1]
-    num_of_decay = np.floor(last_update_vector/days_til_deceay)
+    num_of_decay = np.floor(last_update_vector/days_til_decay)
     list_categories = []
     list_new_weights = []
     for idx, category_weight in enumerate(user_vector):
