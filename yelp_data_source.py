@@ -1,11 +1,13 @@
+import json
 import math
 import time
 import urllib
-import json
-import mysql_manager as mm
+
 import numpy as np
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
+
+import mysql_manager as mm
 
 consumer_key = 'EXZNRAR-epLUvS7LnuwqNg'
 consumer_secret = 'JTZY_0nE8ohfazCK-e_hP_aHhDs'
@@ -35,6 +37,9 @@ class YelpData:
             if category in mm.set_categories:  # add only the categories that we have.
                 vec[mm.category_dict[category]] = 1
         return vec
+
+    def __str__(self):
+        return self.restaurant_info['business_id']
 
 
 # Query the Yelp API for a Business, by passing restaurant_id.
@@ -167,16 +172,14 @@ def get_results_from_locations(num_results, coords, limit=20):
 
 
 def get_yelp_data(list_businesses):
-    list_yelp_data = []
-    for bus in list_businesses:
-        list_yelp_data.append(YelpData(bus))
-    return list_yelp_data
+    """
+    Given a list of Yelp Businesses from Yelp API, returns a list of YelpData Objects
+    :param list_businesses: list of businesses from Yelp API
+    :return: List(YelpData)
+    """
+    return [YelpData(bus) for bus in list_businesses]
 
 
 def get_restaurant_vectors_by_query(coords, num_results):
-    list_businesses = get_results_from_locations( num_results, coords=coords)
+    list_businesses = get_results_from_locations(num_results, coords=coords)
     return get_yelp_data(list_businesses)
-
-
-if __name__ == '__main__':
-    results = get_results_from_locations(['Italian'])

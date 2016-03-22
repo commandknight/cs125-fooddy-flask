@@ -7,10 +7,10 @@ from googleapiclient import discovery
 from oauth2client import client
 
 import mysql_manager as mm
-import yelp_data_source
 import ranker
+import yelp_data_source
 from models.UserModel import User
-import time;
+
 # app configuration
 DEBUG = False
 SECRET_KEY = 'development_key'
@@ -24,6 +24,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 # Helper Functions
 @login_manager.user_loader
@@ -54,22 +55,23 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
+        # getting user_name and password form data
         user_name = request.form['user_name']
         form_password = request.form['user_password']
-        if request.form['submit'] == 'Sign In':
-            user = mm.get_user(user_name)
-            if user:
-                muser = User(user)
-                if muser.password == form_password:
+        if request.form['submit'] == 'Sign In':  # if the user is trying to sign in
+            user = mm.get_user(user_name)  # get the user from Database, will return Null if no user_name
+            if user:  # if not None
+                muser = User(user)  # make a new user_model User
+                if muser.password == form_password:  # if correct password
                     login_user(muser)  # Save user in context as "logged_in"
-                    return redirect(url_for('index'))
-                    # redirect(request.args.get('next') or url_for('index')) #allows login page to act as inbetween
+                    return redirect(url_for('index'))  # return client to index page
+                    # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
                 else:
                     # print("ERROR in logging in") #DEBUG
                     return render_template("login.html", error_msg="You entered a wrong password, please try again")
             else:
                 return render_template("login.html", error_msg="Unknown username, please try again")
-        elif request.form['submit'] == 'Sign Up':
+        elif request.form['submit'] == 'Sign Up':  # if trying to sign up new user
             # print("Trying to sign user up") #DEBUG
             if user_name is "" or form_password is "":
                 return render_template("login.html", error_msg="Empty Username or Password Fields, please try again")
@@ -100,7 +102,6 @@ def auth_google():
     return redirect(url_for('index'))
 
 
-@app.route('/get_location')
 def get_location(http_auth):
     service = discovery.build('calendar', 'v3', http=http_auth)
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
@@ -130,7 +131,7 @@ def oauth2callback():
         'resources/google_calendar_client_secret.json',
         scope='https://www.googleapis.com/auth/calendar.readonly',
         redirect_uri=url_for('oauth2callback', _external=True))
-    # print('flow was established') # DEBUG
+    print('google auth flow was established')  # DEBUG
     if 'code' not in request.args:
         auth_uri = flow.step1_get_authorize_url()
         return redirect(auth_uri)
@@ -148,43 +149,34 @@ def oauth2callback():
 def recommended():
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
-    if request.method=="POST":
-
+    if request.method == "POST":
         for i in request.form.items():
             print(i)
         if request.form['confirm_current_loc'] == "OK":
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
-
             print(long, lat)
-
             if is_google_auth():
                 location = get_location(http_auth)
-
             elif not is_google_auth():
                 location = "Connect with Google Calendar to see your next event's location!"
-
-            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
-            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
-            # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             print(lat,long)
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories, coords=[(lat,long)]),
-                                   next_location =location)
+                                   next_location=location)
     else:
         print('still using GET')
         if is_google_auth():
             location = get_location(http_auth)
         elif not is_google_auth():
             location = "Connect with Google Calendar to see your next event's location!"
-
-
         return render_template("recommended.html",
                                list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), user_categories),
                                next_location=location)
 
-#Single Restaurant View
+
+# Single Restaurant View
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
@@ -195,6 +187,7 @@ def restaurant(restaurant_id):
     return render_template("restaurant.html", business=business)
 
 
+# Deprecating this method and page
 @app.route('/profile/<username>')
 @login_required
 def profile(username):
@@ -204,6 +197,7 @@ def profile(username):
     return render_template("profile.html", category_names=cat_names)
 
 
+# Deprecating this method and page
 @app.route('/upload', methods=['POST', 'GET'])
 @login_required
 def upload():
@@ -217,15 +211,18 @@ def upload():
         mm.init_category_weight_if_not_present(username, cat_name, 1.0)
     return render_template("index.html", logged_in=True, username=username, code=302)
 
-# todo: rating upload and do stuff with it.
+
+# TODO: rating upload and do stuff with it.
 @app.route('/rating', methods=['POST'])
 @login_required
 def update_user_weights():
     username = current_user.get_id()
-    rating = request.form['rating']
     business_id = request.form['business_id']
+    rating = request.form['rating']
     categories = request.form['categories']
+
+
 if __name__ == '__main__':
     app.run(host='localhost')
-    # to make public
+    # to make app run public
     # app.run(host='0.0.0.0')
