@@ -24,8 +24,8 @@ yelp_client = Client(auth)
 
 
 # Constants
-radius = 50
-limit = 20; # number of results per yelp query
+radius = 40000/5 # in meters 40000 is 25 miles
+limit = 20  # number of results per yelp query
 
 class YelpData:
     def __init__(self, business):
@@ -168,6 +168,7 @@ def get_results_from_locations(num_results, coords):
         lat = normal_coords[0][1]
         for i in range(iterations):
             time.sleep(.3)
+            params['radius_filter'] = radius
             params['offset'] = i * limit
             yelp_api_response = yelp_client.search_by_coordinates(lat, long, **params)
 
@@ -186,6 +187,7 @@ def get_results_from_address(num_results, location):
     params = {
         'category_filter': "food",
         'limit': limit,
+        'radius_filter': radius
     }
 
     for i in range(iterations):
