@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head data-theme="a">
     <title>Fooddy Home</title>
     <!--favicon-->
     <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
 
     <!--jQueryMobile scripts-->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" href="../static/themes/black-fooddy.min.css"/>
+    <link rel="stylesheet" href="../static/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"><!-- to work with portrait mode-->
 
 
@@ -35,7 +38,7 @@
 
 </head>
 
-<body onload="getLocation()">
+<body onload="getLocation()" data-theme="a">
 >
 <!-- page 1-->
 <div data-role="page" id="index_page">
@@ -56,7 +59,8 @@
     <form id="login_form" action="{{ url_for('recommended') }}" method="POST">
         <input type="hidden" name="current_location_latitude" id="current_location_latitude" value="default_lat"/>
         <input type="hidden" name="current_location_longitude" id="current_location_longitude" value="default_long"/>
-        <input type="submit" onclick="getLocation()" name="confirm_current_loc" id="confirm_current_loc" value="OK"
+        <input data-theme="d" type="submit" onclick="getLocation()" name="confirm_current_loc" id="confirm_current_loc"
+               value="OK"
                class="ui-btn-inline"/>
     </form>
     {% if not current_user.is_authenticated %}

@@ -1,10 +1,8 @@
-import yelp_data_source as ydp;
 import numpy as np
 from scipy import spatial
+
 import mysql_manager as mm;
-from numpy.random import random_sample
-
-
+import yelp_data_source as ydp;
 
 
 # coords is a list of long lat tuples. (1 or 2))
@@ -21,8 +19,8 @@ def get_ranking_by_probabilistic_cosine(username, coords=[(33.6694, -117.8231)],
         list_cosine_sims.append(yelp_data.cosine_sim + .1)
         # np.rad2deg(np.arccos(1- spatial.distance.cosine(user_weight_vec, yelp_data.restaurant_vector))) for degrees
     # sorts restaurants by probabilistics by their cosine similarity in an attempt to keep things interesting.
-    print(list_cosine_sims)
-    print(user_weight_vec)
+    # print(list_cosine_sims)
+    # print(user_weight_vec)
     list_yelp_data = np.random.choice(list_yelp_data, len(list_yelp_data), p=list_cosine_sims/np.sum(list_cosine_sims), replace=False).tolist()
     return list_yelp_data
 

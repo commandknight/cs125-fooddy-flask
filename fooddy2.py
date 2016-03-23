@@ -156,21 +156,21 @@ def recommended():
     username = current_user.get_id()
     user_categories = mm.get_list_of_category_names_user_likes(username)
     if request.method == "POST":
-        for i in request.form.items():
-            print(i)
+        # for i in request.form.items():
+        #     print(i)
         if request.form['confirm_current_loc'] == "OK":
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
-            print(long, lat)
+            # print(long, lat)
             location = get_location(http_auth) if is_google_auth() else connect_to_goog_cal
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
-            print('LOCATION FROM GOOGLE CAL' + lat + "," + long)  # DEBUG
+            # print('LOCATION FROM GOOGLE CAL' + lat + "," + long)  # DEBUG
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(),
                                                                                            coords=[(lat, long)]),
                                    next_location=location)
     else:
-        print('Trying to get restaurant results using GET method')
+        # print('Trying to get restaurant results using GET method')
         if is_google_auth():
             location = get_location(http_auth)
         else:
@@ -225,6 +225,6 @@ def update_user_weights():
 
 
 if __name__ == '__main__':
-    # app.run(host='localhost')
+    app.run(host='localhost')
     # to make app run public
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
