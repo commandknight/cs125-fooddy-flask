@@ -16,9 +16,26 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id"
           content="113602676382-vom8i9393ldj0vcuk32emk3c4elf20vo.apps.googleusercontent.com">
+
+    <!--Location Service Scripts-->
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById("current_location_latitude").value = position.coords.latitude;
+            document.getElementById("current_location_longitude").value = position.coords.longitude;
+        }
+    </script>
+
 </head>
 
-<body>
+<body onload="getLocation()">
 >
 <!-- page 1-->
 <div data-role="page" id="index_page">
@@ -36,17 +53,23 @@
         <img src="../static/assets/logo.png" width="60%"/>
         <h3>Your Food Buddy</h3>
     </center>
-
+    <form id="login_form" action="{{ url_for('recommended') }}" method="POST">
+        <input type="hidden" name="current_location_latitude" id="current_location_latitude" value="default_lat"/>
+        <input type="hidden" name="current_location_longitude" id="current_location_longitude" value="default_long"/>
+        <input type="submit" onclick="getLocation()" name="confirm_current_loc" id="confirm_current_loc" value="OK"
+               class="ui-btn-inline"/>
+    </form>
     {% if not current_user.is_authenticated %}
         <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
     {% else %}
-        <center><h3><img src="../static/assets/fooddy_favicon_32.png" />Hey, {{ current_user.get_id() }}!</h3></center>
+        <center><h3><img src="../static/assets/fooddy_favicon_32.png"/>Hey, {{ current_user.get_id() }}!</h3></center>
 
         <!--Displaying Google Product logo for Calendar-->
         <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a>
         <a href="/recommended" rel="external" class="ui-btn">Rate my visited restaurants</a>
-{#        <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a>#}
-        <a href="/auth_google" rel="external" class="ui-btn"><img src="../static/assets/google-product-logos/logo_calendar_32px.png" />Connect to <em>Google Calendar</em></a>
+        {#        <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a> #}
+        <a href="/auth_google" rel="external" class="ui-btn"><img
+                src="../static/assets/google-product-logos/logo_calendar_32px.png"/>Connect to <em>Google Calendar</em></a>
         <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
 
     {% endif %}
@@ -64,6 +87,5 @@
 
 </div><!--/end index_page-->
 </body>
-<script src="../static/js/get_user_location.js"></script>
 
 </html>
