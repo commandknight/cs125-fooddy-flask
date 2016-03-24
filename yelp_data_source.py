@@ -33,13 +33,16 @@ class YelpData:
         self.restaurant_vector = self.__get_restaurant_vector()  # restaurant weights
         self.cosine_sim = -1  # cosine simlarity.
 
+
     # return weight vectors for restaurant
     def __get_restaurant_vector(self):
+        self.list_categories = []
         vec = np.zeros(mm.num_categories)
         for category_list_item in self.restaurant_info.categories:
             category = category_list_item.name
             if category in mm.set_categories:  # add only the categories that we have.
                 vec[mm.category_dict[category]] = 1
+                self.list_categories.append(category)
         return vec
 
     def __str__(self):
@@ -85,9 +88,10 @@ def get_rotation_matrix(recentered_outer_vector):
     # get leftmost point, center both points by the left most point. find slope to determine how to find angle. find angle,
     # rotate it, find box, rotate it back, translate it back.
 
-
+# expects it in long,lat format. (x,y)
 def get_bounding_box(coords):
     # width is Golden Ratio. L/1.62
+    ratio = 1.62
     long1 = coords[0][0]
     long2 = coords[1][0]
     left_most_point_index = np.array([long1, long2]).argmin()
@@ -98,10 +102,10 @@ def get_bounding_box(coords):
         [coords[right_most_point_index][0] - translate_x, coords[right_most_point_index][1] - translate_y])
     R = get_rotation_matrix(recentered_outer_vector)
     rotated_point = np.array(np.dot(R, recentered_outer_vector.transpose()))[0]
-    lower_left = np.array([-rotated_point[1] / 1.62 / 2, 0])
-    lower_right = np.array([rotated_point[1] / 1.62 / 2, 0])
-    upper_left = np.array([-rotated_point[1] / 1.62 / 2, rotated_point[1]])
-    upper_right = np.array([rotated_point[1] / 1.62 / 2, rotated_point[1]])
+    lower_left = np.array([-rotated_point[1] / ratio / 2, 0])
+    lower_right = np.array([rotated_point[1] / ratio / 2, 0])
+    upper_left = np.array([-rotated_point[1] / ratio / 2, rotated_point[1]])
+    upper_right = np.array([rotated_point[1] / ratio / 2, rotated_point[1]])
     boundary_points = np.array([lower_left, lower_right, upper_left, upper_right]).transpose()
     boundary_points = np.dot(np.linalg.inv(R), boundary_points)  # rotate back to original angle.
     translate_matrix = np.dot(np.array([[translate_x, 0], [0, translate_y]]), np.ones([2, 4]))
@@ -139,6 +143,12 @@ def parse_yelp_responses(yelp_api_response):
                 break
     return responses
 
+def filter_results_by_rectangle(coords, list_businesses):
+    boundary_points = get_bounding_box(coords);
+    for business in list_businesses:
+        business.location.coordinate.latitude
+        business.location.coordinate.longitude
+    return None
 
 # coords are in lat/long
 def get_results_from_locations(num_results, coords):
@@ -206,6 +216,8 @@ def get_yelp_data(list_businesses):
     :return: List(YelpData)
     """
     return [YelpData(bus) for bus in list_businesses]
+
+
 
 
 def get_restaurant_vectors_by_query(coords, num_results):
