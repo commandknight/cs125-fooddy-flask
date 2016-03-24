@@ -9,6 +9,7 @@ from decimal import Decimal
 
 import numpy as np
 import pymysql as mysql
+
 # Configuration for mysql database
 config = {
     'user': 'ucifooddy',
@@ -332,7 +333,7 @@ def get_user_weights_vector_and_last_update_vector(username):
     return user_weight_vec, last_update_vector
 
 
-def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name):
+def insert_business_or_ignore(business_obj, list_of_categories_alias):
     """
     Function that will insert business into Business Table if not exists.
     Then inserts the associated category_alias and business_id in relational table
@@ -344,8 +345,8 @@ def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name)
     business_name = business_obj.restaurant_info.__getattribute__('name')
     business_id = business_obj.restaurant_info.__getattribute__('id')
     curr = cnx.cursor()
-    sql_insert_new_business = 'INSERT IGNORE INTO Businesses (business_id,business_name,user_name) VALUES (%s,%s,%s)'
-    curr.execute(sql_insert_new_business, (business_id, business_name, user_name))
+    sql_insert_new_business = 'INSERT IGNORE INTO Businesses (business_id,business_name) VALUES (%s,%s,%s)'
+    curr.execute(sql_insert_new_business, (business_id, business_name))
     sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
                                    '(SELECT category_id FROM Categories WHERE category_alias = %s))'
     for category_alias in list_of_categories_alias:
@@ -366,8 +367,12 @@ def insert_visit_and_update_categories_for_business(business_id, list_of_categor
                        'ON DUPLICATE KEY UPDATE visit = NOW()'
     curr = cnx.cursor()
     curr.execute(sql_insert_visit, (business_id, user_name, is_blacklist))
-    update_category_weights_by_visit(user_name, list_of_categories)
+    sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
+                                   '(SELECT category_id FROM Categories WHERE category_name = %s))'
+    for category_alias in list_of_categories:
+        curr.execute(sql_insert_business_category, (business_id, category_alias))
     cnx.commit()
+    update_category_weights_by_visit(user_name, list_of_categories)
     curr.close()
 
 
