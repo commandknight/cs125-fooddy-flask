@@ -184,8 +184,7 @@ def recommended():
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
-    # mm.update_category_weights_by_visit(username, categories)
-    # print(mm.get_user_weights_vector(username))
+    is_blacklist = mm.get_blacklist_status_by_business_id(current_user.get_id(), business.id)
     return render_template("restaurant.html", business=business)
 
 
