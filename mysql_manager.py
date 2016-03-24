@@ -418,7 +418,8 @@ def update_category_weights_by_visit(username, list_categories):
 # Todo: degenerate categories by looking at the last visited time.
 # Need to get the last time updated/visited category attribute from DB. jeet pls.
 # Planning to use this at the start of every user login so they can have the most updated vector
-def degenerate_categories(username, days_til_decay):
+def degenerate_categories(username):
+    days_til_decay = 5
     returns = get_user_weights_vector_and_last_update_vector(username)  # has weight vector and a vector containing # of days since last update
     user_vector = returns[0]
     last_update_vector = returns[1]

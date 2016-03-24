@@ -69,6 +69,7 @@ def login():
                 muser = User(user)  # make a new user_model User
                 if muser.password == form_password:  # if correct password
                     login_user(muser)  # Save user in context as "logged_in"
+                    # mm.degenerate_categories(user)
                     return redirect(url_for('index'))  # return client to index page
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
                 else:
