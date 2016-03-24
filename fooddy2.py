@@ -221,7 +221,9 @@ def update_user_weights():
     username = current_user.get_id()
     business_id = request.form['business_id']
     rating = request.form['rating']
-    categories = request.form['categories']
+    business = yelp_data_source.get_business_by_id(business_id);
+    list_categories = yelp_data_source.YelpData(business).list_categories
+    mm.update_category_weights_by_visit(username, list_categories)
 
 
 if __name__ == '__main__':
