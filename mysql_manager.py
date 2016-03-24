@@ -454,8 +454,8 @@ def close_connection():
     """
     cnx.close()
 
-
-def get_blacklist_status_by_business_id(user_name, business_id):
+# gets the rating value. even though it is blacklist right now, for demo we will use rating
+def get_rating_by_business_id(user_name, business_id):
     """
     :param user_name:
     :param business_id:
@@ -469,7 +469,8 @@ def get_blacklist_status_by_business_id(user_name, business_id):
     return result[0]
 
 
-
+# do not use if we switch back to rating
+'''
 def get_blacklist_by_username(user_name):
     """
     :param user_name:
@@ -480,7 +481,7 @@ def get_blacklist_by_username(user_name):
     result = curr.fetchall()
     curr.close()
     return result
-
+'''
 
 
 # TODO:

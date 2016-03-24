@@ -185,8 +185,8 @@ def recommended():
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
-    #is_blacklist = mm.get_blacklist_status_by_business_id(current_user.get_id(), business.id)
-    return render_template("restaurant.html", business=business)
+    #is_blacklist = mm.get_rating_by_business_id(current_user.get_id(), business.id)
+    return render_template("restaurant.html", business=business, is_blacklisted=0)
 
 
 # Deprecating this method and page
@@ -219,13 +219,16 @@ def upload():
 def update_user_weights():
     username = current_user.get_id()
     business_id = request.form['business-id']
-    is_blacklisted = request.form['blacklist']
+    # opt_param = request.form.get('blacklist', None)
+    # if opt_param is None:
+    #     is_blacklisted = 0
+    rating = request.form['my_rating_slider']
     business = yelp_data_source.get_business_by_id(business_id);
     list_categories = yelp_data_source.YelpData(business).list_categories
     print('hihihihihi')
-    print(is_blacklisted)
+    print(rating)
     print(list_categories)
-    mm.insert_visit_and_update_categories_for_business(business_id, list_categories, username, is_blacklisted)
+    mm.insert_visit_and_update_categories_for_business(business_id, list_categories, username, rating)
 
 
 if __name__ == '__main__':
