@@ -4,11 +4,11 @@ import mysql_manager as mm
 result = mm.get_list....
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from decimal import Decimal
 
 import numpy as np
 import pymysql as mysql
-from decimal import Decimal
 # Configuration for mysql database
 config = {
     'user': 'ucifooddy',
@@ -303,6 +303,7 @@ def get_user_weights_vector(username):
         raise Exception("user weight vector is zero~!!!")
     return user_weight_vec
 
+
 def get_user_weights_vector_and_last_update_vector(username):
     """
     Function to get user_vector from DB
@@ -353,7 +354,7 @@ def insert_business_or_ignore(business_obj, list_of_categories_alias, user_name)
     curr.close()
 
 
-def insert_visit_to_business(business_id, date_time_string, user_name):
+def insert_visit_and_update_categories_for_business(business_id, list_of_categories, user_name, is_blacklist):
     """
     Function to insert a visit to a business_id for a given user_name and datetime string
     :param business_id: id of the business that user_name visisted
@@ -361,9 +362,11 @@ def insert_visit_to_business(business_id, date_time_string, user_name):
     :param user_name: user_name of the user that made the visit
     :return: None
     """
-    sql_insert_visit = 'INSERT INTO Business_LOG (business_id,user_name,visit) VALUES(%s,%s,%s)'
+    sql_insert_visit = 'INSERT IGNORE INTO business_log (business_id,user_name,visit,is_blacklist) VALUES(%s,%s,NOW(),%s) ' \
+                       'ON DUPLICATE KEY UPDATE visit = NOW()'
     curr = cnx.cursor()
-    curr.execute(sql_insert_visit, (business_id, user_name, date_time_string))
+    curr.execute(sql_insert_visit, (business_id, user_name, is_blacklist))
+    update_category_weights_by_visit(user_name, list_of_categories)
     cnx.commit()
     curr.close()
 
@@ -449,6 +452,11 @@ def close_connection():
 # TODO:
 def get_user_rating_for_resturant(user_name, resturant_id):
     pass
+
+
+def add_visit_to_business_log(user_name, resturant_id, is_blacklisted, list_of_categories):
+    pass
+
 
 
 # CONSTANTS! #####
