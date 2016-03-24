@@ -454,6 +454,33 @@ def close_connection():
     cnx.close()
 
 
+def get_blacklist_status_by_business_id(user_name, business_id):
+    """
+    :param user_name:
+    :param business_id:
+    :return: 0 or 1 indicaitng blacklisted or not
+    """
+    curr = cnx.cursor()
+    curr.execute('SELECT is_blacklist FROM Business_Log WHERE user_name = %s and business_id = %s', (user_name, business_id))
+    result = curr.fetchall()
+    curr.close()
+    return result[0]
+
+
+
+def get_blacklist_by_username(user_name):
+    """
+    :param user_name:
+    :return: 0 or 1 indicaitng blacklisted or not
+    """
+    curr = cnx.cursor()
+    curr.execute('SELECT business_id FROM Business_Log WHERE user_name = %s and is_blacklist = 1', (user_name,))
+    result = curr.fetchall()
+    curr.close()
+    return result
+
+
+
 # TODO:
 def get_user_rating_for_resturant(user_name, resturant_id):
     pass

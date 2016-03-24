@@ -214,16 +214,18 @@ def upload():
     return render_template("index.html", logged_in=True, username=username, code=302)
 
 
-# TODO: rating upload and do stuff with it.
 @app.route('/rating', methods=['POST'])
 @login_required
 def update_user_weights():
     username = current_user.get_id()
-    business_id = request.form['business_id']
-    rating = request.form['rating']
+    business_id = request.form['business-id']
+    is_blacklisted = request.form['blacklist']
     business = yelp_data_source.get_business_by_id(business_id);
     list_categories = yelp_data_source.YelpData(business).list_categories
-    mm.update_category_weights_by_visit(username, list_categories)
+    print('hihihihihi')
+    print(is_blacklisted)
+    print(list_categories)
+    mm.insert_visit_and_update_categories_for_business(business_id, list_categories, username, is_blacklisted)
 
 
 if __name__ == '__main__':
