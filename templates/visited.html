@@ -16,24 +16,18 @@
 </head>
 
 <body>
-<div data-role="page" id="rec_page">
-
-
-    </div><!-- /location_panel -->
-
-    <div data-role="header" data-position="fixed" style="padding-top:2px; padding-bottom:0px;">
-        <a href="/" data-icon="home" class="ui-btn-left ui-btn-inline ui-mini">Home</a>
-        <h1><img src="../static/assets/logo.png" height="50px"/><br/>
-            recommends...</h1>
-             <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
-    </div>
+<div id="rec_page">
 
 
     <ul data-role="listview">
-        {% for yelp_data in list_results %}
-            <li><a href="restaurant/{{ yelp_data.restaurant_info['id'] }}">{{ yelp_data.restaurant_info['name'] }}</a>
-            </li>
-        {% endfor %}
+        {% if len(list_results) > 0%}
+            {% for yelp_data in list_results %}
+                <li><a href="restaurant/{{ yelp_data.restaurant_info['id'] }}">{{ yelp_data.restaurant_info['name'] }}</a>
+                </li>
+            {% endfor %}
+        {% elif %}
+
+        {% endif %}
     </ul>
 
     <div data-role="footer" data-position="fixed">

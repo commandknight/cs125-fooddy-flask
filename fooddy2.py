@@ -165,6 +165,10 @@ def recommended():
     if request.method == "POST":
         # for i in request.form.items():
         #     print(i)
+
+        long = request.form.get("current_location_longitude")
+        lat = request.form.get("current_location_latitude")
+        print(long, lat)
         if request.form['confirm_current_loc'] == "OK":
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
@@ -177,7 +181,11 @@ def recommended():
                                                                                            coords=[(lat, long)]),
                                    next_location=location)
     else:
-        # print('Trying to get restaurant results using GET method')
+
+        long = request.form.get("current_location_longitude")
+        lat = request.form.get("current_location_latitude")
+        print(long, lat)
+        print('Trying to get restaurant results using GET method')
         if is_google_auth():
             location = get_location(http_auth)
         else:
@@ -194,9 +202,10 @@ def visit_restaurants():
     list_yelp_data = []
     print(list_of_tuples_business_id)
     for tup in list_of_tuples_business_id:
-        print(yelp_data_source.get_business_by_id(tup[0]))
         list_yelp_data.append(yelp_data_source.YelpData(yelp_data_source.get_business_by_id(tup[0])))
 
+    print(list_yelp_data)
+    print(list_yelp_data[0].restaurant_info.name)
     return render_template("visited.html", list_results=list_yelp_data)
 
 
