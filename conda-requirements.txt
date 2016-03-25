@@ -4,3 +4,4 @@ numpy=1.10.1
 scipy=0.16.0
 PyMySQL==0.6.7
 mysql-connector-python==2.0.3
+llvmlite==0.8.0
