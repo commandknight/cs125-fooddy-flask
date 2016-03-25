@@ -69,6 +69,7 @@ def login():
                 muser = User(user)  # make a new user_model User
                 if muser.password == form_password:  # if correct password
                     login_user(muser)  # Save user in context as "logged_in"
+                    # TODO: (1) This is where to process location.
                     # mm.degenerate_categories(user)
                     return redirect(url_for('index'))  # return client to index page
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
@@ -85,6 +86,7 @@ def login():
             new_user = User((user_name, form_password))
             mm.init_category_weight_vector_for_user(user_name, .015)
             login_user(new_user)
+            #TODO: (2) Process location here also
             return redirect(url_for('index'))
     return render_template("login.html")
 
