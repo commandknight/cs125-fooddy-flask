@@ -69,7 +69,7 @@
         <div class="ui-block-a">
             <form id="my_rating" action="/rating" method="POST">
                 <center><label for="my_rating_slider"><strong>Eaten here before? Rate it!</strong></label></center>
-                {% if is_blacklisted %}
+                {% if rating %}
 
 
                 <input type="range" name="my_rating_slider" id="my_rating_slider"
