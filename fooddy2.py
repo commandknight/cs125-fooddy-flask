@@ -92,6 +92,11 @@ def login():
             new_user = User((user_name, form_password))
             mm.init_category_weight_vector_for_user(user_name, .015)
             login_user(new_user)
+            lat = request.form['current_location_latitude']
+            long = request.form['current_location_longitude']
+            print(lat,long)
+            session['lat'] = lat
+            session['long'] = long
             #TODO: (2) Process location here also
             return redirect(url_for('index'))
     return render_template("login.html")
@@ -184,6 +189,7 @@ def recommended():
     else:
 
         print('Trying to get restaurant results using GET method')
+        print((session['lat'], session['long']))
         if is_google_auth():
             location = get_location(http_auth)
         else:
@@ -263,7 +269,7 @@ def update_user_weights():
     print(rating)
     print(list_categories)
     mm.insert_visit_and_update_categories_for_business(business_id, list_categories, username, rating)
-    return
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
