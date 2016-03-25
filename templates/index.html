@@ -38,9 +38,6 @@
     </script>
 
 </head>
-
-<body onload="getLocation()" data-theme="a">
->
 <!-- page 1-->
 <div data-role="page" id="index_page">
 
@@ -81,7 +78,7 @@
         {#        <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a> #}
 
         <!--TODO: uncomment this section if we want the CALENDAR integration back-->
-{#        <a href="/auth_google" rel="external" class="ui-btn"><img#}
+{#        <a href="/auth_google" rel="external" class="ui-btn"><img>#}
 {#                src="../static/assets/google-product-logos/logo_calendar_32px.png"/>Connect to <em>Google Calendar</em></a>#}
 
         <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
