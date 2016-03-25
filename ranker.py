@@ -8,7 +8,7 @@ import yelp_data_source as ydp;
 # coords is a list of long lat tuples. (1 or 2))
 # category filter is a list of string categories
 # returns a list of YelpData sorted by the most similar to the least
-def get_ranking_by_probabilistic_cosine(username, coords=[(33.6694, -117.8231)], num_results=80):
+def get_ranking_by_probabilistic_cosine(username, coords=[(37.7903373, -122.4091663)], num_results=80):
 
     list_yelp_data = ydp.get_restaurant_vectors_by_query(coords, num_results)
     user_weight_vec = mm.get_user_weights_vector(username)

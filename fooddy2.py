@@ -61,9 +61,6 @@ def index():
 def login():
     if request.method == 'POST':
         # getting user_name and password form data
-        lat = request.form['current_location_latitude']
-        long = request.form['current_location_longitude']
-        print(lat,long)
         user_name = request.form['user_name']
         form_password = request.form['user_password']
         print(user_name, form_password)
@@ -74,6 +71,11 @@ def login():
                 if muser.password == form_password:  # if correct password
                     login_user(muser)  # Save user in context as "logged_in"
                     # TODO: (1) This is where to process location.
+                    lat = request.form['current_location_latitude']
+                    long = request.form['current_location_longitude']
+                    print(lat,long)
+                    session['lat'] = lat
+                    session['long'] = long
                     # mm.degenerate_categories(user)
                     return redirect(url_for('index'))  # return client to index page
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
@@ -178,24 +180,21 @@ def recommended():
             # print('LOCATION FROM GOOGLE CAL' + lat + "," + long)  # DEBUG
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(),
-                                                                                           coords=[(lat, long)]),
-                                   next_location=location)
+                                                                                           coords=[(lat, long)]),next_location=location)
     else:
 
-        long = request.form.get("current_location_longitude")
-        lat = request.form.get("current_location_latitude")
-        print(long, lat)
         print('Trying to get restaurant results using GET method')
         if is_google_auth():
             location = get_location(http_auth)
         else:
             location = "Connect with Google Calendar to see your next event's location!"
         return render_template("recommended.html",
-                               list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id()),
+                               list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(), coords=[(session['lat'], session['long'])]),
                                next_location=location)
 
 # Visited Restaurants
 @app.route('/visited')
+@login_required
 def visit_restaurants():
     username = current_user.get_id()
     list_of_tuples_business_id = mm.get_visited_businesses_by_username(username)
@@ -243,6 +242,12 @@ def upload():
     return render_template("index.html", logged_in=True, username=username, code=302)
 
 
+@app.route('/rate_listing')
+@login_required
+def get_nearby_locations():
+    list_results = ranker.get_nearby_restaurants(current_user.get_id(), coords=[(session['lat'], session['long'])])
+    return render_template("rate_listing.html", list_results=list_results)
+
 @app.route('/rating', methods=['POST'])
 @login_required
 def update_user_weights():
@@ -254,10 +259,11 @@ def update_user_weights():
     rating = request.form['my_rating_slider']
     business = yelp_data_source.get_business_by_id(business_id);
     list_categories = yelp_data_source.YelpData(business).list_categories
-    print('hihihihihi')
+    print('Rating')
     print(rating)
     print(list_categories)
     mm.insert_visit_and_update_categories_for_business(business_id, list_categories, username, rating)
+    return
 
 
 if __name__ == '__main__':

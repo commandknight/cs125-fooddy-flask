@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rate Nearby</title>
+
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
+
+    <!--jQueryMobile scripts-->
+    <link rel="stylesheet" href="../static/themes/black-fooddy.min.css"/>
+    <link rel="stylesheet" href="../static/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"><!-- to work with portrait mode-->
+</head>
+
+<body>
+<div id="rec_page">
+
+    <div data-role="header" data-position="fixed" style="padding-top:2px; padding-bottom:0px;">
+        <a href="/" data-icon="home" class="ui-btn-left ui-btn-inline ui-mini">Home</a>
+        <h1><img src="../static/assets/logo.png" height="50px"/><br/>
+            Rate Restaurants near you!</h1>
+           
+    </div>
+
+
+    <ul data-role="listview">
+        {% for yelp_data in list_results %}
+            <li><a href="restaurant/{{ yelp_data.restaurant_info['id'] }}">{{ yelp_data.restaurant_info['name'] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div data-role="footer" data-position="fixed">
+        <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
+    </div>
+
+</div> <!--/end rec_page-->
+</body>
+
+</html>
