@@ -76,7 +76,7 @@ def login():
                     print(lat,long)
                     session['lat'] = lat
                     session['long'] = long
-                    # mm.degenerate_categories(user)
+                    #mm.degenerate_categories(user)
                     return redirect(url_for('index'))  # return client to index page
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
                 else:
@@ -202,10 +202,10 @@ def visit_restaurants():
     print(list_of_tuples_business_id)
     for tup in list_of_tuples_business_id:
         list_yelp_data.append(yelp_data_source.YelpData(yelp_data_source.get_business_by_id(tup[0])))
-
-    print(list_yelp_data)
-    print(list_yelp_data[0].restaurant_info.name)
-    return render_template("visited.html", list_results=list_yelp_data)
+    empty_list = True
+    if len(list_yelp_data) > 0:
+        empty_list = False
+    return render_template("visited.html", list_results=list_yelp_data, empty_list=empty_list)
 
 
 

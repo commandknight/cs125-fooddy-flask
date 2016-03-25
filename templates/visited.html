@@ -103,6 +103,11 @@
              <a href="#location_panel" data-icon="location" class="ui-btn-right ui-btn-inline ui-mini">Location</a>
     </div>
 
+     {% if empty_list %}
+
+         <strong>Sorry, you haven't been to any restaurants yet =[ </strong>
+
+    {% else %}
 
     <ul data-role="listview">
         {% for yelp_data in list_results %}
@@ -111,6 +116,9 @@
             </li>
         {% endfor %}
     </ul>
+
+    {% endif %}
+
 
     <div data-role="footer" data-position="fixed">
         <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
