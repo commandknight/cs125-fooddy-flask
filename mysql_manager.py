@@ -462,7 +462,7 @@ def get_rating_by_business_id(user_name, business_id):
     :return: 0 or 1 indicaitng blacklisted or not
     """
     curr = cnx.cursor()
-    sql_blacklist_status = 'SELECT is_blacklist FROM Business_Log WHERE user_name = %s and business_id = %s'
+    sql_blacklist_status = 'SELECT rating FROM Business_Log WHERE user_name = %s and business_id = %s'
     curr.execute(sql_blacklist_status, (user_name, business_id))
     result = curr.fetchone()
     curr.close()
