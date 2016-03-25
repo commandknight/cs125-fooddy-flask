@@ -61,8 +61,5 @@ ujson==1.33
 uritemplate==0.6
 virtualenv==15.0.1
 xlrd==0.9.4
-XlsxWriter==0.7.7
-xlwings==0.5.0
-xlwt==1.0.0
 yelp==1.0.1
 yelpapi==1.3
