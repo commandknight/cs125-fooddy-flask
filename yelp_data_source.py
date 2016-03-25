@@ -189,7 +189,7 @@ def get_results_from_locations(num_results, coords, radius):
 
 
 # pass in location as an address String
-def get_results_from_address(num_results, location, radius=radiusToSearch):
+def get_results_from_address(location, num_results, radius=radiusToSearch):
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
@@ -199,7 +199,6 @@ def get_results_from_address(num_results, location, radius=radiusToSearch):
     }
 
     for i in range(iterations):
-        time.sleep(.3)
         params['offset'] = i * limit
         yelp_api_response = yelp_client.search(location, **params)
         responses += parse_yelp_responses(yelp_api_response)
@@ -220,4 +219,8 @@ def get_yelp_data(list_businesses):
 
 def get_restaurant_vectors_by_query(coords, num_results, radius=radiusToSearch):
     list_businesses = get_results_from_locations(num_results, coords=coords, radius=radius)
+    return get_yelp_data(list_businesses)
+
+def get_restaurant_vectors_by_address(location, num_results):
+    list_businesses = get_results_from_address(location, num_results)
     return get_yelp_data(list_businesses)

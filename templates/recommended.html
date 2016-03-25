@@ -50,9 +50,10 @@
         <!-- this will display a message to user saying that we will be using
             their location for our recommendations-->
         <form id="login_form" action="{{ url_for('recommended') }}" method="POST">
+            <input type="hidden" name="whatOk" value="coords">
             <input name="current_location_latitude" id="current_location_latitude" value="default_lat"/>
             <input name="current_location_longitude" id="current_location_longitude" value="default_long"/>
-            <input type="submit" name="confirm_current_loc" id="confirm_current_loc" value="OK" class="ui-btn-inline"/>
+            <input type="submit" name="submit_location" value="OK" class="ui-btn-inline"/>
         </form>
 
         <!--CALENDAR LOCATION-->
@@ -73,22 +74,25 @@
         <!--TODO: grab this data to backend & pass to yelp query-->
         <button onclick="openAddressForm('address_form')">Manually enter location</button>
         <div id="address_form" style="display:none;">
-            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
-            <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">
+            <form id="manual-form" action="{{ url_for('recommended') }}" method="POST">
+                <input type="hidden" name="whatOk" id="whatOk" value="manual">
+                <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
+                <input type="text" name="addressline1" id="addressline1" placeholder="Address Line 1" value="">
 
-            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>
-            <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">
+                <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>
+                <input type="text" name="addressline2" id="addressline2" placeholder="Address Line 2" value="">
 
-            <label for="textinput-hide" class="ui-hidden-accessible">City</label>
-            <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">
+                <label for="textinput-hide" class="ui-hidden-accessible">City</label>
+                <input type="text" name="addresscity" id="addresscity" placeholder="City" value="">
 
-            <label for="textinput-hide" class="ui-hidden-accessible">State</label>
-            <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">
+                <label for="textinput-hide" class="ui-hidden-accessible">State</label>
+                <input type="text" name="addressstate" id="addressstate" placeholder="State" value="">
 
-{#            <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
-{#            <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">#}
+    {#            <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
+    {#            <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">#}
 
-            <input type="submit" name="submit_location" value="OK" class="ui-mini"/>
+                <input type="submit" name="submit_location" value="OK" class="ui-mini"/>
+            </form>
         </div><!--/addressform-->
         <script>
             function openAddressForm(target) {

@@ -169,24 +169,34 @@ def oauth2callback():
 @app.route('/recommended', methods=["GET", "POST"])
 def recommended():
     username = current_user.get_id()
-    # user_categories = mm.get_list_of_category_names_user_likes(username) # unneeded now
     if request.method == "POST":
+        print('hi post')
         # for i in request.form.items():
         #     print(i)
-
-        long = request.form.get("current_location_longitude")
-        lat = request.form.get("current_location_latitude")
-        print(long, lat)
-        if request.form['confirm_current_loc'] == "OK":
+        print(request.form['whatOk'])
+        if request.form['whatOk'] == "coords":
             long = request.form.get("current_location_longitude")
             lat = request.form.get("current_location_latitude")
-            # print(long, lat)
-            location = get_location(http_auth) if is_google_auth() else connect_to_goog_cal
+            print(long, lat)
+            # location = get_location(http_auth) if is_google_auth() else connect_to_goog_cal
             # TODO: PASS IN LONGITUDE AND LATITUDE IN YELP RETURN STATEMENT BELOW.................
             # print('LOCATION FROM GOOGLE CAL' + lat + "," + long)  # DEBUG
+
+
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id(),
-                                                                                           coords=[(lat, long)]),next_location=location)
+                                                                                  coords=[(lat, long)]))
+
+
+        elif request.form['whatOk'] == "manual":
+            a1 = request.form['addressline1']
+            a2 = request.form['addressline2']
+            city = request.form['addresscity']
+            state = request.form['addressstate']
+            address = a1 + ' ' + a2 + ' ' + city + ' ' + state
+            return render_template("recommended.html",
+                                   list_results=ranker.get_ranking_by_probabilistic_cosine_by_address(current_user.get_id(),address=address))
+
     else:
 
         print('Trying to get restaurant results using GET method')
@@ -278,7 +288,7 @@ def update_user_weights():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='localhost')
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='localhost')
     # to make app run public
     # app.run(host='0.0.0.0')
