@@ -355,7 +355,7 @@ def insert_business_or_ignore(business_obj, list_of_categories_alias):
     curr.close()
 
 
-def insert_visit_and_update_categories_for_business(business_id, list_of_categories, user_name, is_blacklist):
+def insert_visit_and_update_categories_for_business(business_id, list_of_categories, user_name, rating):
     """
     Function to insert a visit to a business_id for a given user_name and datetime string
     :param business_id: id of the business that user_name visisted
@@ -363,10 +363,10 @@ def insert_visit_and_update_categories_for_business(business_id, list_of_categor
     :param user_name: user_name of the user that made the visit
     :return: None
     """
-    sql_insert_visit = 'INSERT IGNORE INTO business_log (business_id,user_name,visit,is_blacklist) VALUES(%s,%s,NOW(),%s) ' \
-                       'ON DUPLICATE KEY UPDATE visit = NOW()'
+    sql_insert_visit = 'INSERT IGNORE INTO Business_Log (business_id,user_name,visit,rating) VALUES(%s,%s,NOW(),%s) ' \
+                       'ON DUPLICATE KEY UPDATE visit = NOW(), rating = %s'
     curr = cnx.cursor()
-    curr.execute(sql_insert_visit, (business_id, user_name, is_blacklist))
+    curr.execute(sql_insert_visit, (business_id, user_name, rating, rating))
     sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
                                    '(SELECT category_id FROM Categories WHERE category_name = %s))'
     for category_alias in list_of_categories:
