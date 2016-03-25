@@ -61,8 +61,12 @@ def index():
 def login():
     if request.method == 'POST':
         # getting user_name and password form data
+        lat = request.form['current_location_latitude']
+        long = request.form['current_location_longitude']
+        print(lat,long)
         user_name = request.form['user_name']
         form_password = request.form['user_password']
+        print(user_name, form_password)
         if request.form['submit'] == 'Sign In':  # if the user is trying to sign in
             user = mm.get_user(user_name)  # get the user from Database, will return Null if no user_name
             if user:  # if not None
@@ -157,7 +161,7 @@ def oauth2callback():
 @app.route('/recommended', methods=["GET", "POST"])
 def recommended():
     username = current_user.get_id()
-    user_categories = mm.get_list_of_category_names_user_likes(username)
+    # user_categories = mm.get_list_of_category_names_user_likes(username) # unneeded now
     if request.method == "POST":
         # for i in request.form.items():
         #     print(i)
@@ -182,13 +186,27 @@ def recommended():
                                list_results=ranker.get_ranking_by_probabilistic_cosine(current_user.get_id()),
                                next_location=location)
 
+# Visited Restaurants
+@app.route('/visited')
+def visit_restaurants():
+    username = current_user.get_id()
+    list_of_tuples_business_id = mm.get_visited_businesses_by_username(username)
+    list_yelp_data = []
+    print(list_of_tuples_business_id)
+    for tup in list_of_tuples_business_id:
+        print(yelp_data_source.get_business_by_id(tup[0]))
+        list_yelp_data.append(yelp_data_source.YelpData(yelp_data_source.get_business_by_id(tup[0])))
+
+    return render_template("visited.html", list_results=list_yelp_data)
+
+
 
 # Single Restaurant View
 @app.route('/restaurant/<restaurant_id>')
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
-    #is_blacklist = mm.get_rating_by_business_id(current_user.get_id(), business.id)
-    return render_template("restaurant.html", business=business, is_blacklisted=0)
+    #rating = mm.get_rating_by_business_id(current_user.get_id(), business.id)
+    return render_template("restaurant.html", business=business, rating=0)
 
 
 # Deprecating this method and page

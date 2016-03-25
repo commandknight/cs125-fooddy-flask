@@ -165,7 +165,7 @@ def get_results_from_locations(num_results, coords, radius):
         # find bounding box
         southwest_point, northeast_point = get_southwest_northeast_coords(normal_coords);
         for i in range(iterations):
-            time.sleep(.2)
+            time.sleep(.1)
             params['offset'] = i * limit
             yelp_api_response = yelp_client.search_by_bounding_box(southwest_point[1], southwest_point[0], northeast_point[1],
                                                           northeast_point[0], **params)
@@ -177,7 +177,7 @@ def get_results_from_locations(num_results, coords, radius):
         long = normal_coords[0][0]
         lat = normal_coords[0][1]
         for i in range(iterations):
-            time.sleep(.3)
+            time.sleep(.1)
             params['radius_filter'] = radius
             params['offset'] = i * limit
             yelp_api_response = yelp_client.search_by_coordinates(lat, long, **params)

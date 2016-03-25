@@ -470,18 +470,17 @@ def get_rating_by_business_id(user_name, business_id):
 
 
 # do not use if we switch back to rating
-'''
-def get_blacklist_by_username(user_name):
+
+def get_visited_businesses_by_username(user_name):
     """
     :param user_name:
-    :return: 0 or 1 indicaitng blacklisted or not
+    :return: list of tuples of (business_ids, )
     """
     curr = cnx.cursor()
-    curr.execute('SELECT business_id FROM Business_Log WHERE user_name = %s and is_blacklist = 1', (user_name,))
+    curr.execute('SELECT business_id FROM Business_Log WHERE user_name = %s', (user_name,))
     result = curr.fetchall()
     curr.close()
     return result
-'''
 
 
 # TODO:
