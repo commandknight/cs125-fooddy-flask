@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head data-theme="a">
+    <title>Fooddy Home</title>
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
+
+    <!--jQueryMobile scripts-->
+    <link rel="stylesheet" href="../static/themes/black-fooddy.min.css"/>
+    <link rel="stylesheet" href="../static/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"><!-- to work with portrait mode-->
+
+
+    <!--Google API scripts-->
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id"
+          content="113602676382-vom8i9393ldj0vcuk32emk3c4elf20vo.apps.googleusercontent.com">
+
+
+    <!--Location Service Scripts-->
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById("current_location_latitude").value = position.coords.latitude;
+            document.getElementById("current_location_longitude").value = position.coords.longitude;
+        }
+    </script>
+
+</head>
+
+<body onload="getLocation()" data-theme="a">
+>
+<!-- page 1-->
+<div data-role="page" id="index_page">
+
+    <div data-role="header">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/">Fooddy Home</a></li>
+            </ul>
+        </div>
+    </div><!-- /header -->
+
+    <center>
+        <h1>Welcome to Fooddy!</h1>
+        <img src="../static/assets/logo.png" width="60%"/>
+        <h3>Your Food Buddy</h3>
+    </center>
+
+<!--TODO: Jeet, if not using this block for "OK" location, please delete -->
+{#    <form id="login_form" action="{{ url_for('recommended') }}" method="POST">#}
+{#        <input type="hidden" name="current_location_latitude" id="current_location_latitude" value="default_lat"/>#}
+{#        <input type="hidden" name="current_location_longitude" id="current_location_longitude" value="default_long"/>#}
+{#        <input data-theme="d" type="submit" onclick="getLocation()" name="confirm_current_loc" id="confirm_current_loc"#}
+{#               value="OK"#}
+{#               class="ui-btn-inline"/>#}
+{#    </form>#}
+
+
+    {% if not current_user.is_authenticated %}
+        <a href="/login" rel="external" class="ui-btn">Log-in/Sign-up</a> <!--return to login page-->
+    {% else %}
+        <center><h3><img src="../static/assets/fooddy_favicon_32.png"/>Hey, {{ current_user.get_id() }}!</h3></center>
+
+        <!--Displaying Google Product logo for Calendar-->
+        <a href="/recommended" rel="external" class="ui-btn">Restaurants for you!</a>
+        <a href="/visited" rel="external" class="ui-btn">View my Visited restaurants</a>
+        <a href="/rate_listing" rel="external" class="ui-btn">Rate Nearby Restaurants</a>
+        <!--TODO: uncomment these if we want "My Profile" where user can customize by categories-->
+        {#        <a href="/profile/{{ current_user.get_id() }}" rel="external" class="ui-btn">My Profile</a> #}
+
+        <!--TODO: uncomment this section if we want the CALENDAR integration back-->
+{#        <a href="/auth_google" rel="external" class="ui-btn"><img#}
+{#                src="../static/assets/google-product-logos/logo_calendar_32px.png"/>Connect to <em>Google Calendar</em></a>#}
+
+        <a href="/logout" onclick="signOut();" rel="external" class="ui-btn">Sign out</a>
+
+    {% endif %}
+
+
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+
+
+</div><!--/end index_page-->
+</body>
+
+</html>

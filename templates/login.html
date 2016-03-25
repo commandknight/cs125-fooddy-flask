@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fooddy Log-in</title>
+
+    <!--favicon-->
+    <link rel="shortcut icon" type="image/ico" href="{{ url_for('static', filename='favicon.ico') }}"/>
+
+    <!--jQueryMobile scripts-->
+    <link rel="stylesheet" href="../static/themes/black-fooddy.min.css"/>
+    <link rel="stylesheet" href="../static/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"><!-- to work with portrait mode-->
+
+</head>
+<body>
+<!-- page 1-->
+<div data-role="page" id="login_page">
+
+    <div data-role="header" style="overflow:hidden;" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/"><img src="../static/assets/logo.png" height="50px"/></a></li>
+            </ul>
+        </div><!--/navbar-->
+        <center>Login to Fooddy!</center>
+    </div><!--/header-->
+
+    <fieldset data-role="control-group">
+        <h3>Hey! Have you met Fooddy? :)</h3>
+        {% if error_msg %}
+            <h1>{{ error_msg }}</h1>
+        {% endif %}
+        <form id="login_form" action="{{ url_for('login') }}" method="POST">
+            <label for="user_name">Username:</label>
+            <input type="text" name="user_name"/>
+            <label for="user_password">Password:</label>
+            <input type="password" name="user_password"/>
+
+            <input type="hidden" name="current_location_latitude" id="current_location_latitude" value=""/>
+            <input type="hidden" name="current_location_longitude" id="current_location_longitude" value=""/>
+
+            <input type="submit" name="submit" value="Sign In"/>
+            <input type="submit" name="submit" value="Sign Up"/>
+        </form>
+        <button onclick=getLocation()>Provide Location!</button>
+
+        <!--Location Service Scripts-->
+        <script>
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    document.getElementById("error").innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showPosition(position) {
+                document.getElementById("current_location_latitude").value = position.coords.latitude;
+                document.getElementById("current_location_longitude").value = position.coords.longitude;
+            }
+        </script>
+    </fieldset>
+
+    <div data-role="footer" data-position="fixed">
+        <center>Fooddy is glad to meet you.</center>
+    </div><!--/footer-->
+
+</div><!-- end of login_page-->
+</body>
+{#<script src="../static/js/get_user_location.js"></script>#}
+</html>
