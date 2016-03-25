@@ -466,6 +466,8 @@ def get_rating_by_business_id(user_name, business_id):
     curr.execute(sql_blacklist_status, (user_name, business_id))
     result = curr.fetchone()
     curr.close()
+    if result == None:
+        return 1
     return result[0]
 
 

@@ -221,7 +221,6 @@ def visit_restaurants():
 def restaurant(restaurant_id):
     business = yelp_data_source.get_business_by_id(restaurant_id)  # this is a dictionary
     rating = mm.get_rating_by_business_id(current_user.get_id(), business.id)
-    print(rating)
     return render_template("restaurant.html", business=business, rating=rating)
 
 
