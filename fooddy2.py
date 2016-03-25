@@ -190,10 +190,9 @@ def recommended():
 
         elif request.form['whatOk'] == "manual":
             a1 = request.form['addressline1']
-            a2 = request.form['addressline2']
             city = request.form['addresscity']
             state = request.form['addressstate']
-            address = a1 + ' ' + a2 + ' ' + city + ' ' + state
+            address = a1 + ' ' + city + ' ' + state
             return render_template("recommended.html",
                                    list_results=ranker.get_ranking_by_probabilistic_cosine_by_address(current_user.get_id(),address=address))
 
