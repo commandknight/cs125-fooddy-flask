@@ -24,7 +24,7 @@ yelp_client = Client(auth)
 
 
 # Constants
-radius = 40000/5 # in meters 40000 is 25 miles
+radiusToSearch = 40000/5 # in meters 40000 is 25 miles
 limit = 20  # number of results per yelp query
 
 class YelpData:
@@ -151,7 +151,7 @@ def filter_results_by_rectangle(coords, list_businesses):
     return None
 
 # coords are in lat/long
-def get_results_from_locations(num_results, coords):
+def get_results_from_locations(num_results, coords, radius):
     # parse location if two locations given
     normal_coords = swap_coords(coords)
     iterations = math.ceil(num_results / limit)
@@ -191,7 +191,7 @@ def get_results_from_locations(num_results, coords):
 
 
 # pass in location as an address String
-def get_results_from_address(num_results, location):
+def get_results_from_address(num_results, location, radius=radiusToSearch):
     iterations = math.ceil(num_results / limit)
     responses = []
     params = {
@@ -220,6 +220,6 @@ def get_yelp_data(list_businesses):
 
 
 
-def get_restaurant_vectors_by_query(coords, num_results):
-    list_businesses = get_results_from_locations(num_results, coords=coords)
+def get_restaurant_vectors_by_query(coords, num_results, radius=radiusToSearch):
+    list_businesses = get_results_from_locations(num_results, coords=coords, radius=radius)
     return get_yelp_data(list_businesses)
