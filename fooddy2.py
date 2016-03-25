@@ -76,7 +76,7 @@ def login():
                     print(lat,long)
                     session['lat'] = lat
                     session['long'] = long
-                    #mm.degenerate_categories(user)
+                    mm.degenerate_categories(user_name)
                     return redirect(url_for('index'))  # return client to index page
                     # redirect(request.args.get('next') or url_for('index')) #allows login page to act as in between
                 else:
@@ -252,7 +252,7 @@ def upload():
 @app.route('/rate_listing')
 @login_required
 def get_nearby_locations():
-    list_results = ranker.get_nearby_restaurants(current_user.get_id(), coords=[(session['lat'], session['long'])])
+    list_results = ranker.get_nearby_restaurants(current_user.get_id(), coords=[(37.7903373, -122.4091663)])
     return render_template("rate_listing.html", list_results=list_results)
 
 @app.route('/rating', methods=['POST'])
