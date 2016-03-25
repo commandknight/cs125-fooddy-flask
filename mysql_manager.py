@@ -364,7 +364,7 @@ def insert_visit_and_update_categories_for_business(business_id, list_of_categor
     :return: None
     """
     sql_insert_visit = 'INSERT IGNORE INTO Business_Log (business_id,user_name,visit,rating) VALUES(%s,%s,NOW(),%s) ' \
-                       'ON DUPLICATE KEY UPDATE visit = NOW() AND rating = %s'
+                       'ON DUPLICATE KEY UPDATE visit = NOW(), rating = %s'
     curr = cnx.cursor()
     curr.execute(sql_insert_visit, (business_id, user_name, rating, rating))
     sql_insert_business_category = 'INSERT IGNORE INTO Business_Category (business_id,category_id) VALUES (%s,' \
