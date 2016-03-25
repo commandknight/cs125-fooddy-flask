@@ -56,17 +56,19 @@
         </form>
 
         <!--CALENDAR LOCATION-->
-        <!--TODO: add calendar location from dolly-->
-        <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>
-        <div id="next_event_location" style="display:none;">
-            {{ next_location }} <br/>
+        <!--TODO: UNCOMMENT BELOW IF WANT THE CALENDAR FEATURE BACK-->
+{#        <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>#}
+{#        <div id="next_event_location" style="display:none;">#}
+{#            {{ next_location }} <br/>#}
             {#            <button id="confirm_next_location" class="ui-btn ui-btn-inline ui-corner-all">Confirm</button>#}
-        </div>
-        <script>
-            function getNextEventLocation(target) {
-                document.getElementById(target).style.display = 'block';
-            }
-        </script>
+{#        </div>#}
+{#        <script>#}
+{#            function getNextEventLocation(target) {#}
+{#                document.getElementById(target).style.display = 'block';#}
+{#            }#}
+{#        </script>#}
+
+
         <!--MANUAL LOCATION-->
         <!--TODO: grab this data to backend & pass to yelp query-->
         <button onclick="openAddressForm('address_form')">Manually enter location</button>
@@ -83,8 +85,8 @@
             <label for="textinput-hide" class="ui-hidden-accessible">State</label>
             <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">
 
-            <label for="textinput-hide" class="ui-hidden-accessible">State</label>
-            <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">
+{#            <label for="textinput-hide" class="ui-hidden-accessible">State</label>#}
+{#            <input type="text" name="textinput-hide" id="addresscountry" placeholder="Country" value="">#}
 
             <input type="submit" name="submit_location" value="OK" class="ui-mini"/>
         </div><!--/addressform-->

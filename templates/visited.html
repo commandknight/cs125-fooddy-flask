@@ -16,7 +16,82 @@
 </head>
 
 <body>
-<div data-role="page" id="rec_page">
+<div data-role="page" id="visited_page">
+    <!--LOCATION PANEL, must be first or last in visited_page div-->
+    <div data-role="panel" id="location_panel" data-display="overlay" data-position="right">
+        <div data-role="header" id="location_panel_header">
+            {#            <h1>Location Settings</h1>#}
+            {#            <a href="#" data-icon="delete" class="ui-btn-left ui-btn-icon-notext">Close_button</a>#}
+            <div data-role="navbar" data-iconpos="left">
+                <ul>
+                    <li><a href="#" data-rel="close" data-icon="delete">Location Settings</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--CURRENT LOCATION-->
+        <button onclick="getLocation()">Use my current location</button>
+
+        <script>
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showPosition(position) {
+                document.getElementById("current_location_latitude").value = position.coords.latitude;
+                document.getElementById("current_location_longitude").value = position.coords.longitude;
+            }
+        </script>
+
+
+        <!-- this will display a message to user saying that we will be using
+            their location for our recommendations-->
+        <form id="login_form" action="{{ url_for('recommended') }}" method="POST">
+            <input type="hidden" name="current_location_latitude" id="current_location_latitude" value="default_lat"/>
+            <input type="hidden" name="current_location_longitude" id="current_location_longitude" value="default_long"/>
+            <input type="submit" name="confirm_current_loc" id="confirm_current_loc" value="OK" class="ui-btn-inline"/>
+        </form>
+
+        <!--CALENDAR LOCATION-->
+        <!--TODO: UNCOMMENT BELOW IF WANT THE CALENDAR FEATURE BACK-->
+{#        <button onclick="getNextEventLocation('next_event_location')">Use my next event</button>#}
+{#        <div id="next_event_location" style="display:none;">#}
+{#            {{ next_location }} <br/>#}
+            {#            <button id="confirm_next_location" class="ui-btn ui-btn-inline ui-corner-all">Confirm</button>#}
+{#        </div>#}
+{#        <script>#}
+{#            function getNextEventLocation(target) {#}
+{#                document.getElementById(target).style.display = 'block';#}
+{#            }#}
+{#        </script>#}
+
+
+        <!--MANUAL LOCATION-->
+        <!--TODO: grab this data to backend & pass to yelp query-->
+        <button onclick="openAddressForm('address_form')">Manually enter location</button>
+        <div id="address_form" style="display:none;">
+            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 1</label>
+            <input type="text" name="textinput-hide" id="addressline1" placeholder="Address Line 1" value="">
+
+            <label for="textinput-hide" class="ui-hidden-accessible">Address Line 2</label>
+            <input type="text" name="textinput-hide" id="addressline2" placeholder="Address Line 2" value="">
+
+            <label for="textinput-hide" class="ui-hidden-accessible">City</label>
+            <input type="text" name="textinput-hide" id="addresscity" placeholder="City" value="">
+
+            <label for="textinput-hide" class="ui-hidden-accessible">State</label>
+            <input type="text" name="textinput-hide" id="addressstate" placeholder="State" value="">
+
+            <input type="submit" name="submit_location" value="OK" class="ui-mini"/>
+        </div><!--/addressform-->
+        <script>
+            function openAddressForm(target) {
+                document.getElementById(target).style.display = 'block';
+            }
+        </script>
 
 
     </div><!-- /location_panel -->
@@ -32,6 +107,7 @@
     <ul data-role="listview">
         {% for yelp_data in list_results %}
             <li><a href="restaurant/{{ yelp_data.restaurant_info['id'] }}">{{ yelp_data.restaurant_info['name'] }}</a>
+{#            <li>{{ yelp_data.restaurant_info['id'] }}#}
             </li>
         {% endfor %}
     </ul>
@@ -40,7 +116,7 @@
         <center>Restaurant information from <img src="../static/assets/yelp/yelp-logo-small.png"/></center>
     </div>
 
-</div> <!--/end rec_page-->
+</div> <!--/end visited_page-->
 </body>
 
 </html>
