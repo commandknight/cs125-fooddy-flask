@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask.ext.login import login_user, logout_user, current_user, login_required, LoginManager
 from googleapiclient import discovery
 from oauth2client import client
+import os
 
 import mysql_manager as mm
 import ranker
