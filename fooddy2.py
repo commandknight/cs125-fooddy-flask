@@ -277,6 +277,8 @@ def update_user_weights():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost')
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+    #app.run(host='localhost')
     # to make app run public
     # app.run(host='0.0.0.0')
