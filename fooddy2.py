@@ -252,8 +252,11 @@ def upload():
 @app.route('/rate_listing')
 @login_required
 def get_nearby_locations():
+    empty_list = True
     list_results = ranker.get_nearby_restaurants(current_user.get_id(), coords=[(session['lat'], session['long'])])
-    return render_template("rate_listing.html", list_results=list_results)
+    if len(list_results)>0:
+        empty_list = False
+    return render_template("rate_listing.html", list_results=list_results, empty_list=empty_list)
 
 @app.route('/rating', methods=['POST'])
 @login_required

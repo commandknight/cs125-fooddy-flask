@@ -25,6 +25,9 @@
            
     </div>
 
+    {% if empty_list %}
+        Ohnoes, no restaurants found nearby :'(
+    {% endif %}
 
     <ul data-role="listview">
         {% for yelp_data in list_results %}
