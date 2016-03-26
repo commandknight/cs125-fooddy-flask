@@ -56,7 +56,7 @@ def is_google_auth():
 @app.route('/')
 def index():
     return render_template("index.html")
-
+# TODO: fix the front end get location and its scenarios where it doesnt have the location
 # todo: on login, degenerate the user weights
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -71,7 +71,6 @@ def login():
                 muser = User(user)  # make a new user_model User
                 if muser.password == form_password:  # if correct password
                     login_user(muser)  # Save user in context as "logged_in"
-                    # TODO: (1) This is where to process location.
                     lat = request.form['current_location_latitude']
                     long = request.form['current_location_longitude']
                     print(lat,long)
@@ -98,7 +97,6 @@ def login():
             print(lat,long)
             session['lat'] = lat
             session['long'] = long
-            #TODO: (2) Process location here also
             return redirect(url_for('index'))
     return render_template("login.html")
 
@@ -166,6 +164,7 @@ def oauth2callback():
         return redirect(url_for('index'))
 
 
+# TODO: fix the front end location buttons
 @app.route('/recommended', methods=["GET", "POST"])
 def recommended():
     username = current_user.get_id()
