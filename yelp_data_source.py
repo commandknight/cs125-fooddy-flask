@@ -9,10 +9,10 @@ from yelp.oauth1_authenticator import Oauth1Authenticator
 
 import mysql_manager as mm
 
-consumer_key = 'EXZNRAR-epLUvS7LnuwqNg'
-consumer_secret = 'JTZY_0nE8ohfazCK-e_hP_aHhDs'
-token = 'Sa67MrlQ3hoVCr3Wsn2rfU9-kPPQ40Q_'
-token_secret = '8Xyb1WAJpRW_TJFomJb3eom3e4w'
+consumer_key = 'C_273T4OjCIa6OcfQdPJxw'
+consumer_secret = '9pMtvafUV6kX8aWACal4dJdyOfY'
+token = 'Pgigoo33oQZj2CIRReFjrHJWDT1vGftK'
+token_secret = 'LtszCja-7W4QkTTU9lq60mpSfEk'
 google_places_key = "AIzaSyBrElDm-bOxHup93M1QLfWXYjpYYoReGjg"
 auth = Oauth1Authenticator(
     consumer_key=consumer_key,
